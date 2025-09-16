@@ -3427,7 +3427,8 @@ if (QS('#op_up2k.act'))
     goto_up2k();
 
 apply_perms({ "perms": perms, "frand": frand, "u2ts": u2ts });
-fileman.render();
+if (ls0)
+    fileman.render();
 
 
 (function () {
