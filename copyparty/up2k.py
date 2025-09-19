@@ -3007,7 +3007,7 @@ class Up2k(object):
 
         # check if filesystem supports sparse files;
         # refuse out-of-order / multithreaded uploading if sprs False
-        sprs = self.fstab.get(pdir) != "ng"
+        sprs = self.fstab.get(pdir)[0] != "ng"
 
         if True:
             jcur = self.cur.get(ptop)
@@ -5180,7 +5180,7 @@ class Up2k(object):
                     sprs = False
 
             if not ANYWIN and sprs and sz > 1024 * 1024:
-                fs = self.fstab.get(pdir)
+                fs, mnt = self.fstab.get(pdir)
                 if fs == "ok":
                     pass
                 elif "nosparse" in vf:
