@@ -546,6 +546,8 @@ def py_desc() -> str:
     ofs = py_ver.find(".final.")
     if ofs > 0:
         py_ver = py_ver[:ofs]
+    if "free-threading" in sys.version:
+        py_ver += "t"
 
     host_os = platform.system()
     compiler = platform.python_compiler().split("http")[0]
