@@ -433,9 +433,8 @@ def _get_cover_from_epub2(
 ) -> Optional[str]:
     # <meta name="cover" content="id-to-cover-image"> in <metadata>, then
     # <item> in <manifest>
-    cover_id = package_root.find("./metadata/meta[@name='cover']", package_ns).get(
-        "content"
-    )
+    xn = package_root.find("./metadata/meta[@name='cover']", package_ns)
+    cover_id = xn.get("content") if xn is not None else None
 
     if not cover_id:
         return None
