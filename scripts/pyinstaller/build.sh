@@ -17,6 +17,7 @@ uname -s | grep NT-10 && w10=1 || w7=1
 [ $w7 ] && [ -e up2k.sh ] && [ ! "$1" ] && ./up2k.sh
 
 [ $w7 ] && pyv=37 || pyv=313
+[ $w7 ] && sfx=en || sfx=sfx
 esuf=
 [ $w7 ] && [ $m = 32 ] && esuf=32
 [ $w7 ] && [ $m = 64 ] && esuf=-winpe64
@@ -33,8 +34,16 @@ dl https://192.168.123.1:3923/cpp/scripts/pyinstaller/loader.ico
 dl https://192.168.123.1:3923/cpp/scripts/pyinstaller/loader.py
 dl https://192.168.123.1:3923/cpp/scripts/pyinstaller/loader.rc
 
+[ $sfx = en ] && {
+    dl https://192.168.123.1:3923/cpp/dist/copyparty-en.py
+
+    st_en=$(cat copyparty-en.py | awk '/^STAMP = [0-9]+/{print$3;exit}') 2>/dev/null
+    st_sfx=$(cat copyparty-sfx.py | awk '/^STAMP = [0-9]+/{print$3;exit}') 2>/dev/null
+    [ $st_en ] && [ $st_en -ge $st_sfx ] || sfx=sfx
+}
+
 rm -rf $TEMP/pe-copyparty*
-python copyparty-sfx.py --version
+python copyparty-$sfx.py --version
 
 rm -rf mods; mkdir mods
 cp -pR $TEMP/pe-copyparty/{copyparty,partftpy}/ $TEMP/pe-copyparty/{ftp,j2}/* mods/
