@@ -174,7 +174,8 @@ class Fstab(object):
                 # prisonparty or other restrictive environment
                 if not self.warned:
                     self.warned = True
-                    self.log("failed to build tab:\n{}".format(min_ex()), 3)
+                    t = "failed to associate fs-mounts with the VFS (this is fine):\n%s"
+                    self.log(t % (min_ex(),), 6)
                 self.build_fallback()
 
         assert self.tab  # !rm

@@ -1,4 +1,40 @@
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
+# 2025-0915-0019  `v1.19.9`  case-sensitivity, give or take
+
+## 🧪 new features
+
+* #781 case-sensitive behavior is now simulated on Windows/Macos/Fat32/NTFS 8b66874b 
+  * avoids some of the scary issues associated with case-insensitive filesystems
+  * unfortunately this is expensive and may be **noticeably slower in large folders;** disable the safeguard with `casechk: n` if you know you don't need it
+* #789 case-insensitive search for unicode filenames/paths (thx @km-clay!) e2aa8fc1 ecd18adc
+  * default-disabled because it is somewhat expensive; enable with global-option `srch-icase`
+* [CB-1](https://codeberg.org/9001/copyparty/issues/1) add `--qr-stdout` and `--qr-stderr` to show qr-code even with `-q` d7887f3d
+
+## 🩹 bugfixes
+
+* #775 the basic-uploader didn't accept empty files 25749b4b
+* opt-out from index.html with `?v` did not work as documented 3d09bec1 
+* Windows: dedup could get rejected by the filesystem if the origin file had a timestamp from the cambrian era e09f3c9e
+* webdav would incorrectly return an error for Depth:0 on an unmapped root 3a2381ff
+* markdown-editor would waste another http roundtrip on certain documents 14b7e514
+* `--help` didn't render if terminal was non-UTF8 3f454927
+
+## 🔧 other changes
+
+* #788 fixed a hotkey typo in the imageviewer (thx @tkroo!) 5c1a43c7
+* #778 improved polish translation (thx @daimond113!) 52438bcc
+* #798 debian: fixed an issue in the systemd script (thx @Beethoven-n, and congrats on commit number 4000!) dfd9e007
+* media-tag `conductor` is no longer mapped to `circle` (album-artist) 9c9e4057
+* "download-selection-as-zip" now produces a better filename, `sel-FOLDERNAME.zip` instead of `FIRSTFILE.zip` 8f587627
+* detect and warn if IdP volumes are misconfigured in a particular way 83bd1974
+
+## 🌠 fun facts
+
+* the themesong of this release is [KO3 - Give it up?](https://www.youtube.com/watch?v=8w_na7HAppU) because that's what the car mechanic got to enjoy when i forgot to unplug the flashdrive before handing in the shitbox for service
+
+
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
 # 2025-0907-2300  `v1.19.8`  SECURITY: fix single-file shares
 
 ## ⚠️ ATTN: this release fixes [CVE-2025-58753](https://github.com/9001/copyparty/security/advisories/GHSA-pxvw-4w88-6x95), an issue with shares
