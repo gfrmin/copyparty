@@ -1,4 +1,29 @@
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
+# 2025-0919-2244  `v1.19.10`  ramdisk kinshi
+
+## 🧪 new features
+
+* prevent uploading into ramdisks by default 59a01221 538a205c
+  * safeguard against misconfigured docker containers, where certain parts of the vfs has not been mapped to actual storage, for example `/w/music` is but `/w/` itself isn't
+  * can be disabled with `wram` (global-option and/or volflag), mainly for ephemeral servers
+* #799 nixos: groups can be specified (thx @AnyTimeTraveler!) ee5f3190
+* the logspam from the filesystem indexer can be reduced/disabled 478f1c76
+  * new options `scan-st-r`, `scan-pr-r`, `scan-pr-s`
+
+## 🩹 bugfixes
+
+* #809 medialinks (`#af-badf00d`) would fail on the very first pageload from a new browser 5996a58b
+* #806 instructions for running on iOS was bad (thx @GhelloZ!) 35326a6f
+
+## 🔧 other changes
+
+* copyparty32.exe is now english-only, to save space 669b1075
+* version info on startup indicates free-threading or not 65591528
+* docs: explain the `daw` option better a043d7cf
+
+
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
 # 2025-0915-0019  `v1.19.9`  case-sensitivity, give or take
 
 ## 🧪 new features
