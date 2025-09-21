@@ -3620,7 +3620,7 @@ var Ls = {
 
 		"m3u_add1": "muzikaĵo aldonita al m3u-ludlisto",
 		"m3u_addn": "{0} muzikaĵoj aldonitaj al m3u-ludlisto",
-		"m3u_clip": "m3u-ludlisto kopiita al tondujo\n\nvi devus krei tekst-dosieron kun etendaĵo &lt;code&gt;.m3u&lt;/code&gt; kaj alglui la tekston en ĝi por krei uzeblan ludliston",
+		"m3u_clip": "m3u-ludlisto kopiita al tondujo\n\nvi devus krei tekst-dosieron kun etendaĵo <code>.m3u</code> kaj alglui la tekston en ĝi por krei uzeblan ludliston",
 
 		"gt_vau": "ne montri videojn, nur ludi muzikaĵojn\">🎧",
 		"gt_msel": "ŝalti elektado-reĝimon; stir-klaki dosieron por ne-elekta ago$N$N&lt;em&gt;kiam ŝaltita: duoblaklako por malfermi dosier(uj)on&lt;/em&gt;$N$NFulmoklavo: S\">elektado",
