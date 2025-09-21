@@ -169,14 +169,19 @@ class Lim(object):
         self.rotn = 0  # rot num files
         self.rotl = 0  # rot depth
         self.rotf = ""  # rot datefmt
+        self.rotf_tz = UTC  # rot timezone
         self.rot_re = re.compile("")  # rotf check
 
     def log(self, msg: str, c: Union[int, str] = 0) -> None:
         if self.log_func:
             self.log_func("up-lim", msg, c)
 
-    def set_rotf(self, fmt: str) -> None:
+    def set_rotf(self, fmt: str, tz: str) -> None:
         self.rotf = fmt
+        if tz != "UTC":
+            from zoneinfo import ZoneInfo
+
+            self.rotf_tz = ZoneInfo(tz)
         r = re.escape(fmt).replace("%Y", "[0-9]{4}").replace("%j", "[0-9]{3}")
         r = re.sub("%[mdHMSWU]", "[0-9]{2}", r)
         self.rot_re = re.compile("(^|/)" + r + "$")
@@ -280,7 +285,7 @@ class Lim(object):
             if self.rot_re.search(path.replace("\\", "/")):
                 return path, ""
 
-            suf = datetime.now(UTC).strftime(self.rotf)
+            suf = datetime.now(self.rotf_tz).strftime(self.rotf)
             if path:
                 path += "/"
 
@@ -2218,7 +2223,7 @@ class AuthSrv(object):
             zs = vol.flags.get("rotf")
             if zs:
                 use = True
-                lim.set_rotf(zs)
+                lim.set_rotf(zs, vol.flags.get("rotf_tz") or "UTC")
 
             zs = vol.flags.get("maxn")
             if zs:

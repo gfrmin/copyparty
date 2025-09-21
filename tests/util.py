@@ -207,6 +207,7 @@ class Cfg(Namespace):
             put_name="put-{now.6f}-{cip}.bin",
             mv_retry="0/0",
             rm_retry="0/0",
+            rotf_tz="UTC",
             s_rd_sz=256 * 1024,
             s_wr_sz=256 * 1024,
             shr_who="auth",

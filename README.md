@@ -1637,6 +1637,7 @@ set upload rules using volflags,  some examples:
 * `:c,nosub` disallow uploading into subdirectories; goes well with `rotn` and `rotf`:
 * `:c,rotn=1000,2` moves uploads into subfolders, up to 1000 files in each folder before making a new one, two levels deep (must be at least 1)
 * `:c,rotf=%Y/%m/%d/%H` enforces files to be uploaded into a structure of subfolders according to that date format
+  * `:c,rotf_tz=Europe/Oslo` sets the timezone (default is UTC unless global-option `rotf-tz` is changed)
   * if someone uploads to `/foo/bar` the path would be rewritten to `/foo/bar/2021/08/06/23` for example
   * but the actual value is not verified, just the structure, so the uploader can choose any values which conform to the format string
     * just to avoid additional complexity in up2k which is enough of a mess already

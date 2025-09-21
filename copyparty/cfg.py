@@ -219,6 +219,7 @@ flagcats = {
     "upload rotation\n(moves all uploads into the specified folder structure)": {
         "rotn=100,3": "3 levels of subfolders with 100 entries in each",
         "rotf=%Y-%m/%d-%H": "date-formatted organizing",
+        "rotf_tz=Europe/Oslo": "timezone (default=UTC)",
         "lifetime=3600": "uploads are deleted after 1 hour",
     },
     "database, general": {
