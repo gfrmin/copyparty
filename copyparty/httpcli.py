@@ -6278,7 +6278,7 @@ class HttpCli(object):
 
         add_og = "og" in vn.flags
         if add_og:
-            if "th" in self.uparam or "raw" in self.uparam:
+            if "th" in self.uparam or "raw" in self.uparam or "opds" in self.uparam:
                 add_og = False
             elif vn.flags["og_ua"]:
                 add_og = vn.flags["og_ua"].search(self.ua)
@@ -6483,6 +6483,7 @@ class HttpCli(object):
 
         url_suf = self.urlq({}, ["k"])
         is_ls = "ls" in self.uparam
+        is_opds = "opds" in self.uparam
         is_js = self.args.force_js or self.cookies.get("js") == "y"
 
         if not is_ls and not add_og and self.ua.startswith(("curl/", "fetch")):
@@ -6493,6 +6494,13 @@ class HttpCli(object):
         if "b" in self.uparam:
             tpl = "browser2"
             is_js = False
+        elif is_opds:
+            # Display directory listing as OPDS v1.2 catalog feed
+            if not (self.args.opds or "opds" in self.vn.flags):
+                raise Pebkac(405, "OPDS is disabled in server config")
+            if not self.can_read:
+                raise Pebkac(401, "OPDS requires read permission")
+            is_js = is_ls = False
 
         vf = vn.flags
         ls_ret = {
@@ -6622,10 +6630,13 @@ class HttpCli(object):
         dirs = []
         files = []
         ptn_hr = RE_HR
+        use_abs_url = is_opds or (
+            not is_ls and not is_js and not self.trailing_slash and vpath
+        )
         for fn in ls_names:
             base = ""
             href = fn
-            if not is_ls and not is_js and not self.trailing_slash and vpath:
+            if use_abs_url:
                 base = "/" + vpath + "/"
                 href = base + fn
 
@@ -6725,6 +6736,7 @@ class HttpCli(object):
             self.cookies.get("idxh") == "y"
             and "ls" not in self.uparam
             and "v" not in self.uparam
+            and not is_opds
         ):
             idx_html = set(["index.htm", "index.html"])
             for item in files:
@@ -6892,6 +6904,51 @@ class HttpCli(object):
             d["name"] += "/"
 
         dirs.sort(key=itemgetter("name"))
+
+        if is_opds:
+            url_base = "%s://%s%s" % (
+                "https" if self.is_https else "http",
+                self.host,
+                self.args.SR,
+            )
+            # exclude files which don't match --opds-exts
+            allowed_exts = vf.get("opds_exts") or self.args.opds_exts
+            if allowed_exts:
+                files = [
+                    x for x in files if x["name"].rsplit(".", 1)[-1] in allowed_exts
+                ]
+            for item in dirs:
+                href = url_base + item["href"]
+                href += ("&" if "?" in href else "?") + "opds"
+                item["iso8601"] = "%sZ" % (item["dt"].replace(" ", "T"))
+
+            for item in files:
+                href = url_base + item["href"]
+                href += ("&" if "?" in href else "?") + "dl"
+                item["iso8601"] = "%sZ" % (item["dt"].replace(" ", "T"))
+
+                if "rmagic" in self.vn.flags:
+                    ap = "%s/%s" % (fsroot, item["name"])
+                    item["mime"] = guess_mime(item["name"], ap)
+                else:
+                    item["mime"] = guess_mime(item["name"])
+
+                # Make sure we can actually generate JPEG thumbnails
+                if (
+                    not self.args.th_no_jpg
+                    and self.thumbcli
+                    and "dthumb" not in dbv.flags
+                    and "dithumb" not in dbv.flags
+                ):
+                    item["jpeg_thumb_href"] = href + "&th=jf"
+                    item["jpeg_thumb_href_hires"] = item["jpeg_thumb_href"] + "3"
+
+            j2a["files"] = files
+            j2a["dirs"] = dirs
+            html = self.j2s("opds", **j2a)
+            mime = "application/atom+xml;profile=opds-catalog"
+            self.reply(html.encode("utf-8", "replace"), mime=mime)
+            return True
 
         if is_js:
             j2a["ls0"] = cgv["ls0"] = {
