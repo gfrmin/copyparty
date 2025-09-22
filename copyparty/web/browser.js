@@ -18420,6 +18420,7 @@ var treectl = (function () {
 		try {
 			var res = JSON.parse(this.responseText);
 			Object.assign(res, res.cfg);
+			res.cfg.k;
 		}
 		catch (ex) {
 			if (r.ls_cb) {
