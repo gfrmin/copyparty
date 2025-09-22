@@ -125,7 +125,7 @@ symbol legend,
 | config GUI              |   | █ | █ | █ | █ |   |   | █ | █ | █ |   | █ | █ |
 | good documentation      |   |   | █ | █ | █ | █ | █ |   |   | █ | █ | ╱ | ╱ |
 | runs on iOS             | ╱ |   |   |   |   | ╱ |   |   |   |   |   |   |   |
-| runs on Android         | █ |   | █ |   |   | █ |   |   |   |   |   |   |   |
+| runs on Android         | █ |   | █ |   |   | █ |   |   |   |   |   | █ |   |
 | runs on WinXP           | █ | █ |   |   |   | █ |   |   |   |   |   |   |   |
 | runs on Windows         | █ | █ | █ | █ | █ | █ | █ | ╱ | █ | █ | █ | █ | ╱ |
 | runs on Linux           | █ | ╱ | █ | █ | █ | █ | █ | █ | █ | █ | █ | █ | █ |
@@ -146,7 +146,9 @@ symbol legend,
 * `b`/hfs2 runs on linux through wine
 * `f`/rclone must be started with the command `rclone serve webdav .` or similar
 * `h`/chibisafe has undocumented windows support
-* `i`/sftpgo must be launched with a command
+* `l`/sftpgo:
+  * Must be launched with a command
+  * On Termux, just run `pkg in sftpgo`
 * `m`/arozos has partial windows support
 
 
@@ -262,7 +264,7 @@ symbol legend,
 
 * `folder-rproxy` = reverse-proxying without dedicating an entire (sub)domain, using a subfolder instead
 * `l`/sftpgo:
-  * config: users must be added through gui / api calls
+  * config: user can be added by cmd command in [Portable mode](https://docs.sftpgo.com/2.6/cli/#portable-mode); if not in  Portable mode users must be added through gui / api calls
 * `m`/arozos:
   * configuration is primarily through GUI
   * reverse-proxy is not guaranteed to see the correct client IP
@@ -280,7 +282,7 @@ symbol legend,
 | per-volume permissions  | █ | █ | █ | █ | █ | █ | █ |   | █ | █ | ╱ | █ | █ |
 | per-folder permissions  | ╱ |   | █ | █ | █ |   | █ |   | █ | █ | ╱ | █ | █ |
 | per-file permissions    |   |   | █ | █ | █ |   | █ |   | █ |   |   |   | █ |
-| per-file passwords      | █ |   |   | █ | █ |   | █ |   | █ |   |   |   | █ |
+| per-file passwords      | █ |   |   | █ | █ |   | █ |   | █ |   |   | █ | █ |
 | unmap subfolders        | █ |   | █ |   |   |   | █ |   |   | █ | ╱ | • |   |
 | index.html blocks list  | ╱ |   |   |   |   |   | █ |   |   | • |   |   |   |
 | write-only folders      | █ |   | █ |   | █ |   |   |   |   |   | █ | █ |   |
@@ -342,18 +344,18 @@ symbol legend,
 | single-page app         | █ |   | █ | █ | █ |   |   | █ | █ | █ | █ |   | █ |
 | themes                  | █ | █ | █ | █ |   |   |   |   | █ |   |   |   |   |
 | directory tree nav      | █ | ╱ |   |   | █ |   |   |   | █ |   | ╱ |   |   |
-| multi-column sorting    | █ |   |   |   |   |   |   |   |   |   |   |   |   |
+| multi-column sorting    | █ |   |   |   |   |   |   |   |   |   |   | █ |   |
 | thumbnails              | █ |   | / | ╱ | ╱ |   |   | █ | █ | ╱ |   |   | █ |
 | ┗ image thumbnails      | █ |   | / | █ | █ |   |   | █ | █ | █ |   |   | █ |
 | ┗ video thumbnails      | █ |   |   | █ | █ |   |   |   | █ |   |   |   | █ |
 | ┗ audio spectrograms    | █ |   |   |   |   |   |   |   |   |   |   |   |   |
-| audio player            | █ |   | ╱ | █ | █ |   |   |   | █ | ╱ |   |   | █ |
+| audio player            | █ |   | ╱ | █ | █ |   |   |   | █ | ╱ |   | ╱ | █ |
 | ┗ gapless playback      | █ |   |   |   |   |   |   |   | • |   |   |   |   |
 | ┗ audio equalizer       | █ |   |   |   |   |   |   |   |   |   |   |   |   |
 | ┗ waveform seekbar      | █ |   |   |   |   |   |   |   |   |   |   |   |   |
 | ┗ OS integration        | █ |   | █ |   |   |   |   |   |   |   |   |   |   |
 | ┗ transcode to lossy    | █ |   |   |   |   |   |   |   |   |   |   |   |   |
-| video player            | █ |   | █ | █ | █ |   |   |   | █ | █ |   |   | █ |
+| video player            | █ |   | █ | █ | █ |   |   |   | █ | █ |   | ╱ | █ |
 | ┗ video transcoding     |   |   | / |   |   |   |   |   | █ |   |   |   |   |
 | audio BPM detector      | █ |   |   |   |   |   |   |   |   |   |   |   |   |
 | audio key detector      | █ |   |   |   |   |   |   |   |   |   |   |   |   |
@@ -366,16 +368,16 @@ symbol legend,
 | find local file         | █ |   |   |   |   |   |   |   |   |   |   |   |   |
 | undo recent uploads     | █ |   |   |   |   |   |   |   |   |   |   |   |   |
 | create directories      | █ |   | █ | █ | █ | ╱ | █ | █ | █ | █ | █ | █ | █ |
-| image viewer            | █ |   | █ | █ | █ |   |   |   | █ | █ | █ |   | █ |
+| image viewer            | █ |   | █ | █ | █ |   |   |   | █ | █ | █ | █ | █ |
 | markdown viewer         | █ |   | / |   | █ |   |   |   | █ | ╱ | ╱ |   | █ |
-| markdown editor         | █ |   |   |   | █ |   |   |   | █ | ╱ | ╱ |   | █ |
+| markdown editor         | █ |   |   |   | █ |   |   |   | █ | ╱ | ╱ | ╱ | █ |
 | readme.md in listing    | █ |   | / | █ |   |   |   |   |   |   |   |   |   |
 | rename files            | █ | █ | █ | █ | █ | ╱ | █ |   | █ | █ | █ | █ | █ |
 | batch rename            | █ |   |   |   |   |   |   |   | █ |   |   |   |   |
 | cut / paste files       | █ | █ | █ | █ | █ |   |   |   | █ |   |   |   | █ |
-| move files              | █ | █ | █ | █ | █ |   | █ |   | █ | █ | █ |   | █ |
+| move files              | █ | █ | █ | █ | █ |   | █ |   | █ | █ | █ | █ | █ |
 | delete files            | █ | █ | █ | █ | █ | ╱ | █ | █ | █ | █ | █ | █ | █ |
-| copy files              |   |   | / |   | █ |   |   |   | █ | █ | █ |   | █ |
+| copy files              |   |   | / |   | █ |   |   |   | █ | █ | █ | █ | █ |
 
 * `single-page app` = multitasking; possible to continue navigating while uploading
 * `audio player » os-integration` = use the [lockscreen](https://user-images.githubusercontent.com/241032/142711926-0700be6c-3e31-47b3-9928-53722221f722.png) or [media hotkeys](https://user-images.githubusercontent.com/241032/215347492-b4250797-6c90-4e09-9a4c-721edf2fb15c.png) to play/pause, prev/next song
@@ -389,6 +391,9 @@ symbol legend,
   * audio playback does not continue into next song
   * plaintext viewer/editor
 * `k`/filegator directory tree is a modal window
+* `l`/sftpgo remarks:
+  * audio/video playback does not continue into next song/video
+  * plaintext viewer/editor
 
 
 ## integration
@@ -614,10 +619,8 @@ symbol legend,
   * ⚠️ across the atlantic, copyparty is 2.5x faster
   * 🔵 sftp uploads are resumable
 * ⚠️ web UI is very minimal + a bit slow
-  * ⚠️ no thumbnails / image viewer / audio player
-  * ⚠️ basic file manager (no cut/paste/move)
+  * ⚠️ no thumbnails
 * ⚠️ no filesystem indexing / search
-* ⚠️ doesn't run on phones, tablets
 * ⚠️ no zeroconf (mdns/ssdp)
 * ⚠️ impractical directory URLs
 * ⚠️ AGPL licensed
