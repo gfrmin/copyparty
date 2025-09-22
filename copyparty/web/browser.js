@@ -11369,7 +11369,7 @@ var Ls = {
 
 		"lang_set": "uppdatera för att ändringen ska ta effekt?",
 	},
-	"tr": {
+	"tur": {
 		"tt": "Türkçe",
 
 		"cols": {
@@ -11476,7 +11476,8 @@ var Ls = {
 		"gop": 'önceki kardeş">önceki',
 		"gou": 'üst klasör">üst',
 		"gon": 'sonraki klasör">sonraki',
-		"logout": "Çıkış",
+		"logout": "Çıkış ",
+		"login": "Giriş",
 		"access": " erişim",
 		"ot_close": "alt menüyü kapat",
 		"ot_search": "dosyaları özniteliklere, yol / ad, müzik etiketlerine veya bunların herhangi bir kombinasyonuna göre arayın$N$N&lt;code&gt;foo bar&lt;/code&gt; = hem «foo» hem de «bar» içermelidir,$N&lt;code&gt;foo -bar&lt;/code&gt; = «foo» içermeli ancak «bar» içermemelidir,$N&lt;code&gt;^yana .opus$&lt;/code&gt; = «yana» ile başlamalı ve bir «opus» dosyası olmalıdır$N&lt;code&gt;&quot;try unite&quot;&lt;/code&gt; = tam olarak «try unite» içermelidir$N$N tarih formatı iso-8601'dir, gibi$N&lt;code&gt;2009-12-31&lt;/code&gt; veya &lt;code&gt;2020-09-12 23:30:00&lt;/code&gt;",
@@ -11663,9 +11664,9 @@ var Ls = {
 		"mt_mloop": "açık klasörü döngüye al\">🔁 döngü",
 		"mt_mnext": "bir sonraki klasörü yükle ve devam et\">📂 sonraki",
 		"mt_mstop": "oynatmayı durdur\">⏸ durdur",
-		"mt_cflac": "flac / wav'ı opus'a dönüştür\">flac",
-		"mt_caac": "aac / m4a'yı opus'a dönüştür\">aac",
-		"mt_coth": "diğer tüm formatları (mp3 hariç) opus'a dönüştür\">oth",
+		"mt_cflac": "flac / wav'ı {0}'a dönüştür\">flac",
+		"mt_caac": "aac / m4a'yı {0}'a dönüştür\">aac",
+		"mt_coth": "diğer tüm formatları (mp3 hariç) {0}'a dönüştür\">oth",
 		"mt_c2opus": "masaüstü, dizüstü bilgisayarlar, android için en iyi seçim\">opus",
 		"mt_c2owa": "opus-weba, iOS 17.5 ve üzeri için\">owa",
 		"mt_c2caf": "opus-caf, iOS 11 ile 17 arasında için\">caf",
@@ -11718,10 +11719,10 @@ var Ls = {
 		"f_partial": "Mevcutta yüklenen bir dosyayı güvenli bir şekilde indirmek için lütfen aynı adlı ama <code>.PARTIAL</code> uzantısına sahip olmayan dosyaya tıklayın. Lütfen bunu yapmak için İPTAL veya Esc tuşuna basın.\n\nTamam / Enter tuşuna basmak, bu uyarıyı yok sayacak ve bunun yerine <code>.PARTIAL</code> geçici dosyasını indirmeye devam edecektir ki bu da elinize bozuk veriler sunacaktır.",
 
 		"ft_paste": "{0} ögeyi yapıştır$Kısayol: ctrl-V",
-		"fr_eperm": 'yeniden adlandırılamıyor:\nbu klasörü "taşıma" izniniz yok',
-		"fd_eperm": 'silinemiyor:\nbu klasörde "silme" izniniz yok',
-		"fc_eperm": 'kesilemiyor:\nbu klasörde "taşıma" izniniz yok',
-		"fp_eperm": 'yapıştırılamıyor:\nbu klasörde "yazma" izniniz yok',
+		"fr_eperm": 'yeniden adlandırılamıyor:\nbu klasörü “taşıma” izniniz yok',
+		"fd_eperm": 'silinemiyor:\nbu klasörde “silme” izniniz yok',
+		"fc_eperm": 'kesilemiyor:\nbu klasörde “taşıma“ izniniz yok',
+		"fp_eperm": 'yapıştırılamıyor:\nbu klasörde “yazma“ izniniz yok',
 		"fr_emore": "yeniden adlandırmak için en az bir öge seçin",
 		"fd_emore": "silmek için en az bir öge seçin",
 		"fc_emore": "kesmek için en az bir öge seçin",
@@ -11790,6 +11791,7 @@ var Ls = {
 		"fcp_ok": "kopyalama tamam",
 		"fp_busy": "{0} öğe taşınıyor...\n\n{1}",
 		"fcp_busy": "{0} öğe kopyalanıyor...\n\n{1}",
+		"fp_abrt": "İptal ediliyor...",
 		"fp_err": "taşıma başarısız:\n",
 		"fcp_err": "kopyalama başarısız:\n",
 		"fp_confirm": "bu {0} öğeyi buraya taşımak istiyor musunuz?",
@@ -12631,7 +12633,7 @@ var Ls = {
 	},
 };
 
-var LANGS = ["eng", "nor", "chi", "cze", "deu", "epo", "fin", "fra", "grc", "ita", "kor", "nld", "nno", "pol", "por", "rus", "spa", "swe", "ukr"];
+var LANGS = ["eng", "nor", "chi", "cze", "deu", "epo", "fin", "fra", "grc", "ita", "kor", "nld", "nno", "pol", "por", "rus", "spa", "swe", "tur", "ukr"];
 
 if (window.langmod)
 	langmod();

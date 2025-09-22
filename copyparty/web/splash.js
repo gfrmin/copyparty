@@ -853,37 +853,37 @@ var Ls = {
 		"af1": "показать недавние загрузки",
 		"ag1": "показать известных IdP-пользователей",
 	},
-	"tr": {
+	"tur": {
 		"a1": "yenile",
 		"b1": "N'aber aga &nbsp; <small>(giriş yapmamışsın)</small>",
 		"c1": "çıkış yap",
-		"d1": "yığını yolla",  // TLNote: "d2" is the tooltip for this button
+		"d1": "yığını yolla",
 		"d2": "tüm aktif iş parçacıklarının durumunu gösterir",
 		"e1": "cfg'yi yenile",
 		"e2": "yapılandırma dosyalarını yenile (hesaplar/hacimler/hacim bayrakları),$Nve tüm e2ds hacimlerini yeniden tarayın$N$Nnot: global ayarlardaki herhangi bir değişiklik$Netkili hale gelmesi için tam bir yeniden başlatma gerektirir",
 		"f1": "göz atabilirsiniz:",
 		"g1": "yükleyebilirsiniz:",
 		"cc1": "diğer şeyler:",
-		"h1": "k304'ü devre dışı bırak",  // TLNote: "j1" explains what k304 is
+		"h1": "k304'ü devre dışı bırak",
 		"i1": "k304'ü etkinleştir",
 		"j1": "k304'ü etkinleştirmek, her HTTP 304'te istemcinizin bağlantısını keser, bu da bazı hatalı proxy'lerin takılmasını önleyebilir (sayfaların birdenbire yüklenmesinin durması gibi); <em>ama</em> bu, aynı zamanda genel olarak işleyişi yavaşlatır",
 		"k1": "istemci ayarlarını sıfırla",
 		"l1": "daha fazlası için giriş yap:",
-		"m1": "hoş geldin,",  // TLNote: "welcome back, USERNAME"
+		"m1": "hoş geldin,",
 		"n1": "404 bulunamadı &nbsp;┐( ´ -`)┌",
 		"o1": 'ya da erişim iznin yok -- bir şifre dene veya <a href="' + SR + '/?h">ana sayfaya dön</a>',
 		"p1": "403 yasaklandı &nbsp;~┻━┻",
 		"q1": 'bir şifre kullan veya <a href="' + SR + '/?h">ana sayfaya dön</a>',
 		"r1": "ana sayfaya dön",
 		".s1": "yeniden tara",
-		"t1": "işlem",  // TLNote: this is the header above the "rescan" buttons
+		"t1": "işlem",
 		"u2": "son sunucu yazma zamanı$N( yükleme / yeniden adlandırma / ... )$N$N17d = 17 gün$N1h23 = 1 saat 23 dakika$N4m56 = 4 dakika 56 saniye",
 		"v1": "bağlan",
 		"v2": "bu sunucuyu yerel HDD olarak kullan",
 		"w1": "https'ye geç",
 		"x1": "şifreyi değiştir",
-		"y1": "paylaşılanları düzenle",  // TLNote: shows the list of folders that the user has decided to share
-		"z1": "gizli paylaşımın kilidini aç:",  // TLNote: the password prompt to see a hidden share
+		"y1": "paylaşılanları düzenle",
+		"z1": "gizli paylaşımın kilidini aç:",
 		"ta1": "ilk önce yeni şifreyi doldur",
 		"ta2": "yeni şifreyi onaylamak için tekrar girin:",
 		"ta3": "bir yazım hatası bulundu; lütfen tekrar deneyin",
