@@ -6630,8 +6630,12 @@ class HttpCli(object):
         dirs = []
         files = []
         ptn_hr = RE_HR
-        use_abs_url = is_opds or (
-            not is_ls and not is_js and not self.trailing_slash and vpath
+        use_abs_url = (
+            not is_opds
+            and not is_ls
+            and not is_js
+            and not self.trailing_slash
+            and vpath
         )
         for fn in ls_names:
             base = ""
@@ -6906,11 +6910,6 @@ class HttpCli(object):
         dirs.sort(key=itemgetter("name"))
 
         if is_opds:
-            url_base = "%s://%s%s" % (
-                "https" if self.is_https else "http",
-                self.host,
-                self.args.SR,
-            )
             # exclude files which don't match --opds-exts
             allowed_exts = vf.get("opds_exts") or self.args.opds_exts
             if allowed_exts:
@@ -6918,14 +6917,16 @@ class HttpCli(object):
                     x for x in files if x["name"].rsplit(".", 1)[-1] in allowed_exts
                 ]
             for item in dirs:
-                href = url_base + item["href"]
+                href = item["href"]
                 href += ("&" if "?" in href else "?") + "opds"
-                item["iso8601"] = "%sZ" % (item["dt"].replace(" ", "T"))
+                item["href"] = href
+                item["iso8601"] = "%sZ" % (item["dt"].replace(" ", "T"),)
 
             for item in files:
-                href = url_base + item["href"]
+                href = item["href"]
                 href += ("&" if "?" in href else "?") + "dl"
-                item["iso8601"] = "%sZ" % (item["dt"].replace(" ", "T"))
+                item["href"] = href
+                item["iso8601"] = "%sZ" % (item["dt"].replace(" ", "T"),)
 
                 if "rmagic" in self.vn.flags:
                     ap = "%s/%s" % (fsroot, item["name"])
