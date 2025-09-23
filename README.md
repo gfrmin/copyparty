@@ -50,6 +50,7 @@ made in Norway 🇳🇴
     * [shares](#shares) - share a file or folder by creating a temporary link
     * [batch rename](#batch-rename) - select some files and press `F2` to bring up the rename UI
     * [rss feeds](#rss-feeds) - monitor a folder with your RSS reader
+    * [opds feeds](#opds-feeds) - browse and download files from your e-book reader
     * [recent uploads](#recent-uploads) - list all recent uploads
     * [media player](#media-player) - plays almost every audio format there is
         * [playlists](#playlists) - create and play [m3u8](https://en.wikipedia.org/wiki/M3U) playlists
@@ -1039,7 +1040,8 @@ url parameters:
   * `a` = filesize
   * uppercase = reverse-sort; `M` = oldest file first
 
-# opds feeds
+
+## opds feeds
 
 browse and download files from your e-book reader
 
