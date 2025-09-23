@@ -1803,7 +1803,7 @@ function up2k_init(subtle) {
             while (true) {
                 var now = Date.now(),
                     blocktime = now - r.tact,
-                    was_busy = st.is_busy,
+                    was_busy = !!st.is_busy,
                     is_busy = !!(  // gzip take the wheel
                         st.car < st.files.length ||
                         st.busy.hash.length ||
