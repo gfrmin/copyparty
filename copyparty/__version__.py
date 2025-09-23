@@ -1,6 +1,6 @@
 # coding: utf-8
 
-VERSION = (1, 19, 13)
+VERSION = (1, 19, 14)
 CODENAME = "usernames"
 BUILD_DT = (2025, 9, 23)
 
