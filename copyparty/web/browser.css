@@ -1155,6 +1155,9 @@ html.y #widget.open {
 	border: 1px solid var(--bg-u5);
 	border-width: 0 .1em 0 0;
 }
+#wzip1 {
+    margin-right: .2em;
+}
 #wfm.act+#wzip1+#wzip,
 #wfm.act+#wzip1+#wzip+#wnp {
 	margin-left: .2em;

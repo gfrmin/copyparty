@@ -1,4 +1,32 @@
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
+# 2025-0921-2211  `v1.19.12`  conlangparty
+
+## 🧪 new features
+
+* #787 add Esperanto translation (thx @slashdevslashurandom!) 15d3c2fb
+* #802 timezone can be specified for the rotf upload rule (thx @Lehmustus!) 1460fe97
+
+## 🩹 bugfixes
+
+* #837 sharing an entire HDD on Windows ([v1.19.9](https://github.com/9001/copyparty/releases/tag/v1.19.9) regression) 6a244320
+  * sharing your whole [【Dドライブ】](https://www.youtube.com/watch?v=BFfYrxm2t58) is once again possible
+    * TLNote: `Dドライブ` means "D:\ drive"
+    * if you can't upgrade, a workaround is global-option `casechk: n`
+* `/?ls` on an unmapped root didn't give a sensible response; now it should be okay except it won't have a `cfg` field 8f6194fe
+
+## 🔧 other changes
+
+* #836 hide the unpost tab in folders where user has no write-access ca872c40
+* #835 fix webdep buildscript to avoid an edgecase on some platforms (thx @25huizengek1!) 260da2f4
+
+## 🌠 fun facts
+
+* the esperanto translation was the final straw; `copyparty-sfx.py` is now 1 MiB large
+  * `copyparty-en.py` is still a comfy 759 KiB
+
+
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
 # 2025-0920-1011  `v1.19.11`  ftp fix
 
 ## 🩹 bugfixes
