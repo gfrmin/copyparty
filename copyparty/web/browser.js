@@ -8519,6 +8519,8 @@ var Ls = {
 		"mt_c2owa": "opus-weba, dla iOS 17.5 i nowszych\">owa",
 		"mt_c2caf": "opus-caf, dla iOS 11 do 17\">caf",
 		"mt_c2mp3": "używaj na bardzo starych urządzeniach\">mp3",
+		"mt_c2flac": "najlepsza jakość dźwięku, ale ogromne pliki do pobrania\">flac", //m
+		"mt_c2wav": "nieskompresowane odtwarzanie (jeszcze większe)\">wav", //m
 		"mt_c2ok": "cudownie, dobry wybór",
 		"mt_c2nd": "ten format nie jest rekomendowany dla twojego urządzenia, ale nadal jest w porządku",
 		"mt_c2ng": "wygląda na to, że to urządzenie nie wspiera tego formatu, lecz spróbujmy i tak",
