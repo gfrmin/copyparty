@@ -3300,8 +3300,11 @@ class Up2k(object):
                                 job["at"],
                                 "",
                             )
-                            if not hr:
-                                t = "upload blocked by xbu server config: %r" % (dst,)
+                            t = hr.get("rejectmsg") or ""
+                            if t or not hr:
+                                if not t:
+                                    t = "upload blocked by xbu server config: %r"
+                                    t = t % (vp,)
                                 self.log(t, 1)
                                 raise Pebkac(403, t)
                             if hr.get("reloc"):
@@ -3981,8 +3984,11 @@ class Up2k(object):
                 at or time.time(),
                 "",
             )
-            if not hr:
-                t = "upload blocked by xau server config"
+            t = hr.get("rejectmsg") or ""
+            if t or not hr:
+                if not t:
+                    t = "upload blocked by xau server config: %r"
+                    t = t % (djoin(vtop, rd, fn),)
                 self.log(t, 1)
                 wunlink(self.log, dst, vflags)
                 self.registry[ptop].pop(wark, None)
@@ -5132,8 +5138,10 @@ class Up2k(object):
                 job["t0"],
                 "",
             )
-            if not hr:
-                t = "upload blocked by xbu server config: %r" % (vp_chk,)
+            t = hr.get("rejectmsg") or ""
+            if t or not hr:
+                if not t:
+                    t = "upload blocked by xbu server config: %r" % (vp_chk,)
                 self.log(t, 1)
                 raise Pebkac(403, t)
             if hr.get("reloc"):

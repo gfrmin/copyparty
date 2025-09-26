@@ -2268,8 +2268,10 @@ class HttpCli(object):
                 at,
                 "",
             )
-            if not hr:
-                t = "upload blocked by xbu server config"
+            t = hr.get("rejectmsg") or ""
+            if t or not hr:
+                if not t:
+                    t = "upload blocked by xbu server config: %r" % (vp,)
                 self.log(t, 1)
                 raise Pebkac(403, t)
             if hr.get("reloc"):
@@ -2401,8 +2403,10 @@ class HttpCli(object):
                 at,
                 "",
             )
-            if not hr:
-                t = "upload blocked by xau server config"
+            t = hr.get("rejectmsg") or ""
+            if t or not hr:
+                if not t:
+                    t = "upload blocked by xau server config: %r" % (vp,)
                 self.log(t, 1)
                 wunlink(self.log, path, vfs.flags)
                 raise Pebkac(403, t)
@@ -3214,11 +3218,38 @@ class HttpCli(object):
             new_file += ".md"
 
         sanitized = sanitize_fn(new_file, "")
+        fdir = vfs.canonical(rem)
+        fn = os.path.join(fdir, sanitized)
+
+        for hn in ("xbu", "xau"):
+            xxu = vfs.flags.get(hn)
+            if xxu:
+                hr = runhook(
+                    self.log,
+                    self.conn.hsrv.broker,
+                    None,
+                    "%s.http.new-md" % (hn,),
+                    xxu,
+                    fn,
+                    vjoin(self.vpath, sanitized),
+                    self.host,
+                    self.uname,
+                    self.asrv.vfs.get_perms(self.vpath, self.uname),
+                    time.time(),
+                    0,
+                    self.ip,
+                    time.time(),
+                    "",
+                )
+                t = hr.get("rejectmsg") or ""
+                if t or not hr:
+                    if not t:
+                        t = "new-md blocked by " + hn + " server config: %r"
+                        t = t % (vjoin(vfs.vpath, rem),)
+                    self.log(t, 1)
+                    raise Pebkac(403, t)
 
         if not nullwrite:
-            fdir = vfs.canonical(rem)
-            fn = os.path.join(fdir, sanitized)
-
             if bos.path.exists(fn):
                 raise Pebkac(500, "that file exists already")
 
@@ -3382,8 +3413,11 @@ class HttpCli(object):
                         at,
                         "",
                     )
-                    if not hr:
-                        t = "upload blocked by xbu server config"
+                    t = hr.get("rejectmsg") or ""
+                    if t or not hr:
+                        if not t:
+                            t = "upload blocked by xbu server config: %r"
+                            t = t % (vjoin(upload_vpath, fname),)
                         self.log(t, 1)
                         raise Pebkac(403, t)
                     if hr.get("reloc"):
@@ -3486,8 +3520,11 @@ class HttpCli(object):
                             at,
                             "",
                         )
-                        if not hr:
-                            t = "upload blocked by xau server config"
+                        t = hr.get("rejectmsg") or ""
+                        if t or not hr:
+                            if not t:
+                                t = "upload blocked by xau server config: %r"
+                                t = t % (vjoin(upload_vpath, fname),)
                             self.log(t, 1)
                             wunlink(self.log, abspath, vfs.flags)
                             raise Pebkac(403, t)
@@ -3779,7 +3816,7 @@ class HttpCli(object):
 
         xbu = vfs.flags.get("xbu")
         if xbu:
-            if not runhook(
+            hr = runhook(
                 self.log,
                 self.conn.hsrv.broker,
                 None,
@@ -3795,8 +3832,11 @@ class HttpCli(object):
                 self.ip,
                 time.time(),
                 "",
-            ):
-                t = "save blocked by xbu server config"
+            )
+            t = hr.get("rejectmsg") or ""
+            if t or not hr:
+                if not t:
+                    t = "save blocked by xbu server config"
                 self.log(t, 1)
                 raise Pebkac(403, t)
 
@@ -3823,27 +3863,31 @@ class HttpCli(object):
         sha512 = sha512[:56]
 
         xau = vfs.flags.get("xau")
-        if xau and not runhook(
-            self.log,
-            self.conn.hsrv.broker,
-            None,
-            "xau.http.txt",
-            xau,
-            fp,
-            self.vpath,
-            self.host,
-            self.uname,
-            self.asrv.vfs.get_perms(self.vpath, self.uname),
-            new_lastmod,
-            sz,
-            self.ip,
-            new_lastmod,
-            "",
-        ):
-            t = "save blocked by xau server config"
-            self.log(t, 1)
-            wunlink(self.log, fp, vfs.flags)
-            raise Pebkac(403, t)
+        if xau:
+            hr = runhook(
+                self.log,
+                self.conn.hsrv.broker,
+                None,
+                "xau.http.txt",
+                xau,
+                fp,
+                self.vpath,
+                self.host,
+                self.uname,
+                self.asrv.vfs.get_perms(self.vpath, self.uname),
+                new_lastmod,
+                sz,
+                self.ip,
+                new_lastmod,
+                "",
+            )
+            t = hr.get("rejectmsg") or ""
+            if t or not hr:
+                if not t:
+                    t = "save blocked by xau server config"
+                self.log(t, 1)
+                wunlink(self.log, fp, vfs.flags)
+                raise Pebkac(403, t)
 
         self.conn.hsrv.broker.say(
             "up2k.hash_file",

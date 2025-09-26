@@ -493,24 +493,30 @@ class FtpHandler(FTPHandler):
             return
         self.vfs_map[ap] = vp
         xbu = vfs.flags.get("xbu")
-        if xbu and not runhook(
-            None,
-            None,
-            self.hub.up2k,
-            "xbu.ftpd",
-            xbu,
-            ap,
-            vp,
-            "",
-            self.uname,
-            self.hub.asrv.vfs.get_perms(vp, self.uname),
-            0,
-            0,
-            self.cli_ip,
-            time.time(),
-            "",
-        ):
-            raise FSE("Upload blocked by xbu server config")
+        if xbu:
+            hr = runhook(
+                None,
+                None,
+                self.hub.up2k,
+                "xbu.ftpd",
+                xbu,
+                ap,
+                vp,
+                "",
+                self.uname,
+                self.hub.asrv.vfs.get_perms(vp, self.uname),
+                0,
+                0,
+                self.cli_ip,
+                time.time(),
+                "",
+            )
+            t = hr.get("rejectmsg") or ""
+            if t or not hr:
+                if not t:
+                    t = "Upload blocked by xbu server config: %r" % (vp,)
+                self.respond("550 %s" % (t,), logging.info)
+                return
 
         # print("ftp_STOR: {} {} => {}".format(vp, mode, ap))
         ret = FTPHandler.ftp_STOR(self, file, mode)
