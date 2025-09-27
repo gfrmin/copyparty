@@ -157,7 +157,7 @@ class SvcHub(object):
             args.unpost = 0
             args.no_del = True
             args.no_mv = True
-            args.hardlink = True
+            args.reflink = True
             args.dav_auth = True
             args.vague_403 = True
             args.nih = True
