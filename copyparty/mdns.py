@@ -102,9 +102,14 @@ class MDNS(MCast):
         self.log_func(self.logsrc, msg, c)
 
     def build_svcs(self) -> tuple[dict[str, dict[str, Any]], set[str]]:
+        ar = self.args
         zms = self.args.zms
-        http = {"port": 80 if 80 in self.args.p else self.args.p[0]}
-        https = {"port": 443 if 443 in self.args.p else self.args.p[0]}
+
+        zi = ar.zm_http
+        http = {"port": zi if zi != -1 else 80 if 80 in ar.p else ar.p[0]}
+        zi = ar.zm_https
+        https = {"port": zi if zi != -1 else 443 if 443 in ar.p else ar.p[0]}
+
         webdav = http.copy()
         webdavs = https.copy()
         webdav["u"] = webdavs["u"] = "u"  # KDE requires username
@@ -129,16 +134,16 @@ class MDNS(MCast):
 
         svcs: dict[str, dict[str, Any]] = {}
 
-        if "d" in zms:
+        if "d" in zms and http["port"]:
             svcs["_webdav._tcp.local."] = webdav
 
-        if "D" in zms:
+        if "D" in zms and https["port"]:
             svcs["_webdavs._tcp.local."] = webdavs
 
-        if "h" in zms:
+        if "h" in zms and http["port"]:
             svcs["_http._tcp.local."] = http
 
-        if "H" in zms:
+        if "H" in zms and https["port"]:
             svcs["_https._tcp.local."] = https
 
         if "f" in zms.lower():
