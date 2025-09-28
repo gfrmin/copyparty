@@ -209,6 +209,7 @@ var Ls = {
 		"u_nav_b": '<a href="#" id="modal-ok">Files</a><a href="#" id="modal-ng">One folder</a>',
 
 		"cl_opts": "switches",
+		"cl_hfsz": "filesize",
 		"cl_themes": "theme",
 		"cl_langs": "language",
 		"cl_ziptype": "folder download",
@@ -11148,7 +11149,7 @@ var Ls = {
 		"fd_warn2": "<b>Sista chansen!</b> Det finns inget sätt att ångra detta. Radera?",
 
 		"fc_ok": "klippte {0} objekt",
-        "fc_warn": 'klippte {0} objekt, men:\n\nendast <b>denna</b> webbläsarflik kan klistra in dem\n(eftersom urvalet är så enormt stort)',
+		"fc_warn": 'klippte {0} objekt, men:\n\nendast <b>denna</b> webbläsarflik kan klistra in dem\n(eftersom urvalet är så enormt stort)',
 
 		"fcc_ok": "kopierade {0} objekt till urklippet",
 		"fcc_warn": 'kopierade {0} objekt till urklippet, men:\n\nendast <b>denna</b> webbläsarflik kan klistra in dem\n(eftersom urvalet är så enormt stort)',
@@ -12856,6 +12857,22 @@ ebi('op_cfg').innerHTML = (
 	'		<a id="idxh" class="tgl btn" href="#" tt="' + L.ct_idxh + '</a>\n' +
 	'		<a id="sbars" class="tgl btn" href="#" tt="' + L.ct_sbars + '</a>\n' +
 	'	</div>\n' +
+	'</div>\n' +
+	'<div>\n' +
+	'	<h3>' + L.cl_hfsz + '</h3>\n' +
+	'	<div><select id="fszfmt">\n' +
+	'     <option value="0">0 ┃ 1234567</option>\n' +
+	'     <option value="1">1 ┃ 1 234 567</option>\n' +
+	'     <option value="2">2- ┃ 1.18 M</option>\n' +
+	'     <option value="2c">2c ┃ 1.18 M</option>\n' +
+	'     <option value="3">3- ┃ 1.2 M</option>\n' +
+	'     <option value="3c">3c ┃ 1.2 M</option>\n' +
+	'     <option value="4">4- ┃ 1.18 MB</option>\n' +
+	'     <option value="4c">4c ┃ 1.18 MB</option>\n' +
+	'     <option value="5">5- ┃ 1.2 MB</option>\n' +
+	'     <option value="5c">5c ┃ 1.2 MB</option>\n' +
+	'     <option value="fuzzy">fuzzy</option>\n' +
+	'   </select></div>\n' +
 	'</div>\n' +
 	'<div>\n' +
 	'	<h3>' + L.cl_themes + '</h3>\n' +
@@ -18301,7 +18318,8 @@ var search_ui = (function () {
 		for (var a = 0; a < res.hits.length; a++) {
 			var r = res.hits[a],
 				ts = parseInt(r.ts),
-				sz = esc(r.sz + ''),
+				sz = parseInt(r.sz),
+				hsz = filesizefun(sz),
 				rp = esc(uricom_dec(r.rp + '')),
 				ext = rp.lastIndexOf('.') > 0 ? rp.split('.').pop().split('?')[0] : '%',
 				id = 'f-' + ('00000000' + crc32(rp)).slice(-8);
@@ -18314,7 +18332,8 @@ var search_ui = (function () {
 				ext = '%';
 
 			var links = linksplit(r.rp + '', id).join('<span>/</span>'),
-				nodes = ['<tr><td>-</td><td><div>' + links + '</div>', sz];
+				nodes = ['<tr><td>-</td><td><div>' + links +
+					'</div></td><td sortv="' + sz + '">' + hsz];
 
 			for (var b = 0; b < tagord.length; b++) {
 				var k = esc(tagord[b]),
@@ -19240,7 +19259,8 @@ var treectl = (function () {
 
 			var cl = /\.PARTIAL$/.exec(fname) ? ' class="fade"' : '',
 				ln = ['<tr' + cl + '><td>' + tn.lead + '</td><td><a href="' +
-					top + tn.href + '" id="' + id + '">' + hname + '</a>', tn.sz];
+					top + tn.href + '" id="' + id + '">' + hname +
+					'</a></td><td sortv="' + tn.sz + '">' + filesizefun(tn.sz)];
 
 			for (var b = 0; b < res.taglist.length; b++) {
 				var k = esc(res.taglist[b]),
@@ -20083,6 +20103,31 @@ var settheme = (function () {
 
 	freshen();
 	return r;
+})();
+
+
+var setfszf = (function () {
+	function freshen() {
+		var cb = ebi('fszfmt'),
+		    fmt = sread("fszfmt", humansize_fmts) || window.dfszf;
+        if (!has(humansize_fmts, fmt))
+            fmt = '1';
+        window.filesizefun = window['humansize_' + fmt];
+		cb.onchange = onch;
+        if (cb.value != fmt)
+            cb.value = fmt;
+	}
+	function onch(e) {
+		ev(e);
+		setfmt(ebi('fszfmt').value)
+	}
+	function setfmt(fmt) {
+		swrite("fszfmt", fmt);
+        freshen();
+		treectl.gentab(get_evpath(), treectl.lsc);
+	}
+	freshen();
+    return setfmt;
 })();
 
 
@@ -21243,14 +21288,6 @@ function reload_browser() {
 		o.textContent = uricom_dec(parts[a]) || '/';
 		ebi('path').appendChild(mknod('i'));
 		ebi('path').appendChild(o);
-	}
-
-	var oo = QSA('#files>tbody>tr>td:nth-child(3)');
-	for (var a = 0, aa = oo.length; a < aa; a++) {
-		var sz = oo[a].textContent.replace(/ +/g, ""),
-			hsz = sz.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-
-		oo[a].textContent = hsz;
 	}
 
 	reload_mp();

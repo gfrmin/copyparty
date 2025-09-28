@@ -84,6 +84,13 @@
 	--sort-1: #fb0;
 	--sort-2: #d09;
 
+	--sz-b: #aaa;
+	--sz-k: #4ff;
+	--sz-m: var(--tab-alt);
+	--sz-g: var(--a);
+	--sz-t: var(--sz-g);
+	--sz-p: var(--sz-t);
+
 	--srv-1: #aaa;
 	--srv-2: #a73;
 	--srv-3: #f4c;
@@ -186,6 +193,9 @@ html.y {
 
 	--sort-1: #059;
 	--sort-2: #f5d;
+
+	--sz-b: #777;
+	--sz-k: #380;
 
 	--srv-1: #555;
 	--srv-2: #c83;
@@ -343,6 +353,9 @@ html.cz {
 	--btn-bs: 0 .1em .6em rgba(255,0,185,0.5);
 	--btn-1-bb: .2em solid #e90;
 	--btn-1-bs: 0 .1em .8em rgba(255,205,0,0.9);
+
+	--sz-b: #ddd;
+	--sz-k: #c9f;
 
 	--srv-3: #fff;
 
@@ -740,6 +753,15 @@ html.y #files tr.fade a {
 #files tbody tr td:last-child {
 	white-space: nowrap;
 }
+#files span.fsz_B { color: var(--sz-b); }
+#files span.fsz_K { color: var(--sz-k); }
+#files span.fsz_M { color: var(--sz-m); }
+#files span.fsz_G { color: var(--sz-g); }
+#files span.fsz_T { color: var(--sz-t); }
+#files span.fsz_P { color: var(--sz-p); }
+html.y #files span.fsz_G,
+html.y #files span.fsz_T,
+html.y #files span.fsz_P { font-weight: bold }
 #files thead th[style] {
 	width: auto !important;
 }
