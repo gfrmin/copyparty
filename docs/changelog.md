@@ -1,4 +1,36 @@
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
+# 2025-0923-2247  `v1.19.14`  Voile, the Magic Library
+
+## 🧪 new features
+
+* #779 add [OPDS](https://opds.io/) support (thx @Scotsguy!) 6dbd9901
+  * copyparty can now serve books for [KOReader](https://koreader.rocks/)
+  * [the mandatory soundtrack](https://www.youtube.com/watch?v=F8Aex6tzH-s)
+* #786 add Turkish translation (thx @NandeMD!) 549fe33f
+* #808 support reading config-files in UTF8-BOM 5e4ff90b
+* make more http-errors return a friendly errortext rather than the scary wall of html 9d066414
+
+## 🩹 bugfixes
+
+* #842 could not navpane into webroot if webroot is unmapped 0941fd4e
+* upload-resume becomes funky when the OS/network is overloaded to the point where it starts dropping connections left and right -- the issue was reported on discord and I don't have a good way to reproduce it, but these changes may help and/or fix it: 
+  * b136a5b0 panic and drop chunk reservations if client or connection glitches out
+  * 38df223b also drop reservations if subchunk logic hits an edgecase
+
+## 🔧 other changes
+
+* [versus.md](https://github.com/9001/copyparty/blob/hovudstraum/docs/versus.md) tweaks:
+  * #840 tooltips in the table headers (thx @guano!) e9ca36fa
+  * #839 sftpgo updates (thx @augustanational!) a053a663
+
+## 🌠 fun facts
+
+* this release is identical to v1.19.13 except [the pypi package isn't messed up](https://github.com/9001/copyparty/issues/847) 👉😎👉
+  * as if the 13 wasn't foreshadowing enough
+
+
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
 # 2025-0921-2211  `v1.19.12`  conlangparty
 
 ## 🧪 new features
