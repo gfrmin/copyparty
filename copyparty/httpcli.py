@@ -48,7 +48,6 @@ from .util import (
     FN_EMB,
     HAVE_SQLITE3,
     HTTPCODE,
-    META_NOBOTS,
     UTC,
     Garda,
     MultipartParser,

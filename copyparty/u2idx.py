@@ -303,7 +303,7 @@ class U2idx(object):
                 is_size = False
                 v = int(float(v) * 1024 * 1024)
 
-            if is_wark:
+            elif is_wark:
                 is_wark = False
                 v = v.strip("*")
                 if len(v) > 16:

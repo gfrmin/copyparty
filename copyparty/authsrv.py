@@ -24,6 +24,7 @@ from .util import (
     FAVICON_MIMES,
     HAVE_SQLITE3,
     IMPLICATIONS,
+    META_NOBOTS,
     MIMES,
     SQLITE_VER,
     UNPLICATIONS,
