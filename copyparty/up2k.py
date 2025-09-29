@@ -5289,17 +5289,21 @@ class Up2k(object):
             self.log("\n".join([t] + vis))
             for job in rm:
                 del reg[job["wark"]]
+                rsv_cleared = False
                 try:
                     # remove the filename reservation
                     path = djoin(job["ptop"], job["prel"], job["name"])
                     if bos.path.getsize(path) == 0:
                         bos.unlink(path)
+                        rsv_cleared = True
                 except:
                     pass
 
                 try:
-                    if len(job["hash"]) == len(job["need"]):
-                        # PARTIAL is empty, delete that too
+                    if len(job["hash"]) == len(job["need"]) or (
+                        rsv_cleared and "rm_partial" in self.flags[job["ptop"]]
+                    ):
+                        # PARTIAL is empty (hash==need) or --rm-partial, so delete that too
                         path = djoin(job["ptop"], job["prel"], job["tnam"])
                         bos.unlink(path)
                 except:

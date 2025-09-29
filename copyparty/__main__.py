@@ -1231,6 +1231,7 @@ def add_upload(ap):
     ap2.add_argument("--no-snap", action="store_true", help="disable snapshots -- forget unfinished uploads on shutdown; don't create .hist/up2k.snap files -- abandoned/interrupted uploads must be cleaned up manually")
     ap2.add_argument("--snap-wri", metavar="SEC", type=int, default=300, help="write upload state to ./hist/up2k.snap every \033[33mSEC\033[0m seconds; allows resuming incomplete uploads after a server crash")
     ap2.add_argument("--snap-drop", metavar="MIN", type=float, default=1440.0, help="forget unfinished uploads after \033[33mMIN\033[0m minutes; impossible to resume them after that (360=6h, 1440=24h)")
+    ap2.add_argument("--rm-partial", action="store_true", help="delete the .PARTIAL file when an unfinished upload expires after \033[33m--snap-drop\033[0m (volflag=rm_partial)")
     ap2.add_argument("--u2ts", metavar="TXT", type=u, default="c", help="how to timestamp uploaded files; [\033[32mc\033[0m]=client-last-modified, [\033[32mu\033[0m]=upload-time, [\033[32mfc\033[0m]=force-c, [\033[32mfu\033[0m]=force-u (volflag=u2ts)")
     ap2.add_argument("--rotf-tz", metavar="TXT", type=u, default="UTC", help="default timezone for the rotf upload rule; examples: [\033[32mEurope/Oslo\033[0m], [\033[32mAmerica/Toronto\033[0m], [\033[32mAntarctica/South_Pole\033[0m] (volflag=rotf_tz)")
     ap2.add_argument("--rand", action="store_true", help="force randomized filenames, \033[33m--nrand\033[0m chars long (volflag=rand)")
