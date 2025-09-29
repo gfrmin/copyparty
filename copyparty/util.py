@@ -378,6 +378,13 @@ DAV_ALLPROP_L = [
 DAV_ALLPROPS = set(DAV_ALLPROP_L)
 
 
+FAVICON_MIMES = {
+    "gif": "image/gif",
+    "png": "image/png",
+    "svg": "image/svg+xml",
+}
+
+
 MIMES = {
     "opus": "audio/ogg; codecs=opus",
     "owa": "audio/webm; codecs=opus",

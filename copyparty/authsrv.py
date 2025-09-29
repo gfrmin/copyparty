@@ -21,6 +21,7 @@ from .util import (
     DEF_MTE,
     DEF_MTH,
     EXTS,
+    FAVICON_MIMES,
     HAVE_SQLITE3,
     IMPLICATIONS,
     MIMES,
@@ -2509,6 +2510,16 @@ class AuthSrv(object):
 
             if "norobots" in vol.flags:
                 head_s += META_NOBOTS
+
+            ico_url = vol.flags.get("ufavico")
+            if ico_url:
+                ico_ext = ico_url.split("?")[0].split(".")[-1].lower()
+                if ico_ext in FAVICON_MIMES:
+                    zs = '<link rel="icon" type="%s" href="%s">\n'
+                    head_s += zs % (FAVICON_MIMES[ico_ext], ico_url)
+                elif ico_ext == "ico":
+                    zs = '<link rel="shortcut icon" href="%s">\n'
+                    head_s += zs % (ico_url,)
 
             if head_s:
                 vol.flags["html_head_s"] = head_s
