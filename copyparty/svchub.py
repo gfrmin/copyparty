@@ -247,8 +247,8 @@ class SvcHub(object):
             t = "WARNING: --th-ram-max is very small (%.2f GiB); will not be able to %s"
             self.log("root", t % (args.th_ram_max, zs), 3)
 
-        if args.chpw and args.have_idp_hdrs:
-            t = "ERROR: user-changeable passwords is incompatible with IdP/identity-providers; you must disable either --chpw or --idp-h-usr"
+        if args.chpw and args.have_idp_hdrs and "pw" not in args.auth_ord.split(","):
+            t = "ERROR: user-changeable passwords is not compatible with your current configuration. Choose one of these options to fix it:\n option1: disable --chpw\n option2: remove all use of IdP features; --idp-*\n option3: change --auth-ord to something like pw,idp,ipu"
             self.log("root", t, 1)
             raise Exception(t)
 
