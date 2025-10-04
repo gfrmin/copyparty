@@ -1539,7 +1539,7 @@ def add_safety(ap):
     ap2.add_argument("--ban-422", metavar="N,W,B", type=u, default="9,2,1440", help="hitting more than \033[33mN\033[0m 422's in \033[33mW\033[0m minutes = ban for \033[33mB\033[0m minutes (invalid requests, attempted exploits ++)")
     ap2.add_argument("--ban-url", metavar="N,W,B", type=u, default="9,2,1440", help="hitting more than \033[33mN\033[0m sus URL's in \033[33mW\033[0m minutes = ban for \033[33mB\033[0m minutes; applies only to permissions g/G/h (decent replacement for \033[33m--ban-404\033[0m if that can't be used)")
     ap2.add_argument("--sus-urls", metavar="R", type=u, default=r"\.php$|(^|/)wp-(admin|content|includes)/", help="URLs which are considered sus / eligible for banning; disable with blank or [\033[32mno\033[0m]")
-    ap2.add_argument("--nonsus-urls", metavar="R", type=u, default=r"^(favicon\.ico|robots\.txt)$|^apple-touch-icon|^\.well-known", help="harmless URLs ignored from 404-bans; disable with blank or [\033[32mno\033[0m]")
+    ap2.add_argument("--nonsus-urls", metavar="R", type=u, default=r"^(favicon\..{3}|robots\.txt)$|^apple-touch-icon|^\.well-known", help="harmless URLs ignored from 404-bans; disable with blank or [\033[32mno\033[0m]")
     ap2.add_argument("--early-ban", action="store_true", help="if a client is banned, reject its connection as soon as possible; not a good idea to enable when proxied behind cloudflare since it could ban your reverse-proxy")
     ap2.add_argument("--cookie-nmax", metavar="N", type=int, default=50, help="reject HTTP-request from client if they send more than N cookies")
     ap2.add_argument("--cookie-cmax", metavar="N", type=int, default=8192, help="reject HTTP-request from client if more than N characters in Cookie header")
