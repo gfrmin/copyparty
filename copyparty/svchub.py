@@ -67,6 +67,7 @@ from .util import (
     build_netmap,
     expat_ver,
     gzip,
+    html_escape,
     load_ipr,
     load_ipu,
     lock_file,
@@ -1170,6 +1171,13 @@ class SvcHub(object):
         al.tcolor = al.tcolor.lstrip("#")
         if len(al.tcolor) == 3:  # fc5 => ffcc55
             al.tcolor = "".join([x * 2 for x in al.tcolor])
+
+        if self.args.name_url:
+            zs = html_escape(self.args.name_url, True, True)
+            zs = '<a href="%s">%s</a>' % (zs, self.args.name)
+        else:
+            zs = self.args.name
+        self.args.name_html = zs
 
         zs = al.u2sz
         zsl = [x.strip() for x in zs.split(",")]

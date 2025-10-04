@@ -6493,11 +6493,7 @@ class HttpCli(object):
 
         try:
             if not self.args.nih:
-                if self.args.name_url:
-                    url = html_escape(self.args.name_url, True, True)
-                    srv_info.append(f"<a href='{url}'>{self.args.name}</a>")
-                else:
-                    srv_info.append(self.args.name)
+                srv_info.append(self.args.name_html)
         except:
             self.log("#wow #whoa")
 

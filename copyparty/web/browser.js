@@ -13093,6 +13093,7 @@ var ACtx = !IPHONE && (window.AudioContext || window.webkitAudioContext),
 	abrt_key = "",
 	can_shr = false,
 	rtt = null,
+	srvinf = "",
 	ldks = [],
 	dks = {},
 	dk, mp;
@@ -19336,6 +19337,7 @@ var treectl = (function () {
 
 	r.hydrate = function () {
 		qsr('#bbsw');
+        srvinf = ebi('srv_info').innerHTML.slice(6, -7);
 		if (ls0 === null) {
 			var xhr = new XHR();
 			xhr.open('GET', SR + '/?setck=js=y', true);
