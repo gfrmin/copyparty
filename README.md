@@ -138,6 +138,7 @@ made in Norway 🇳🇴
 * [dependencies](#dependencies) - mandatory deps
     * [optional dependencies](#optional-dependencies) - install these to enable bonus features
         * [dependency chickenbits](#dependency-chickenbits) - prevent loading an optional dependency
+        * [dependency unvendoring](#dependency-unvendoring) - force use of system modules
     * [optional gpl stuff](#optional-gpl-stuff)
 * [sfx](#sfx) - the self-contained "binary" (recommended!)
     * [copyparty.exe](#copypartyexe) - download [copyparty.exe](https://github.com/9001/copyparty/releases/latest/download/copyparty.exe) (win8+) or [copyparty32.exe](https://github.com/9001/copyparty/releases/latest/download/copyparty32.exe) (win7+)
@@ -2989,6 +2990,18 @@ example: `PRTY_NO_PIL=1 python3 copyparty-sfx.py`
 * `PRTY_NO_PIL` saves ram
 * `PRTY_NO_VIPS` saves ram and startup time
 * python2.7 on windows: `PRTY_NO_FFMPEG` + `PRTY_NO_FFPROBE` saves startup time
+
+
+### dependency unvendoring
+
+force use of system modules  instead of the vendored versions:
+
+| env-var              | what it does |
+| -------------------- | ------------ |
+| `PRTY_SYS_ALL`       | all of the below |
+| `PRTY_SYS_IFADDR`    | replace [stolen/ifaddr](./copyparty/stolen/ifaddr) with [upstream](https://pypi.org/project/ifaddr/) |
+
+to debug, run copyparty with `PRTY_MODSPEC=1` to see where it's getting each module from
 
 
 ## optional gpl stuff

@@ -21,6 +21,7 @@ from .util import (
     VF_CAREFUL,
     Netdev,
     atomic_move,
+    get_adapters,
     min_ex,
     sunpack,
     termsize,
@@ -456,8 +457,6 @@ class TcpSrv(object):
             self._distribute_netdevs()
 
     def detect_interfaces(self, listen_ips: list[str]) -> dict[str, Netdev]:
-        from .stolen.ifaddr import get_adapters
-
         listen_ips = [x for x in listen_ips if not x.startswith(("unix:", "fd:"))]
 
         nics = get_adapters(True)

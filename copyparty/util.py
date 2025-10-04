@@ -137,6 +137,25 @@ except:
     pass
 
 try:
+    if os.environ.get("PRTY_NO_IFADDR"):
+        raise Exception()
+    try:
+        if os.getenv("PRTY_SYS_ALL") or os.getenv("PRTY_SYS_IFADDR"):
+            raise ImportError()
+
+        from .stolen.ifaddr import get_adapters
+    except ImportError:
+        from ifaddr import get_adapters
+
+    HAVE_IFADDR = True
+except:
+    HAVE_IFADDR = False
+
+    def get_adapters(include_unconfigured=False):
+        return []
+
+
+try:
     if os.environ.get("PRTY_NO_SQLITE"):
         raise Exception()
 
@@ -172,6 +191,11 @@ try:
     import magic
 except:
     pass
+
+if os.getenv("PRTY_MODSPEC"):
+    from inspect import getsourcefile
+
+    print("PRTY_MODSPEC: ifaddr:", getsourcefile(get_adapters))
 
 if True:  # pylint: disable=using-constant-test
     import types
@@ -2928,8 +2952,6 @@ def read_socket_chunked(
 
 
 def list_ips() -> list[str]:
-    from .stolen.ifaddr import get_adapters
-
     ret: set[str] = set()
     for nic in get_adapters():
         for ipo in nic.ips:
