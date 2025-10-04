@@ -2999,6 +2999,7 @@ force use of system modules  instead of the vendored versions:
 | env-var              | what it does |
 | -------------------- | ------------ |
 | `PRTY_SYS_ALL`       | all of the below |
+| `PRTY_SYS_DNSLIB`    | replace [stolen/dnslib](./copyparty/stolen/dnslib) with [upstream](https://pypi.org/project/dnslib/) |
 | `PRTY_SYS_IFADDR`    | replace [stolen/ifaddr](./copyparty/stolen/ifaddr) with [upstream](https://pypi.org/project/ifaddr/) |
 | `PRTY_SYS_QRCG`      | replace [stolen/qrcodegen.py](./copyparty/stolen/qrcodegen.py) with [upstream](https://github.com/nayuki/QR-Code-generator/blob/master/python/qrcodegen.py) |
 
