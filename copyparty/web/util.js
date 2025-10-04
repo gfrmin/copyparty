@@ -2298,9 +2298,6 @@ function xhrchk(xhr, prefix, e404, lvl, tag) {
     if (xhr.status == 404)
         return toast.err(0, prefix + e404 + suf, tag);
 
-    if (XC_CMSG[xhr.status])
-        errtxt = XC_CMSG[xhr.status];
-
     if (!xhr.status && !errtxt)
         return toast.err(0, prefix + L.xhr0);
 
@@ -2318,6 +2315,9 @@ function xhrchk(xhr, prefix, e404, lvl, tag) {
         fr.src = SR + '/?cf_challenge';
         document.body.appendChild(fr);
     }
+
+    if (XC_CMSG[xhr.status] && (errtxt.indexOf('<html') + 1))
+        errtxt = XC_CMSG[xhr.status];
 
     return fun(0, prefix + xhr.status + ": " + errtxt, tag);
 }
