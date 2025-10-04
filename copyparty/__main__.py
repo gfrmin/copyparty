@@ -816,6 +816,7 @@ def get_sects():
              \033[36mwN\033[35m waits N sec after command has been started before continuing
              \033[36mtN\033[35m sets an N sec timeout before the command is abandoned
              \033[36miN\033[35m xiu only: volume must be idle for N sec (default = 5)
+             \033[36mI\033[35m import and run as module, not as subprocess
 
              \033[36mar\033[35m only run hook if user has read-access
              \033[36marw\033[35m only run hook if user has read-write-access
@@ -864,6 +865,12 @@ def get_sects():
             locations, and to delete or index other files based
             on new uploads, but with certain limitations. See
             bin/hooks/reloc* and docs/devnotes.md#hook-effects
+
+            the \033[36mI\033[0m option will override most other options, because
+            it entirely hands over control to the hook, which is
+            then able to tamper with copyparty's internal memory
+            and wreck havoc if it wants to -- but this is worh it
+            because it makes the hook 140x faster
 
             except for \033[36mxm\033[0m, only one hook / one action can run at a time,
             so it's recommended to use the \033[36mf\033[0m flag unless you really need

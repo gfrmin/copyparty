@@ -3611,6 +3611,7 @@ def _parsehook(
     chk = False
     fork = False
     jtxt = False
+    imp = False
     wait = 0.0
     tout = 0.0
     kill = "t"
@@ -3624,6 +3625,8 @@ def _parsehook(
             fork = True
         elif arg == "j":
             jtxt = True
+        elif arg == "I":
+            imp = True
         elif arg.startswith("w"):
             wait = float(arg[1:])
         elif arg.startswith("t"):
@@ -3668,7 +3671,7 @@ def _parsehook(
 
     argv[0] = os.path.expandvars(os.path.expanduser(argv[0]))
 
-    return areq, chk, fork, jtxt, wait, sp_ka, argv
+    return areq, chk, imp, fork, jtxt, wait, sp_ka, argv
 
 
 def runihook(
@@ -3678,7 +3681,7 @@ def runihook(
     vol: "VFS",
     ups: list[tuple[str, int, int, str, str, str, int, str]],
 ) -> bool:
-    _, chk, fork, jtxt, wait, sp_ka, acmd = _parsehook(log, cmd)
+    _, chk, imp, fork, jtxt, wait, sp_ka, acmd = _parsehook(log, cmd)
     bcmd = [sfsenc(x) for x in acmd]
     if acmd[0].endswith(".py"):
         bcmd = [sfsenc(pybin)] + bcmd
@@ -3857,7 +3860,7 @@ def _runhook(
     txt: str,
 ) -> dict[str, Any]:
     ret = {"rc": 0}
-    areq, chk, fork, jtxt, wait, sp_ka, acmd = _parsehook(log, cmd)
+    areq, chk, imp, fork, jtxt, wait, sp_ka, acmd = _parsehook(log, cmd)
     if areq:
         for ch in areq:
             if ch not in perms:
@@ -3865,7 +3868,7 @@ def _runhook(
                 if log:
                     log(t % (uname, cmd, areq, perms))
                 return ret  # fallthrough to next hook
-    if jtxt:
+    if imp or jtxt:
         ja = {
             "ap": ap,
             "vp": vp,
@@ -3879,6 +3882,9 @@ def _runhook(
             "src": src,
             "txt": txt,
         }
+        if imp:
+            mod = loadpy(acmd[0], False)
+            return mod.main(ja)
         arg = json.dumps(ja)
     else:
         arg = txt or ap

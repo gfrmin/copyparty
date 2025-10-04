@@ -310,6 +310,14 @@ a subset of effect types are available for a subset of hook types,
 to trigger indexing of files `/foo/1.txt` and `/foo/bar/2.txt`, a hook can `print(json.dumps({"idx":{"vp":["/foo/1.txt","/foo/bar/2.txt"]}}))` (and replace "idx" with "del" to delete instead)
 * note: paths starting with `/` are absolute URLs, but you can also do `../3.txt` relative to the destination folder of each uploaded file
 
+### hook import
+
+the `I` flag runs the hook inside copyparty,  which can be very useful and dangerous:
+
+* around 140x faster because it doesn't need to launch a new subprocess
+* the hook can intentionally (or accidentally) mess with copyparty's internals
+  * very easy to crash things if not careful
+
 
 # assumptions
 
