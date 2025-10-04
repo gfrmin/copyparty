@@ -55,7 +55,6 @@ from .__init__ import (
     unicode,
 )
 from .__version__ import S_BUILD_DT, S_VERSION
-from .stolen import surrogateescape
 
 try:
     from datetime import datetime, timezone
@@ -81,6 +80,9 @@ except:
 
 if PY2:
     range = xrange  # type: ignore
+    from .stolen import surrogateescape
+
+    surrogateescape.register_surrogateescape()
 
 
 if sys.version_info >= (3, 7) or (
@@ -293,7 +295,6 @@ RE_MEMAVAIL = re.compile("^MemAvailable:.* kB")
 BOS_SEP = ("%s" % (os.sep,)).encode("ascii")
 
 
-surrogateescape.register_surrogateescape()
 if WINDOWS and PY2:
     FS_ENCODING = "utf-8"
 else:

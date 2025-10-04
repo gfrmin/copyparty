@@ -1,6 +1,19 @@
 #!/bin/ash
 set -ex
 
+tmv() {
+	touch -r "$1" t
+	mv t "$1"
+}
+iawk() {
+	awk "$1" <"$2" >t
+	tmv "$2"
+}
+ised() {
+	sed -r "$1" <"$2" >t
+	tmv "$2"
+}
+
 # use zlib-ng if available
 f=/z/base/zlib_ng-0.5.1-cp312-cp312-linux_$(cat /etc/apk/arch).whl
 [ "$1" != min ] && [ -e $f ] && {
@@ -38,8 +51,13 @@ rm -rf \
   /tmp/pe-* /z/copyparty-sfx.py \
   ensurepip pydoc_data turtle.py turtledemo lib2to3
 
+cd /usr/lib/python3.*/site-packages/copyparty/
+rm stolen/surrogateescape.py
+iawk '/^[^ ]/{s=0}/^if not VENDORED:/{s=1}!s' qrkode.py
+iawk '/^[^ ]/{s=0}/^    DNS_VND = False/{s=1;print"    raise"}!s' mdns.py
+
 # speedhack
-sed -ri 's/os.environ.get\("PRTY_NO_IMPRESO"\)/"1"/' /usr/lib/python3.*/site-packages/copyparty/util.py
+ised 's/os.environ.get\("PRTY_NO_IMPRESO"\)/"1"/' util.py
 
 # drop bytecode
 find / -xdev -name __pycache__ -print0 | xargs -0 rm -rf
