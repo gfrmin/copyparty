@@ -19113,6 +19113,11 @@ var treectl = (function () {
 		if (o)
 			o.innerHTML = ebi('srv_info').innerHTML = '<span>' + srvinf + '</span>';
 
+		if (res.ufavico && (!favico.en || !ebi('icot').value)) {
+			while (qsr('head>link[rel~="icon"]')) { }
+			document.head.insertAdjacentHTML('beforeend', res.ufavico);
+		}
+
 		if (this.hpush && !showfile.active())
 			hist_push(this.top + (dk ? '?k=' + dk : ''));
 

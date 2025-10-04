@@ -2514,13 +2514,17 @@ class AuthSrv(object):
 
             ico_url = vol.flags.get("ufavico")
             if ico_url:
+                ico_h = ""
                 ico_ext = ico_url.split("?")[0].split(".")[-1].lower()
                 if ico_ext in FAVICON_MIMES:
                     zs = '<link rel="icon" type="%s" href="%s">\n'
-                    head_s += zs % (FAVICON_MIMES[ico_ext], ico_url)
+                    ico_h = zs % (FAVICON_MIMES[ico_ext], ico_url)
                 elif ico_ext == "ico":
                     zs = '<link rel="shortcut icon" href="%s">\n'
-                    head_s += zs % (ico_url,)
+                    ico_h = zs % (ico_url,)
+                if ico_h:
+                    vol.flags["ufavico_h"] = ico_h
+                    head_s += ico_h
 
             if head_s:
                 vol.flags["html_head_s"] = head_s
@@ -3005,6 +3009,8 @@ class AuthSrv(object):
                 "unlist": vf.get("unlist") or "",
                 "sb_lg": "" if "no_sb_lg" in vf else (vf.get("lg_sbf") or "y"),
             }
+            if "ufavico_h" in vf:
+                vn.js_ls["ufavico"] = vf["ufavico_h"]
             js_htm = {
                 "SPINNER": self.args.spinner,
                 "s_name": self.args.bname,
