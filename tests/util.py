@@ -155,7 +155,7 @@ class Cfg(Namespace):
         ex = "gid uid"
         ka.update(**{k: -1 for k in ex.split()})
 
-        ex = "hash_mt hsortn qdel safe_dedup scan_pr_r scan_pr_s scan_st_r srch_time tail_fd tail_rate th_spec_p u2abort u2j u2sz ui_filesz unp_who"
+        ex = "hash_mt hsortn qdel safe_dedup scan_pr_r scan_pr_s scan_st_r srch_time tail_fd tail_rate th_spec_p u2abort u2j u2sz unp_who"
         ka.update(**{k: 1 for k in ex.split()})
 
         ex = "ac_convt au_vol dl_list du_iwho mtab_age reg_cap s_thead s_tbody tail_tmax tail_who th_convt ups_who ver_iwho zip_who"
@@ -223,6 +223,7 @@ class Cfg(Namespace):
             th_x3="n",
             u2sort="s",
             u2ts="c",
+            ui_filesz="1",
             unpost=600,
             ver_who="all",
             warksalt="hunter2",
