@@ -998,6 +998,8 @@ available functions:
 * `$lpad(text, length, pad_char)`
 * `$rpad(text, length, pad_char)`
 
+two counters are available; `.n.s` is the nth file in the selection, and `.n.d` the nth file in the folder, for example rename-output `file(.n.d).(ext)` gives `file5.bin`, and `beach-$lpad((.n.s),3,0).(ext)` is `beach-017.jpg`
+
 so,
 
 say you have a file named [`meganeko - Eclipse - 07 Sirius A.mp3`](https://www.youtube.com/watch?v=-dtb0vDPruI) (absolutely fantastic album btw) and the tags are: `Album:Eclipse`, `Artist:meganeko`, `Title:Sirius A`, `tn:7`

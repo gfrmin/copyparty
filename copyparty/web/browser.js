@@ -15933,7 +15933,8 @@ var fileman = (function () {
 
 	r.rename = function (e) {
 		ev(e);
-		var sel = msel.getsel();
+		var sel = msel.getsel(),
+			all = msel.all;
 		if (!sel.length)
 			return toast.err(3, L.fr_emore);
 
@@ -15957,9 +15958,11 @@ var fileman = (function () {
 				return toast.err(0, esc('bug:\n' + base + '\n' + vsp[0]));
 
 			var vars = ft2dict(ebi(sel[a].id).closest('tr'));
-			mkeys = vars[1].concat(vars[2]);
+			mkeys = [".n.d", ".n.s"].concat(vars[1], vars[2]);
 
 			var md = vars[0];
+			md[".n.s"] = '' + (1 + a);
+			md[".n.d"] = '' + (1 + all.indexOf(sel[a]));
 			for (var k in md) {
 				if (!md.hasOwnProperty(k))
 					continue;
