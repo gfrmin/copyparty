@@ -19342,7 +19342,7 @@ var treectl = (function () {
 
 	r.hydrate = function () {
 		qsr('#bbsw');
-        srvinf = ebi('srv_info').innerHTML.slice(6, -7);
+		srvinf = ebi('srv_info').innerHTML.slice(6, -7);
 		if (ls0 === null) {
 			var xhr = new XHR();
 			xhr.open('GET', SR + '/?setck=js=y', true);
