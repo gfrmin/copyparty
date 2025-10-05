@@ -61,7 +61,7 @@ def main(ka: dict[str, Any]) -> dict[str, Any]:
 
         ap = ka["ap"]  # abspath the upload is going to
         fs, mp = fstab.get(ap)  # figure out what the filesystem is
-        ramdisk = fs in ("tmspfs", "overlay")  # looks like a ramdisk?
+        ramdisk = fs in ("tmpfs", "overlay")  # looks like a ramdisk?
 
         # log("<HOOK:RAMDISK> fs=%r" % (fs,))
 
