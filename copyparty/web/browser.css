@@ -1939,6 +1939,8 @@ html.y #tree.nowrap .ntree a+a:hover {
 #rui td input[type="text"] {
 	width: 100%;
 }
+#rui #rn_n_d,
+#rui #rn_n_s,
 #shui td.exs input[type="text"] {
 	width: 3em;
 }

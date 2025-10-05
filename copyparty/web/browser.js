@@ -15944,11 +15944,16 @@ var fileman = (function () {
 		var f = [],
 			sn = ++r.sn,
 			base = vsplit(sel[0].vp)[0],
+			s2d = {},
 			mkeys;
 
 		r.f = f;
+		r.n_s = 1;
+		r.n_d = 1;
 
 		for (var a = 0; a < sel.length; a++) {
+			s2d[a] = all.indexOf(sel[a]);
+
 			var vp = sel[a].vp;
 			if (vp.endsWith('/'))
 				vp = vp.slice(0, -1);
@@ -15961,8 +15966,7 @@ var fileman = (function () {
 			mkeys = [".n.d", ".n.s"].concat(vars[1], vars[2]);
 
 			var md = vars[0];
-			md[".n.s"] = '' + (1 + a);
-			md[".n.d"] = '' + (1 + all.indexOf(sel[a]));
+			md[".n.s"] = md[".n.d"] = 0;
 			for (var k in md) {
 				if (!md.hasOwnProperty(k))
 					continue;
@@ -16009,6 +16013,10 @@ var fileman = (function () {
 			'<tr><td>regex</td><td><input type="text" id="rn_re" ' + NOAC + ' tt="' + L.fr_re + '" placeholder="^[0-9]+[\\. ]+(.*) - (.*)" /></td></tr>',
 			'<tr><td>format</td><td><input type="text" id="rn_fmt" ' + NOAC + ' tt="' + L.fr_fmt + '" placeholder="[(artist) - ](title).(ext)" /></td></tr>',
 			'<tr><td>preset</td><td><select id="rn_pre"></select>',
+			'<tr><td>num0</td><td>',
+			'<code>n.d=</code><input type="text" id="rn_n_d" placeholder="1" ' + NOAC + ' /> &nbsp;',
+			'<code>n.s=</code><input type="text" id="rn_n_s" placeholder="1" ' + NOAC + ' />',
+			'</td></tr>',
 			'<button id="rn_pdel">❌ ' + L.fr_pdel + '</button>',
 			'<button id="rn_pnew">💾 ' + L.fr_pnew + '</button>',
 			'</td></tr>',
@@ -16153,6 +16161,15 @@ var fileman = (function () {
 		};
 		spresets();
 
+		ebi('rn_n_s').oninput = function () {
+			r.n_s = parseInt(this.value || '1');
+			ifmt.oninput();
+		};
+		ebi('rn_n_d').oninput = function () {
+			r.n_d = parseInt(this.value || '1');
+			ifmt.oninput();
+		};
+
 		ire.onkeydown = ifmt.onkeydown = function (e) {
 			var k = (e.key || e.code) + '';
 
@@ -16182,14 +16199,18 @@ var fileman = (function () {
 
 			for (var a = 0; a < f.length; a++) {
 				var m = re ? re.exec(f[a].ofn) : null,
+					d = f[a].md,
 					ok, txt = '';
+
+				d[".n.s"] = d["n.s"] = '' + (r.n_s + a);
+				d[".n.d"] = d["n.d"] = '' + (r.n_d + s2d[a]);
 
 				if (re && !m) {
 					txt = 'regex did not match';
 					ok = false;
 				}
 				else {
-					var ret = fmt_ren(m, f[a].md, fmt);
+					var ret = fmt_ren(m, d, fmt);
 					ok = ret[0];
 					txt = ret[1];
 				}
