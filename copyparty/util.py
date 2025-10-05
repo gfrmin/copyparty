@@ -3629,12 +3629,13 @@ def retchk(
 
 def _parsehook(
     log: Optional["NamedLogger"], cmd: str
-) -> tuple[str, bool, bool, bool, bool, float, dict[str, Any], list[str]]:
+) -> tuple[str, bool, bool, bool, bool, bool, float, dict[str, Any], list[str]]:
     areq = ""
     chk = False
     fork = False
     jtxt = False
     imp = False
+    sin = False
     wait = 0.0
     tout = 0.0
     kill = "t"
@@ -3650,6 +3651,8 @@ def _parsehook(
             jtxt = True
         elif arg == "I":
             imp = True
+        elif arg == "s":
+            sin = True
         elif arg.startswith("w"):
             wait = float(arg[1:])
         elif arg.startswith("t"):
@@ -3694,7 +3697,7 @@ def _parsehook(
 
     argv[0] = os.path.expandvars(os.path.expanduser(argv[0]))
 
-    return areq, chk, imp, fork, jtxt, wait, sp_ka, argv
+    return areq, chk, imp, fork, sin, jtxt, wait, sp_ka, argv
 
 
 def runihook(
@@ -3704,7 +3707,7 @@ def runihook(
     vol: "VFS",
     ups: list[tuple[str, int, int, str, str, str, int, str]],
 ) -> bool:
-    _, chk, imp, fork, jtxt, wait, sp_ka, acmd = _parsehook(log, cmd)
+    _, chk, _, fork, _, jtxt, wait, sp_ka, acmd = _parsehook(log, cmd)
     bcmd = [sfsenc(x) for x in acmd]
     if acmd[0].endswith(".py"):
         bcmd = [sfsenc(pybin)] + bcmd
@@ -3883,7 +3886,7 @@ def _runhook(
     txt: str,
 ) -> dict[str, Any]:
     ret = {"rc": 0}
-    areq, chk, imp, fork, jtxt, wait, sp_ka, acmd = _parsehook(log, cmd)
+    areq, chk, imp, fork, sin, jtxt, wait, sp_ka, acmd = _parsehook(log, cmd)
     if areq:
         for ch in areq:
             if ch not in perms:
@@ -3919,7 +3922,11 @@ def _runhook(
             raise Exception("zmq says %d" % (zi,))
         return {"rc": 0, "stdout": zs}
 
-    acmd += [arg]
+    if sin:
+        sp_ka["sin"] = (arg + "\n").encode("utf-8", "replace")
+    else:
+        acmd += [arg]
+
     if acmd[0].endswith(".py"):
         acmd = [pybin] + acmd
 

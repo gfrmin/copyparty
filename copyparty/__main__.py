@@ -813,6 +813,7 @@ def get_sects():
              \033[36mf\033[35m forks the process, doesn't wait for completion
              \033[36mc\033[35m checks return code, blocks the action if non-zero
              \033[36mj\033[35m provides json with info as 1st arg instead of filepath
+             \033[36ms\033[35m provides input data on stdin (instead of 1st arg)
              \033[36mwN\033[35m waits N sec after command has been started before continuing
              \033[36mtN\033[35m sets an N sec timeout before the command is abandoned
              \033[36miN\033[35m xiu only: volume must be idle for N sec (default = 5)
@@ -846,6 +847,9 @@ def get_sects():
               the \033[33m--\033[35m stops notify-send from reading the message as args
               and the alert will be "hey" followed by the messagetext
 
+             \033[36m--xm s,,tee,-a,log.txt\033[35m appends each msg to log.txt;
+             \033[36m--xm s,j,,tee,-a,log.txt\033[35m writes it as json instead
+
              \033[36m--xau zmq:pub:tcp://*:5556\033[35m announces uploads on zeromq;
              \033[36m--xau t3,zmq:push:tcp://*:5557\033[35m also works, and you can
              \033[36m--xau t3,j,zmq:req:tcp://localhost:5555\033[35m too for example
@@ -855,7 +859,8 @@ def get_sects():
             as soon as the volume has been idle for iN seconds (5 by default)
 
             \033[36mxiu\033[0m is also unique in that it will pass the metadata to the
-            executed program on STDIN instead of as argv arguments, and
+            executed program on STDIN instead of as argv arguments (so
+            just like the \033[36ms\033[0m option does for the other hook types), and
             it also includes the wark (file-id/hash) as a json property
 
             \033[36mxban\033[0m can be used to overrule / cancel a user ban event;
