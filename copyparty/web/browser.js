@@ -15682,7 +15682,7 @@ var fileman = (function () {
 			hdel = !(have_del && has(perms, 'delete')),
 			hcut = !(have_mv && has(perms, 'move')),
 			hpst = !(have_mv && has(perms, 'write')),
-			hshr = !can_shr;
+			hshr = !can_shr || !get_evpath().indexOf(have_shr);
 
 		if (!(enren || endel || encut || enpst))
 			hren = hdel = hcut = hpst = true;
