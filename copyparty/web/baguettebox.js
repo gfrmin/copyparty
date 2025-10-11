@@ -34,6 +34,8 @@ window.baguetteBox = (function () {
         scrollTimer = 0,
         re_i = /^[^?]+\.(a?png|avif|bmp|gif|heif|jpe?g|jfif|svg|webp)(\?|$)/i,
         re_v = /^[^?]+\.(webm|mkv|mp4|m4v|mov)(\?|$)/i,
+        re_cbz = /^[^?]+\.(cbz)(\?|$)/i,
+        cbz_pics = ["png", "jpg", "jpeg", "gif", "bmp", "tga", "tif", "tiff", "webp", "avif"],
         anims = ['slideIn', 'fadeIn', 'none'],
         data = {},  // all galleries
         imagesElements = [],
@@ -147,6 +149,8 @@ window.baguetteBox = (function () {
                 tagsNodeList = [galleryElement];
             else
                 tagsNodeList = galleryElement.getElementsByTagName('a');
+            if (have_zls)
+                bindCbzClickListeners(tagsNodeList, userOptions);
 
             tagsNodeList = [].filter.call(tagsNodeList, function (element) {
                 if (element.className.indexOf(userOptions && userOptions.ignoreClass) === -1)
@@ -167,7 +171,7 @@ window.baguetteBox = (function () {
                 };
                 var imageItem = {
                     eventHandler: imageElementClickHandler,
-                    imageElement: imageElement
+                    imageElement: imageElement,
                 };
                 bind(imageElement, 'click', imageElementClickHandler);
                 gallery.push(imageItem);
@@ -176,6 +180,86 @@ window.baguetteBox = (function () {
         });
 
         return [selectorData.galleries, options];
+    }
+
+    function bindCbzClickListeners(tagsNodeList, userOptions) {
+        var cbzNodes = [].filter.call(tagsNodeList, function (element) {
+            return re_cbz.test(element.href);
+        });
+        if (!tagsNodeList.length) {
+            return;
+        }
+
+        [].forEach.call(cbzNodes, function (cbzElement, index) {
+            var gallery = [];
+            var eventHandler = function (e) {
+                if (ctrl(e) || e && e.shiftKey)
+                    return true;
+
+                e.preventDefault ? e.preventDefault() : e.returnValue = false;
+                fillCbzGallery(gallery, cbzElement, eventHandler).then(function () {
+                        prepareOverlay(gallery, userOptions);
+                        showOverlay(0);
+                    }
+                ).catch(function (reason) {
+                    console.error("cbz-ded", reason);
+                    var t;
+                    try {
+                        t = uricom_dec(cbzElement.href.split('/').pop());
+                    } catch (ex) { }
+
+                    var msg = "Could not browse " + (t ? t : 'archive');
+                    try {
+                        msg += "\n\n" + reason.message;
+                    } catch (ex) { }
+                    toast.err(20, msg, 'cbz-ded');
+                });
+            }
+
+            bind(cbzElement, "click", eventHandler);
+        })
+    }
+
+    function fillCbzGallery(gallery, cbzElement, eventHandler) {
+        if (gallery.length !== 0) {
+            return Promise.resolve();
+        }
+        var href = cbzElement.href;
+        var zlsHref = href + (href.indexOf("?") === -1 ? "?" : "&") + "zls";
+        return fetch(zlsHref)
+            .then(function (response) {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error("Archive is invalid");
+                }
+            })
+            .then(function (fileList) {
+                var imagesList = fileList.map(function (file) {
+                    return file["fn"];
+                }).filter(function (file) {
+                    return file.indexOf(".") !== -1
+                        && cbz_pics.indexOf(file.split(".").pop()) !== -1;
+                }).sort();
+
+                if (imagesList.length === 0) {
+                    throw new Error("Archive does not contain any images");
+                }
+
+                imagesList.forEach(function (imageName, index) {
+                    var imageHref = href
+                        + (href.indexOf("?") === -1 ? "?" : "&")
+                        + "zget="
+                        + encodeURIComponent(imageName);
+
+                    var galleryItem = {
+                        href: imageHref,
+                        imageElement: cbzElement,
+                        eventHandler: eventHandler,
+                    };
+                    gallery.push(galleryItem);
+                });
+            });
     }
 
     function clearCachedData() {
@@ -658,7 +742,7 @@ window.baguetteBox = (function () {
         }, 50);
 
         if (options.onChange && !url_ts)
-            options.onChange(currentIndex, imagesElements.length);
+            options.onChange.call(currentGallery, currentIndex, imagesElements.length);
 
         url_ts = null;
         documentLastFocus = document.activeElement;
@@ -786,11 +870,11 @@ window.baguetteBox = (function () {
             imageContainer.removeChild(imageContainer.firstChild);
 
         var imageElement = galleryItem.imageElement,
-            imageSrc = imageElement.href,
+            imageSrc = galleryItem.href || imageElement.href,
             is_vid = re_v.test(imageSrc),
             thumbnailElement = imageElement.querySelector('img, video'),
             imageCaption = typeof options.captions === 'function' ?
-                options.captions.call(currentGallery, imageElement) :
+                options.captions.call(currentGallery, imageElement, index) :
                 imageElement.getAttribute('data-caption') || imageElement.title;
 
         imageSrc = addq(imageSrc, 'cache');
@@ -930,7 +1014,7 @@ window.baguetteBox = (function () {
         unfig(index);
 
         if (options.onChange)
-            options.onChange(currentIndex, imagesElements.length);
+            options.onChange.call(currentGallery, currentIndex, imagesElements.length);
 
         return true;
     }
