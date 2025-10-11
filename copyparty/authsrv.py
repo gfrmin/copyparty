@@ -2868,8 +2868,6 @@ class AuthSrv(object):
 
         if have_reflink:
             t = "WARNING: Reflink-based dedup was requested, but %s. This will not work; files will be full copies instead."
-            if sys.version_info < (3, 14):
-                self.log(t % "your python version is not new enough", 1)
             if not sys.platform.startswith("linux"):
                 self.log(t % "your OS is not Linux", 1)
 

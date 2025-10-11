@@ -129,8 +129,10 @@ try:
     import fcntl
 
     HAVE_FCNTL = True
+    HAVE_FICLONE = hasattr(fcntl, "FICLONE")
 except:
     HAVE_FCNTL = False
+    HAVE_FICLONE = False
 
 try:
     import ctypes

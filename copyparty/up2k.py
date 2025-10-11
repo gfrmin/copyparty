@@ -10,6 +10,7 @@ import re
 import shutil
 import stat
 import subprocess as sp
+import sys
 import tempfile
 import threading
 import time
@@ -27,6 +28,7 @@ from .mtag import MParser, MTag
 from .util import (
     E_FS_CRIT,
     E_FS_MEH,
+    HAVE_FICLONE,
     HAVE_SQLITE3,
     SYMTIME,
     VF_CAREFUL,
@@ -87,6 +89,10 @@ if True:  # pylint: disable=using-constant-test
 
 if TYPE_CHECKING:
     from .svchub import SvcHub
+
+USE_FICLONE = HAVE_FICLONE and sys.version_info < (3, 14)
+if USE_FICLONE:
+    import fcntl
 
 zsg = "avif,avifs,bmp,gif,heic,heics,heif,heifs,ico,j2p,j2k,jp2,jpeg,jpg,jpx,png,tga,tif,tiff,webp"
 ICV_EXTS = set(zsg.split(","))
@@ -3530,10 +3536,25 @@ class Up2k(object):
 
         linked = False
         try:
-            if "reflink" in flags:
-                raise Exception("reflink")
+            if rm and bos.path.exists(dst):
+                wunlink(self.log, dst, flags)
+
             if not is_mv and not flags.get("dedup"):
                 raise Exception("dedup is disabled in config")
+
+            if "reflink" in flags:
+                if not USE_FICLONE:
+                    raise Exception("reflink")  # python 3.14 or newer; no need
+                try:
+                    with open(fsenc(src), "rb") as fi, open(fsenc(dst), "wb") as fo:
+                        fcntl.ioctl(fo.fileno(), fcntl.FICLONE, fi.fileno())
+                except:
+                    if bos.path.exists(dst):
+                        wunlink(self.log, dst, flags)
+                    raise
+                if lmod:
+                    bos.utime_c(self.log, dst, int(lmod), False)
+                return
 
             lsrc = src
             ldst = dst
@@ -3560,9 +3581,6 @@ class Up2k(object):
             if WINDOWS:
                 lsrc = lsrc.replace("/", "\\")
                 ldst = ldst.replace("/", "\\")
-
-            if rm and bos.path.exists(dst):
-                wunlink(self.log, dst, flags)
 
             try:
                 if "hardlink" in flags:
