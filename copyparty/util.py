@@ -358,6 +358,8 @@ IMPLICATIONS = [
     ["hardlink_only", "hardlink"],
     ["hardlink", "dedup"],
     ["tftpvv", "tftpv"],
+    ["nodupem", "nodupe"],
+    ["no_dupe_m", "no_dupe"],
     ["smbw", "smb"],
     ["smb1", "smb"],
     ["smbvvv", "smbvv"],

@@ -4708,6 +4708,12 @@ class Up2k(object):
         if w:
             assert c1  # !rm
             if c2 and c2 != c1:
+                if "nodupem" in dvn.flags:
+                    q = "select w from up where substr(w,1,16) = ?"
+                    for (w2,) in c2.execute(q, (w[:16],)):
+                        if w == w2:
+                            t = "file exists in target volume, and dupes are forbidden in config"
+                            raise Pebkac(400, t)
                 self._copy_tags(c1, c2, w)
 
             xlink = bool(svn.flags.get("xlink"))

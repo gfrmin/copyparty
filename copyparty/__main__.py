@@ -1241,6 +1241,7 @@ def add_upload(ap):
     ap2.add_argument("--hardlink-only", action="store_true", help="do not fallback to symlinks when a hardlink cannot be made (volflag=hardlinkonly)")
     ap2.add_argument("--reflink", action="store_true", help="enable reflink-based dedup; will fallback on full copies when that is impossible (non-CoW filesystem) (volflag=reflink)")
     ap2.add_argument("--no-dupe", action="store_true", help="reject duplicate files during upload; only matches within the same volume (volflag=nodupe)")
+    ap2.add_argument("--no-dupe-m", action="store_true", help="also reject dupes when moving a file into another volume (volflag=nodupem)")
     ap2.add_argument("--no-clone", action="store_true", help="do not use existing data on disk to satisfy dupe uploads; reduces server HDD reads in exchange for much more network load (volflag=noclone)")
     ap2.add_argument("--no-snap", action="store_true", help="disable snapshots -- forget unfinished uploads on shutdown; don't create .hist/up2k.snap files -- abandoned/interrupted uploads must be cleaned up manually")
     ap2.add_argument("--snap-wri", metavar="SEC", type=int, default=300, help="write upload state to ./hist/up2k.snap every \033[33mSEC\033[0m seconds; allows resuming incomplete uploads after a server crash")
@@ -2079,7 +2080,7 @@ def main(argv: Optional[list[str]] = None) -> None:
 
     # propagate implications
     for k1, k2 in IMPLICATIONS:
-        if getattr(al, k1):
+        if getattr(al, k1, None):
             setattr(al, k2, True)
 
     # propagate unplications
