@@ -5607,16 +5607,16 @@ var thegrid = (function () {
 				r.bbox_opts.refocus = true;
 			},
 			captions: function (g, idx) {
-                var h = '' + g;
+				var h = '' + g;
 
 				return '<a download href="' + h +
 					'">' + (idx + 1) + ' / ' + this.length + ' -- ' +
 					esc(uricom_dec(h.split('/').pop())) + '</a>';
 			},
 			onChange: function (i, maxIdx) {
-                if (this[i].imageElement) {
-                    sethash('g' + this[i].imageElement.getAttribute('ref') + getsort());
-                }
+				if (this[i].imageElement) {
+					sethash('g' + this[i].imageElement.getAttribute('ref') + getsort());
+				}
 			}
 		});
 		r.bbox = true;
