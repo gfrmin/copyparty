@@ -33,7 +33,7 @@ def generate_javascript(lang3, native_name, tl_browser):
     note1 = ""
     note2 = ""
     if lang3 == "hmn":
-        note1 = ";\n// please adjust this (and the \"Ls.hmn\" further down)"
+        note1 = ';\n// please adjust this (and the "Ls.hmn" further down)'
         note2 = """
 // the three-letter language-code "hmn" and language-name "Hymmnos"
 // is used as an example; please replace these with your language
@@ -141,7 +141,7 @@ def main():
         browserjs = f.read().decode("utf-8")
 
     _, browserjs = browserjs.split('\n\t\t"tt": "English",\n', 1)
-    browserjs, _ = browserjs.split('\n}', 1)
+    browserjs, _ = browserjs.split("\n}", 1)
     browserjs = browserjs.replace("\n\t", "\n")
 
     try:
