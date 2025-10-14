@@ -3885,7 +3885,7 @@ def _runhook(
     sz: int,
     ip: str,
     at: float,
-    txt: str,
+    txt: Optional[list[str]],
 ) -> dict[str, Any]:
     ret = {"rc": 0}
     areq, chk, imp, fork, sin, jtxt, wait, sp_ka, acmd = _parsehook(log, cmd)
@@ -3908,15 +3908,17 @@ def _runhook(
             "user": uname,
             "perms": perms,
             "src": src,
-            "txt": txt,
         }
+        if txt:
+            ja["txt"] = txt[0]
+            ja["body"] = txt[1]
         if imp:
             ja["log"] = log
             mod = loadpy(acmd[0], False)
             return mod.main(ja)
         arg = json.dumps(ja)
     else:
-        arg = txt or ap
+        arg = txt[0] if txt else ap
 
     if acmd[0].startswith("zmq:"):
         zi, zs = _zmq_hook(log, verbose, src, acmd[0][4:].lower(), arg, wait, sp_ka)
@@ -3979,7 +3981,7 @@ def runhook(
     sz: int,
     ip: str,
     at: float,
-    txt: str,
+    txt: Optional[list[str]],
 ) -> dict[str, Any]:
     assert broker or up2k  # !rm
     args = (broker or up2k).args  # type: ignore

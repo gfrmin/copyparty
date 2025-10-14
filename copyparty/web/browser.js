@@ -8613,9 +8613,14 @@ var msel = (function () {
 		sf.textContent = 'sending...';
 
 		var xhr = new XHR(),
+			sel = msel.getsel(),
+			msg = uricom_enc(tb.value),
 			ct = 'application/x-www-form-urlencoded;charset=UTF-8';
 
-		xhr.msg = tb.value;
+		for (var a = 0; a < sel.length; a++)
+			msg += "&sel=" + sel[a].vp.split('/').pop();
+
+		xhr.msg = msg;
 		xhr.open('POST', get_evpath(), true);
 		xhr.responseType = 'text';
 		xhr.onload = xhr.onerror = cb;
@@ -8623,7 +8628,7 @@ var msel = (function () {
 		if (xhr.overrideMimeType)
 			xhr.overrideMimeType('Content-Type', ct);
 
-		xhr.send('msg=' + uricom_enc(xhr.msg));
+		xhr.send('msg=' + xhr.msg);
 		return false;
 	};
 

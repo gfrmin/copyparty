@@ -511,7 +511,7 @@ class FtpHandler(FTPHandler):
                 0,
                 self.cli_ip,
                 time.time(),
-                "",
+                None,
             )
             t = hr.get("rejectmsg") or ""
             if t or not hr:

@@ -2144,7 +2144,7 @@ class HttpCli(object):
                     t = "urlform_raw %d @ %r\n  %r\n"
                     self.log(t % (len(orig), "/" + self.vpath, orig))
                     try:
-                        zb = unquote(buf.replace(b"+", b" "))
+                        zb = unquote(buf.replace(b"+", b" ").replace(b"&", b"\n"))
                         plain = zb.decode("utf-8", "replace")
                         if buf.startswith(b"msg="):
                             plain = plain[4:]
@@ -2165,7 +2165,7 @@ class HttpCli(object):
                                     len(buf),
                                     self.ip,
                                     time.time(),
-                                    plain,
+                                    [plain, orig],
                                 )
 
                         t = "urlform_dec %d @ %r\n  %r\n"
@@ -2326,7 +2326,7 @@ class HttpCli(object):
                 remains,
                 self.ip,
                 at,
-                "",
+                None,
             )
             t = hr.get("rejectmsg") or ""
             if t or not hr:
@@ -2461,7 +2461,7 @@ class HttpCli(object):
                 post_sz,
                 self.ip,
                 at,
-                "",
+                None,
             )
             t = hr.get("rejectmsg") or ""
             if t or not hr:
@@ -3299,7 +3299,7 @@ class HttpCli(object):
                     0,
                     self.ip,
                     time.time(),
-                    "",
+                    None,
                 )
                 t = hr.get("rejectmsg") or ""
                 if t or not hr:
@@ -3471,7 +3471,7 @@ class HttpCli(object):
                         0,
                         self.ip,
                         at,
-                        "",
+                        None,
                     )
                     t = hr.get("rejectmsg") or ""
                     if t or not hr:
@@ -3578,7 +3578,7 @@ class HttpCli(object):
                             sz,
                             self.ip,
                             at,
-                            "",
+                            None,
                         )
                         t = hr.get("rejectmsg") or ""
                         if t or not hr:
@@ -3891,7 +3891,7 @@ class HttpCli(object):
                 0,
                 self.ip,
                 time.time(),
-                "",
+                None,
             )
             t = hr.get("rejectmsg") or ""
             if t or not hr:
@@ -3939,7 +3939,7 @@ class HttpCli(object):
                 sz,
                 self.ip,
                 new_lastmod,
-                "",
+                None,
             )
             t = hr.get("rejectmsg") or ""
             if t or not hr:

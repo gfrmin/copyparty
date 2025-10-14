@@ -3304,7 +3304,7 @@ class Up2k(object):
                                 job["size"],
                                 job["addr"],
                                 job["at"],
-                                "",
+                                None,
                             )
                             t = hr.get("rejectmsg") or ""
                             if t or not hr:
@@ -4000,7 +4000,7 @@ class Up2k(object):
                 sz,
                 ip,
                 at or time.time(),
-                "",
+                None,
             )
             t = hr.get("rejectmsg") or ""
             if t or not hr:
@@ -4236,7 +4236,7 @@ class Up2k(object):
                         st.st_size,
                         ip,
                         time.time(),
-                        "",
+                        None,
                     ):
                         t = "delete blocked by xbd server config: %r"
                         self.log(t % (abspath,), 1)
@@ -4276,7 +4276,7 @@ class Up2k(object):
                         st.st_size,
                         ip,
                         time.time(),
-                        "",
+                        None,
                     )
 
         if is_dir:
@@ -4404,7 +4404,7 @@ class Up2k(object):
                 fsize,
                 ip,
                 time.time(),
-                "",
+                None,
             ):
                 t = "copy blocked by xbr server config: %r" % (svp,)
                 self.log(t, 1)
@@ -4505,7 +4505,7 @@ class Up2k(object):
                 fsize,
                 ip,
                 time.time(),
-                "",
+                None,
             )
 
         return "k"
@@ -4656,7 +4656,7 @@ class Up2k(object):
                 fsize,
                 ip,
                 time.time(),
-                "",
+                None,
             ):
                 t = "move blocked by xbr server config: %r" % (svp,)
                 self.log(t, 1)
@@ -4696,7 +4696,7 @@ class Up2k(object):
                     fsize,
                     ip,
                     time.time(),
-                    "",
+                    None,
                 )
 
             return "k"
@@ -4816,7 +4816,7 @@ class Up2k(object):
                 fsize,
                 ip,
                 time.time(),
-                "",
+                None,
             )
 
         return "k"
@@ -5154,7 +5154,7 @@ class Up2k(object):
                 job["size"],
                 job["addr"],
                 job["t0"],
-                "",
+                None,
             )
             t = hr.get("rejectmsg") or ""
             if t or not hr:
