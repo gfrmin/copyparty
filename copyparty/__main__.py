@@ -1611,12 +1611,14 @@ def add_admin(ap):
     ap2 = ap.add_argument_group("admin panel options")
     ap2.add_argument("--no-reload", action="store_true", help="disable ?reload=cfg (reload users/volumes/volflags from config file)")
     ap2.add_argument("--no-rescan", action="store_true", help="disable ?scan (volume reindexing)")
-    ap2.add_argument("--no-stack", action="store_true", help="disable ?stack (list all stacks)")
+    ap2.add_argument("--no-stack", action="store_true", help="disable ?stack (list all stacks); same as --stack-who=no")
     ap2.add_argument("--no-ups-page", action="store_true", help="disable ?ru (list of recent uploads)")
     ap2.add_argument("--no-up-list", action="store_true", help="don't show list of incoming files in controlpanel")
     ap2.add_argument("--dl-list", metavar="LVL", type=int, default=2, help="who can see active downloads in the controlpanel? [\033[32m0\033[0m]=nobody, [\033[32m1\033[0m]=admins, [\033[32m2\033[0m]=everyone")
     ap2.add_argument("--ups-who", metavar="LVL", type=int, default=2, help="who can see recent uploads on the ?ru page? [\033[32m0\033[0m]=nobody, [\033[32m1\033[0m]=admins, [\033[32m2\033[0m]=everyone (volflag=ups_who)")
     ap2.add_argument("--ups-when", action="store_true", help="let everyone see upload timestamps on the ?ru page, not just admins")
+    ap2.add_argument("--stack-who", metavar="LVL", type=u, default="a", help="who can see the ?stack page (list of threads)? [\033[32mno\033[0m]=nobody, [\033[32ma\033[0m]=admins, [\033[32mrw\033[0m]=read+write, [\033[32mall\033[0m]=everyone")
+    ap2.add_argument("--stack-v", action="store_true", help="verbose ?stack")
 
 
 def add_thumbnail(ap):

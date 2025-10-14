@@ -5463,13 +5463,20 @@ class HttpCli(object):
         return self.redirect("", "?h", x.get(), "return to", False)
 
     def tx_stack(self) -> bool:
-        if not self.avol and not [x for x in self.wvol if x in self.rvol]:
+        zs = self.args.stack_who
+        if zs == "all" or (
+            (zs == "a" and self.avol)
+            or (zs == "rw" and [x for x in self.wvol if x in self.rvol])
+        ):
+            pass
+        else:
             raise Pebkac(403, "'stack' not allowed for user " + self.uname)
 
-        if self.args.no_stack:
-            raise Pebkac(403, "the stackdump feature is disabled in server config")
-
-        ret = "<pre>{}\n{}".format(time.time(), html_escape(alltrace()))
+        ret = html_escape(alltrace(self.args.stack_v))
+        if self.args.stack_v:
+            ret = "<pre>%s\n%s" % (time.time(), ret)
+        else:
+            ret = "<pre>%s" % (ret,)
         self.reply(ret.encode("utf-8"))
         return True
 

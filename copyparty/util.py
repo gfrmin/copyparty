@@ -1500,20 +1500,24 @@ def trace(*args: Any, **kwargs: Any) -> None:
     nuprint(msg)
 
 
-def alltrace() -> str:
+def alltrace(verbose: bool = True) -> str:
     threads: dict[str, types.FrameType] = {}
     names = dict([(t.ident, t.name) for t in threading.enumerate()])
     for tid, stack in sys._current_frames().items():
-        name = "%s (%x)" % (names.get(tid), tid)
+        if verbose:
+            name = "%s (%x)" % (names.get(tid), tid)
+        else:
+            name = str(names.get(tid))
         threads[name] = stack
 
     rret: list[str] = []
     bret: list[str] = []
+    np = -3 if verbose else -2
     for name, stack in sorted(threads.items()):
         ret = ["\n\n# %s" % (name,)]
         pad = None
         for fn, lno, name, line in traceback.extract_stack(stack):
-            fn = os.sep.join(fn.split(os.sep)[-3:])
+            fn = os.sep.join(fn.split(os.sep)[np:])
             ret.append('File: "%s", line %d, in %s' % (fn, lno, name))
             if line:
                 ret.append("  " + str(line.strip()))
