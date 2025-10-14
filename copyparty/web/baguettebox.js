@@ -24,7 +24,7 @@ window.baguetteBox = (function () {
             onChange: null,
             readDirRtl: false,
         },
-        overlay, slider, btnPrev, btnNext, btnHelp, btnAnim, btnRotL, btnRotR, btnSel, btnFull, btnVmode, btnReadDir, btnClose,
+        overlay, slider, btnPrev, btnNext, btnHelp, btnAnim, btnRotL, btnRotR, btnSel, btnFull, btnZoom, btnVmode, btnReadDir, btnClose,
         currentGallery = [],
         currentIndex = 0,
         isOverlayVisible = false,
@@ -301,7 +301,8 @@ window.baguetteBox = (function () {
                 '<button id="bbox-rotl" type="button">↶</button>' +
                 '<button id="bbox-rotr" type="button">↷</button>' +
                 '<button id="bbox-tsel" type="button">sel</button>' +
-                '<button id="bbox-full" type="button">⛶</button>' +
+                '<button id="bbox-full" type="button" tt="full-screen">⛶</button>' +
+                '<button id="bbzoom" type="button" tt="zoom/stretch">z</button>' +
                 '<button id="bbox-vmode" type="button" tt="a"></button>' +
                 '<button id="bbox-close" type="button" aria-label="Close">X</button>' +
                 '</div></div>'
@@ -320,8 +321,12 @@ window.baguetteBox = (function () {
         btnRotR = ebi('bbox-rotr');
         btnSel = ebi('bbox-tsel');
         btnFull = ebi('bbox-full');
+        btnZoom = ebi('bbzoom');
         btnVmode = ebi('bbox-vmode');
         btnClose = ebi('bbox-close');
+
+        bcfg_bind(options, 'bbzoom', 'bbzoom', false, setzoom);
+        setzoom();
     }
 
     function halp() {
@@ -337,6 +342,7 @@ window.baguetteBox = (function () {
             ['end', 'last file'],
             ['R', 'rotate (shift=ccw)'],
             ['F', 'toggle fullscreen'],
+            ['Z', 'toggle zoom/stretch'],
             ['S', 'toggle file selection'],
             ['space, P, K', 'video: play / pause'],
             ['U', 'video: seek 10sec back'],
@@ -419,6 +425,8 @@ window.baguetteBox = (function () {
         }
         else if (kl == "f")
             tglfull();
+        else if (kl == "z")
+            btnZoom.click();
         else if (kl == "s")
             tglsel();
         else if (kl == "r")
@@ -526,6 +534,12 @@ window.baguetteBox = (function () {
         }
     }
 
+    function setzoom() {
+        var sel = clgot(btnZoom, 'on')
+        clmod(ebi('bbox-overlay'), 'fill', sel);
+        btnState(btnZoom, sel);
+    }
+
     function tglsel() {
         var o = findfile()[3];
         clmod(o.closest('tr'), 'sel', 't');
@@ -553,10 +567,14 @@ window.baguetteBox = (function () {
             'rgba(153,34,85,0.7)' : '';
 
         img.style.borderRadius = sel ? '1em' : '';
-        btnSel.style.color = sel ? '#fff' : '';
-        btnSel.style.background = sel ? '#d48' : '';
-        btnSel.style.textShadow = sel ? '1px 1px 0 #b38' : '';
-        btnSel.style.boxShadow = sel ? '.15em .15em 0 #502' : '';
+        btnState(btnSel, sel);
+    }
+
+    function btnState(btn, sel) {
+        btn.style.color = sel ? '#fff' : '';
+        btn.style.background = sel ? '#d48' : '';
+        btn.style.textShadow = sel ? '1px 1px 0 #b38' : '';
+        btn.style.boxShadow = sel ? '.15em .15em 0 #502' : '';
     }
 
     function keyUpHandler(e) {
@@ -733,7 +751,7 @@ window.baguetteBox = (function () {
         overlay.style.display = 'block';
         // Fade in overlay
         setTimeout(function () {
-            overlay.className = 'visible';
+            clmod(overlay, 'visible', 1);
             if (options.bodyClass && document.body.classList)
                 document.body.classList.add(options.bodyClass);
 
@@ -779,7 +797,7 @@ window.baguetteBox = (function () {
         unbindEvents();
 
         // Fade out and hide the overlay
-        overlay.className = '';
+        clmod(overlay, 'visible');
         setTimeout(function () {
             overlay.style.display = 'none';
             if (options.bodyClass && document.body.classList)
