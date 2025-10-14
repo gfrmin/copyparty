@@ -1121,6 +1121,7 @@ var ACtx = !IPHONE && (window.AudioContext || window.webkitAudioContext),
 	dbg_kbd = /[?&]dbgkbd\b/.exec(sloc0),
 	abrt_key = "",
 	can_shr = false,
+	in_shr = false,
 	rtt = null,
 	srvinf = "",
 	ldks = [],
@@ -7227,7 +7228,7 @@ var treectl = (function () {
 			fun();
 		}
 
-		if (can_shr && QS('#op_unpost.act') && (cdir.startsWith(SR + have_shr) || get_evpath().startsWith(SR + have_shr)))
+		if (can_shr && in_shr && QS('#op_unpost.act'))
 			goto('unpost');
 	}
 
@@ -7251,6 +7252,8 @@ var treectl = (function () {
 			cid = null,
 			plain = [],
 			seen = {};
+
+		in_shr = have_shr && top.startsWith(SR + have_shr);
 
 		if (ae && /^tr$/i.exec(ae.nodeName))
 			if (ae = ae.querySelector('a[id]'))
@@ -7694,6 +7697,9 @@ function apply_perms(res) {
 		o[a].style.display = (
 			o[a].getAttribute('data-dep') != 'idx' || have_up2k_idx
 		) ? '' : 'none';
+
+	if (in_shr)
+		ebi('opa_srch').style.display = 'none';
 
 	var act = QS('#ops>a.act');
 	if (act && act.style.display === 'none')
