@@ -1177,6 +1177,7 @@ def add_general(ap, nc, srvname):
     ap2.add_argument("--rmagic", action="store_true", help="do expensive analysis to improve accuracy of returned mimetypes; will make file-downloads, rss, and webdav slower (volflag=rmagic)")
     ap2.add_argument("--license", action="store_true", help="show licenses and exit")
     ap2.add_argument("--version", action="store_true", help="show versions and exit")
+    ap2.add_argument("--versionb", action="store_true", help="show version and exit")
 
 
 def add_qr(ap, tty):
@@ -1957,14 +1958,18 @@ def run_argparse(
 
 
 def main(argv: Optional[list[str]] = None) -> None:
+    if argv is None:
+        argv = sys.argv
+
+    if "--versionb" in argv:
+        print(S_VERSION)
+        sys.exit(0)
+
     time.strptime("19970815", "%Y%m%d")  # python#7980
     if WINDOWS:
         os.system("rem")  # enables colors
 
     init_E(E)
-
-    if argv is None:
-        argv = sys.argv
 
     f = '\033[36mcopyparty v{} "\033[35m{}\033[36m" ({})\n{}\033[0;36m\n   sqlite {} | jinja {} | pyftpd {} | tftp {}\n\033[0m'
     f = f.format(
