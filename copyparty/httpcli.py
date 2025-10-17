@@ -6560,9 +6560,10 @@ class HttpCli(object):
                 return self.tx_zget(abspath)
 
             if not add_og or not og_fn:
-                return self.tx_file(
-                    abspath, None if st.st_size or "nopipe" in vn.flags else vn.realpath
-                )
+                if st.st_size or "nopipe" in vn.flags:
+                    return self.tx_file(abspath, None)
+                else:
+                    return self.tx_file(abspath, vn.get_dbv("")[0].realpath)
 
         elif is_dir and not self.can_read:
             if use_dirkey:
