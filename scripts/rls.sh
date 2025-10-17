@@ -1,9 +1,13 @@
 #!/bin/bash
 set -e
 
-# if specified, keep the following sfx flags last: gz gzz fast
-
-parallel=1
+# usage: ./scripts/rls.sh 1.9.11 gzz 50  # create full release
+# usage: ./scripts/rls.sh sfx gzz 10     # just create sfx.py + en.py + helptext
+#
+# if specified, keep the following sfx-args last:  gz gzz xz nopk udep fast
+#
+# WARNING: when creating full release, will DELETE all of ../dist/,
+#   and all docker-images matching 'localhost/(copyparty|alpine)-'
 
 [ -e make-sfx.sh ] || cd scripts
 [ -e make-sfx.sh ] && [ -e deps-docker ] || {
@@ -11,26 +15,24 @@ parallel=1
     exit 1
 }
 
-v=$1
+v=$1; shift
+[ "$v" = sfx ] &&
+    rls= || rls=1
 
-[ "$v" = sfx ] || {
+[ $rls ] && {
     printf '%s\n' "$v" | grep -qE '^[0-9\.]+$' || exit 1
     grep -E "(${v//./, })" ../copyparty/__version__.py || exit 1
 
-    git push all
+    ./make-sfx.sh nopk gz
+    ../dist/copyparty-sfx.py --version >/dev/null
+
     git tag v$v
-    git push all --tags
-
     rm -rf ../dist
-
     ./make-pypi-release.sh u
-    (cd .. && python3 ./setup.py clean2)
-
     ./make-tgz-release.sh $v
 }
 
-rm -f ../dist/copyparty-sfx*
-shift
+rm -rf /tmp/pe-copyparty* ../sfx ../dist/copyparty-sfx*
 ./make-sfx.sh "$@"
 ../dist/copyparty-sfx.py --version >/dev/null
 mv ../dist/copyparty-{sfx,int}.py
@@ -38,6 +40,9 @@ mv ../dist/copyparty-{sfx,int}.py
 while [ "$1" ]; do
     case "$1" in
         gz*) break;;
+        xz) break;;
+        nopk) break;;
+        udep) break;;
         fast) break;;
     esac
     shift
@@ -49,4 +54,26 @@ done
 mv ../dist/copyparty-{sfx,en}.py
 mv ../dist/copyparty-{int,sfx}.py
 
+./genhelp.sh
+
+[ $rls ] || exit  # ----------------------------------------------------
+
+./prep.sh
+git add ../contrib/package/arch/PKGBUILD ../contrib/package/makedeb-mpr/PKGBUILD ../contrib/package/nix/copyparty/pin.json
+git commit -m "update pkgs to $v"
+git log | head
+
+( cd docker
+    #./make.sh purge
+    ./make.sh hclean
+    ./make.sh hclean
+    ./make.sh hclean pull img push
+)
+
+git push
+git push --all
+git push --tags
+git push all
+git push all --all
+git push all --tags
 # git tag -d v$v; git push --delete origin v$v

@@ -48,7 +48,7 @@ done
 
 filt=
 [ $clean  ] && filt='/<none>/{print$$3}'
-[ $hclean ] && filt='/localhost\/copyparty-|^<none>.*localhost\/alpine-/{print$3}'
+[ $hclean ] && filt='/localhost\/(copyparty|alpine)-/{print$3}'
 [ $purge  ] && filt='NR>1{print$3}'
 [ $filt ] && {
     [ $purge ] && {
