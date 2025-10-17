@@ -6567,6 +6567,9 @@ class HttpCli(object):
         elif is_dir and not self.can_read:
             if use_dirkey:
                 is_dk = True
+            elif self.can_get and "doc" in self.uparam:
+                zs = vjoin(self.vpath, self.uparam["doc"]) + "?v"
+                return self.redirect(zs, flavor="redirecting to", use302=True)
             elif not self.can_write:
                 return self.tx_404(True)
 
