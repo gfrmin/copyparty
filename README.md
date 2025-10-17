@@ -1496,7 +1496,12 @@ tweaking the ui
   * to sort in music order (album, track, artist, title) with filename as fallback, you could `--sort tags/Circle,tags/.tn,tags/Artist,tags/Title,href`
   * to sort by upload date, first enable showing the upload date in the listing with `-e2d -mte +.up_at` and then `--sort tags/.up_at`
 
-see [./docs/rice](./docs/rice) for more, including how to add stuff (css/`<meta>`/...) to the html `<head>` tag, or to add your own translation
+see [./docs/rice](./docs/rice) for more, including:
+* how to [hide ui-elements](./docs/rice/README.md#hide-ui-elements)
+* [custom fonts](./docs/rice/README.md#custom-fonts)
+* [custom loading-spinner](./docs/rice/README.md#boring-loader-spinner)
+* adding stuff (css/`<meta>`/...) [to the html `<head>` tag](./docs/rice/README.md#head)
+* [adding your own translation](./docs/rice/README.md#translations)
 
 
 ## opengraph

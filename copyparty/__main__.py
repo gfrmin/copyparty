@@ -1821,6 +1821,15 @@ def add_ui(ap, retry: int):
     ap2.add_argument("--lg-sba", metavar="TXT", type=u, default="", help="the value of the iframe 'allow' attribute for prologue/epilogue docs (volflag=lg_sba); see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Permissions-Policy#iframes")
     ap2.add_argument("--no-sb-md", action="store_true", help="don't sandbox README/PREADME.md documents (volflags: no_sb_md | sb_md)")
     ap2.add_argument("--no-sb-lg", action="store_true", help="don't sandbox prologue/epilogue docs (volflags: no_sb_lg | sb_lg); enables non-js support")
+    ap2.add_argument("--ui-nombar", action="store_true", help="hide top-menu in the UI (volflag=ui_nombar)")
+    ap2.add_argument("--ui-noacci", action="store_true", help="hide account-info in the UI (volflag=ui_noacci)")
+    ap2.add_argument("--ui-nosrvi", action="store_true", help="hide server-info in the UI (volflag=ui_nosrvi)")
+    ap2.add_argument("--ui-nonav", action="store_true", help="hide navpane+breadcrumbs (volflag=ui_nonav)")
+    ap2.add_argument("--ui-notree", action="store_true", help="hide navpane in the UI (volflag=ui_nonav)")
+    ap2.add_argument("--ui-nocpla", action="store_true", help="hide cpanel-link in the UI (volflag=ui_nocpla)")
+    ap2.add_argument("--ui-nolbar", action="store_true", help="hide link-bar in the UI (volflag=ui_nolbar)")
+    ap2.add_argument("--ui-noctxb", action="store_true", help="hide context-buttons in the UI (volflag=ui_noctxb)")
+    ap2.add_argument("--ui-norepl", action="store_true", help="hide repl-button in the UI (volflag=ui_norepl)")
     ap2.add_argument("--have-unlistc", action="store_true", help=argparse.SUPPRESS)
 
 

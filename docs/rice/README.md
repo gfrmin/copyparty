@@ -1,3 +1,24 @@
+# hide ui-elements
+
+useful for simplifying the UI in a write-only folder for uploads, or to embed copyparty into another website in an `<iframe>` or similar
+
+| url-param | volflag | what it hides |
+| --------- | ------- | ------------- |
+| [nombar](https://a.ocv.me/pub/demo/?nombar) | ui_nombar | the menu-bar at the top |
+| [noacci](https://a.ocv.me/pub/demo/?noacci) | ui_noacci | permissions-list and logout-button |
+| [nosrvi](https://a.ocv.me/pub/demo/?nosrvi) | ui_nosrvi | server-info (name, disk usage) |
+| [notree](https://a.ocv.me/pub/demo/?notree) | ui_notree | the navpane sidebar |
+| [nonav](https://a.ocv.me/pub/demo/?nonav)   | ui_nonav  | `notree` + breadcrumbs |
+| [nocpla](https://a.ocv.me/pub/demo/?nocpla) | ui_nocpla | link to controlpanel |
+| [nolbar](https://a.ocv.me/pub/demo/?nolbar) | ui_nolbar | `nocpla` + "prev/up/next" |
+| [noctxb](https://a.ocv.me/pub/demo/?noctxb) | ui_noctxb | tray-toggle / context-buttons |
+| [norepl](https://a.ocv.me/pub/demo/?norepl) | ui_norepl | the `π` repl button |
+
+can be combined; https://a.ocv.me/pub/demo/?nombar&noacci&nosrvi&nonav&nolbar&noctxb&norepl
+
+all options can be overruled with url-param `fullui`; https://a.ocv.me/pub/demo/?fullui
+
+
 # custom fonts
 
 to change the fonts in the web-UI,  first save the following text (the default font-config) to a new css file, for example named `customfonts.css` in your webroot:

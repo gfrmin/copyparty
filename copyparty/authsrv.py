@@ -3075,6 +3075,10 @@ class AuthSrv(object):
                 "lifetime": vn.js_ls["lifetime"],
                 "u2sort": self.args.u2sort,
             }
+            zs = "ui_noacci ui_nocpla ui_noctxb ui_nolbar ui_nombar ui_nonav ui_notree ui_norepl ui_nosrvi"
+            for zs in zs.split():
+                if vf.get(zs):
+                    js_htm[zs] = 1
             vn.js_htm = json_hesc(json.dumps(js_htm))
 
         vols = list(vfs.all_nodes.values())

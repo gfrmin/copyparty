@@ -1118,6 +1118,9 @@ var ACtx = !IPHONE && (window.AudioContext || window.webkitAudioContext),
 	hash0 = location.hash,
 	sloc0 = '' + location,
 	noih = /[?&]v\b/.exec(sloc0),
+	fullui = /[?&]fullui\b/.exec(sloc0),
+	nonav = !fullui && (/[?&]nonav\b/.exec(sloc0) || window.ui_nonav),
+	notree = !fullui && (/[?&]notree\b/.exec(sloc0) || window.ui_notree || nonav),
 	dbg_kbd = /[?&]dbgkbd\b/.exec(sloc0),
 	abrt_key = "",
 	can_shr = false,
@@ -6660,7 +6663,7 @@ var treectl = (function () {
 	r.show = function () {
 		r.hidden = false;
 		if (!entreed) {
-			ebi('path').style.display = 'inline-block';
+			ebi('path').style.display = nonav ? 'none' : 'inline-block';
 			return;
 		}
 
@@ -6678,8 +6681,9 @@ var treectl = (function () {
 		swrite('entreed', 'na');
 
 		r.hide();
-		ebi('path').style.display = '';
-	}
+		if (!nonav)
+			ebi('path').style.display = '';
+	};
 
 	r.hide = function () {
 		r.hidden = true;
@@ -6689,7 +6693,7 @@ var treectl = (function () {
 		window.removeEventListener('resize', onresize);
 		window.removeEventListener('scroll', onscroll);
 		aligngriditems();
-	}
+	};
 
 	function unmenter() {
 		if (mentered) {
@@ -7553,6 +7557,11 @@ var treectl = (function () {
 
 	var cs = sread('entreed'),
 		vw = window.innerWidth / parseFloat(getComputedStyle(document.body)['font-size']);
+
+	if (notree) {
+		cs = 'na';
+		r.hide();
+	}
 
 	if (cs == 'tree' || (cs != 'na' && vw >= 60))
 		r.entree(null, true);
@@ -9366,3 +9375,14 @@ function reload_browser() {
 	msel.render();
 }
 treectl.hydrate();
+
+if (!fullui && (window.ui_nombar || /[?&]nombar\b/.exec(sloc0))) ebi('ops').style.display = 'none';
+if (!fullui && (window.ui_noacci || /[?&]noacci\b/.exec(sloc0))) ebi('acc_info').style.display = 'none';
+if (!fullui && (window.ui_nosrvi || /[?&]nosrvi\b/.exec(sloc0))) ebi('srv_info').style.display = 'none';
+if (!fullui && (window.ui_nocpla || /[?&]nocpla\b/.exec(sloc0))) ebi('goh').style.display = 'none';
+if (!fullui && (window.ui_nolbar || /[?&]nolbar\b/.exec(sloc0))) ebi('wfp').style.display = 'none';
+if (!fullui && (window.ui_noctxb || /[?&]noctxb\b/.exec(sloc0))) ebi('wtoggle').style.display = 'none';
+if (!fullui && (window.ui_norepl || /[?&]norepl\b/.exec(sloc0))) ebi('repl').style.display = 'none';
+
+var m = /[?&]theme=([0-9]+)/.exec(sloc0);
+if (m) settheme.go(parseInt(m[1]));
