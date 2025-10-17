@@ -1972,9 +1972,18 @@ class AuthSrv(object):
             axs_key = "u" + perm
             for vp, vol in vfs.all_vols.items():
                 zx = getattr(vol.axs, axs_key)
-                if "*" in zx:
+                if "*" in zx and "-@acct" not in zx:
                     for usr in unames:
                         zx.add(usr)
+                for zs in list(zx):
+                    if zs.startswith("-"):
+                        zx.discard(zs)
+                        zs = zs[1:]
+                        zx.discard(zs)
+                        if zs.startswith("@"):
+                            zs = zs[1:]
+                            for zs in grps.get(zs) or []:
+                                zx.discard(zs)
 
             # aread,... = dict[uname, list[volnames] or []]
             umap: dict[str, list[str]] = {x: [] for x in unames}
@@ -2754,9 +2763,13 @@ class AuthSrv(object):
                 ["uadmin", "uadmin"],
             ]:
                 u = list(sorted(getattr(zv.axs, attr)))
-                u = ["*"] if "*" in u else u
-                u = ", ".join("\033[35meverybody\033[0m" if x == "*" else x for x in u)
-                u = u if u else "\033[36m--none--\033[0m"
+                if u == ["*"] and acct:
+                    u = ["\033[35monly-anonymous\033[0m"]
+                elif "*" in u:
+                    u = ["\033[35meverybody\033[0m"]
+                if not u:
+                    u = ["\033[36m--none--\033[0m"]
+                u = ", ".join(u)
                 t += "\n|  {}:  {}".format(txt, u)
 
             if "e2d" in zv.flags:

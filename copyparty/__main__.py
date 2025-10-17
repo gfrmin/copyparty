@@ -649,8 +649,11 @@ def get_sects():
             if no accounts or volumes are configured,
             current folder will be read/write for everyone
 
-            the group @acct will always have every user with an account
-            (the name of that group can be changed with --grp-all)
+            the group \033[33m@acct\033[0m will always have every user with an account
+            (the name of that group can be changed with \033[32m--grp-all\033[0m)
+
+            to hide a volume from authenticated users, specify \033[33m*,-@acct\033[0m
+            to subtract \033[33m@acct\033[0m from \033[33m*\033[0m (can subtract users from groups too)
 
             consider the config file for more flexible account/volume management,
             including dynamic reload at runtime (and being more readable w)
