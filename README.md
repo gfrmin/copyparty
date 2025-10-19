@@ -21,6 +21,7 @@ made in Norway 🇳🇴
 
 * top
     * [quickstart](#quickstart) - just run **[copyparty-sfx.py](https://github.com/9001/copyparty/releases/latest/download/copyparty-sfx.py)** -- that's it! 🎉
+        * [mirrors](#mirrors) - other places to download copyparty from
         * [at home](#at-home) - make it accessible over the internet
         * [on servers](#on-servers) - you may also want these, especially on servers
     * [features](#features) - also see [comparison to similar software](./docs/versus.md)
@@ -157,7 +158,7 @@ just run **[copyparty-sfx.py](https://github.com/9001/copyparty/releases/latest/
 
 * or install through [pypi](https://pypi.org/project/copyparty/): `python3 -m pip install --user -U copyparty`
 * or if you cannot install python, you can use [copyparty.exe](#copypartyexe) instead
-* or install [on arch](#arch-package) ╱ [on NixOS](#nixos-module) ╱ [through nix](#nix-package)
+* or install [on arch](#arch-package) / [homebrew](#homebrew-formulae) ╱ [on NixOS](#nixos-module) ╱ [through nix](#nix-package)
 * or if you are on android, [install copyparty in termux](#install-on-android)
 * or maybe an iPhone or iPad? [install in a-Shell on iOS](#install-on-iOS)
 * or maybe you have a [synology nas / dsm](./docs/synology-dsm.md)
@@ -193,6 +194,17 @@ some recommended options:
 * `-v /mnt/music:/music:r:rw,foo -a foo:bar` shares `/mnt/music` as `/music`, `r`eadable by anyone, and read-write for user `foo`, password `bar`
   * replace `:r:rw,foo` with `:r,foo` to only make the folder readable by `foo` and nobody else
   * see [accounts and volumes](#accounts-and-volumes) (or `--help-accounts`) for the syntax and other permissions
+
+
+### mirrors
+
+other places to download copyparty from  (non-github links):
+
+* https://copyparty.eu/ (hetzner, finland, official mirror):
+  * https://copyparty.eu/py = https://copyparty.eu/copyparty-sfx.py = the sfx
+  * https://copyparty.eu/en = https://copyparty.eu/copyparty-en.py = the english-only sfx
+  * https://copyparty.eu/pyz = https://copyparty.eu/copyparty.pyz = the zipapp
+  * https://copyparty.eu/cli = online cli helptext
 
 
 ### at home
