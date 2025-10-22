@@ -55,7 +55,7 @@ except:
 zs = """
 web/a/partyfuse.py
 web/a/u2c.py
-web/a/webdav-cfg.bat
+web/a/webdav-cfg.txt
 web/baguettebox.js
 web/browser.css
 web/browser.html
@@ -125,6 +125,11 @@ web/util.js
 web/w.hash.js
 """
 RES = set(zs.strip().split("\n"))
+RESM = {
+    "web/a/partyfuse.txt": "web/a/partyfuse.py",
+    "web/a/u2c.txt": "web/a/u2c.py",
+    "web/a/webdav-cfg.bat": "web/a/webdav-cfg.txt",
+}
 
 
 class EnvParams(object):

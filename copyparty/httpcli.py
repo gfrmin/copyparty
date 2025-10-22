@@ -30,7 +30,7 @@ try:
 except:
     pass
 
-from .__init__ import ANYWIN, RES, TYPE_CHECKING, EnvParams, unicode
+from .__init__ import ANYWIN, RES, RESM, TYPE_CHECKING, EnvParams, unicode
 from .__version__ import S_VERSION
 from .authsrv import LEELOO_DALLAS, VFS  # typechk
 from .bos import bos
@@ -1270,6 +1270,20 @@ class HttpCli(object):
             res_path = "web/" + self.vpath[5:]
             if res_path in RES:
                 ap = self.E.mod_ + res_path
+                if bos.path.exists(ap) or bos.path.exists(ap + ".gz"):
+                    return self.tx_file(ap)
+                else:
+                    return self.tx_res(res_path)
+
+            if res_path in RESM:
+                ap = self.E.mod_ + RESM[res_path]
+                if (
+                    "txt" not in self.uparam
+                    and "mime" not in self.uparam
+                    and not self.ouparam.get("dl")
+                ):
+                    # return mimetype matching request extension
+                    self.ouparam["dl"] = res_path.split("/")[-1]
                 if bos.path.exists(ap) or bos.path.exists(ap + ".gz"):
                     return self.tx_file(ap)
                 else:
@@ -4179,8 +4193,11 @@ class HttpCli(object):
         # force download
 
         if "dl" in self.ouparam:
-            cdis = gen_content_disposition(os.path.basename(req_path))
-            self.out_headers["Content-Disposition"] = cdis
+            cdis = self.ouparam["dl"] or req_path
+            zs = gen_content_disposition(os.path.basename(cdis))
+            self.out_headers["Content-Disposition"] = zs
+        else:
+            cdis = req_path
 
         #
         # if-modified
@@ -4246,7 +4263,7 @@ class HttpCli(object):
         elif "mime" in self.uparam:
             mime = str(self.uparam.get("mime"))
         else:
-            mime = guess_mime(req_path)
+            mime = guess_mime(cdis)
 
         logmsg += unicode(status) + logtail
 
@@ -4354,8 +4371,11 @@ class HttpCli(object):
         # force download
 
         if "dl" in self.ouparam:
-            cdis = gen_content_disposition(os.path.basename(req_path))
-            self.out_headers["Content-Disposition"] = cdis
+            cdis = self.ouparam["dl"] or req_path
+            zs = gen_content_disposition(os.path.basename(cdis))
+            self.out_headers["Content-Disposition"] = zs
+        else:
+            cdis = req_path
 
         #
         # if-modified
@@ -4483,7 +4503,7 @@ class HttpCli(object):
         elif "rmagic" in self.vn.flags:
             mime = guess_mime(req_path, fs_path)
         else:
-            mime = guess_mime(req_path)
+            mime = guess_mime(cdis)
 
         if "nohtml" in self.vn.flags and "html" in mime:
             mime = "text/plain; charset=utf-8"
