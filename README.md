@@ -204,6 +204,7 @@ other places to download copyparty from  (non-github links):
   * https://copyparty.eu/py = https://copyparty.eu/copyparty-sfx.py = the sfx
   * https://copyparty.eu/en = https://copyparty.eu/copyparty-en.py = the english-only sfx
   * https://copyparty.eu/pyz = https://copyparty.eu/copyparty.pyz = the zipapp
+  * https://copyparty.eu/enz = https://copyparty.eu/copyparty-en.pyz = the enterprise pyz
   * https://copyparty.eu/cli = online cli helptext
 
 
@@ -3078,7 +3079,8 @@ another emergency alternative, [copyparty.pyz](https://github.com/9001/copyparty
 run it by doubleclicking it, or try typing `python copyparty.pyz` in your terminal/console/commandline/telex if that fails
 
 it is a python [zipapp](https://docs.python.org/3/library/zipapp.html) meaning it doesn't have to unpack its own python code anywhere to run, so if the filesystem is busted it has a better chance of getting somewhere
-* but note that it currently still needs to extract the web-resources somewhere (they'll land in the default TEMP-folder of your OS)
+
+> there is also [copyparty-en.pyz](https://github.com/9001/copyparty/releases/latest/download/copyparty-en.pyz), english-only and without smb support (enterprise-friendly)
 
 
 # install on android

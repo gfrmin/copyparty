@@ -445,14 +445,27 @@ iawk '/^class _Base/{s=1}!s' ftp/pyftpdlib/authorizers.py
 iawk '/^ {0,4}[a-zA-Z]/{s=0}/^ {4}def (serve_forever|_loop)/{s=1}!s' ftp/pyftpdlib/servers.py
 rm -f ftp/pyftpdlib/{__main__,prefork}.py
 
-[ $no_ftp ] &&
+unhelp() {
+	iawk '!/add_argument\("--'$1'/{print;next}
+		/ent\("--'$1'"/{print gensub(/(help=")[^"]+/,"\\1not available in this build","1");next}
+		{sub(/help=.*/,"help=argparse.SUPPRESS)")}1' copyparty/__main__.py
+}
+
+[ $no_ftp ] && {
+	unhelp ftp
 	rm -rf copyparty/ftpd.py ftp
+}
 
-[ $no_tfp ] &&
+[ $no_tfp ] && {
+	unhelp tftp
 	rm -rf copyparty/tftpd.py partftpy
+}
 
-[ $no_smb ] &&
+[ $no_smb ] && {
+	unhelp smb
 	rm -f copyparty/smbd.py
+	ised 's/^( {8}elif )record\.name.*"impacket".*/\10:/' copyparty/util.py
+}
 
 [ $no_zm ] &&
 	rm -rf copyparty/mdns.py copyparty/stolen/dnslib

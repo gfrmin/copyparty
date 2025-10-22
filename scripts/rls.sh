@@ -49,14 +49,23 @@ while [ "$1" ]; do
 done
 
 ./make-pyz.sh 
+mv ../dist/copyparty{,-int}.pyz
 
 ./make-sfx.sh re lang eng "$@" 
 mv ../dist/copyparty-{sfx,en}.py
+
+rm -rf /tmp/pe-copyparty* ../sfx
+../dist/copyparty-en.py --version >/dev/null 2>&1
+
+./make-sfx.sh re no-smb "$@"
+./make-pyz.sh
+mv ../dist/copyparty{,-en}.pyz
+mv ../dist/copyparty{-int,}.pyz
 mv ../dist/copyparty-{int,sfx}.py
 
 ./genhelp.sh
 
-[ $rls ] || exit  # ----------------------------------------------------
+[ $rls ] || exit 0  # ----------------------------------------------------
 
 ./prep.sh
 git add ../contrib/package/arch/PKGBUILD ../contrib/package/makedeb-mpr/PKGBUILD ../contrib/package/nix/copyparty/pin.json
