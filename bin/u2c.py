@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import print_function, unicode_literals
 
-S_VERSION = "2.13"
-S_BUILD_DT = "2025-09-05"
+S_VERSION = "2.14"
+S_BUILD_DT = "2025-10-24"
 
 """
 u2c.py: upload to copyparty
@@ -1225,9 +1225,7 @@ class Ctl(object):
                             while req:
                                 print("DELETING ~%s#%s" % (srd, len(req)))
                                 body = json.dumps(req).encode("utf-8")
-                                sc, txt = web.req(
-                                    "POST", self.ar.url + "?delete", {}, body, MJ
-                                )
+                                sc, txt = web.req("POST", "/?delete", {}, body, MJ)
                                 if sc == 413 and "json 2big" in txt:
                                     print(" (delete request too big; slicing...)")
                                     req = req[: len(req) // 2]
