@@ -1,4 +1,43 @@
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
+# 2025-1017-2313  `v1.19.17`  read:cbz + re:ftp
+
+## 🧪 new features
+
+* #916 view cbz manga/comics in the browser (thx @Scotsguy!) 8ef6dda7
+* #845 users/groups can be subtracted from a broader access grant b4fda5f1
+  * for example `*,-@acct` hides a volume from everyone who's logged in
+* [reflink dedup](https://github.com/9001/copyparty/#file-deduplication) is now available in most python versions, not just 3.14 and newer f2caab61
+  * much better and safer than symlink/hardlink-based dedup, but only works with a few filesystems
+* #905 option to magnify images/videos to fill the screen 66dc8b5c
+* #921 #685 `xm` hooks can see the selected files (thx @carson-coder!) 6c024dbf 33644488
+* #927 textfiles can now be viewed with the `?doc=` suffix with just the `g` permission dbb78705
+* #742 new volflag `nodupem` to prevent dupes from being moved into a volume; the stronger alternative to `nodupe` which only prevents uploads f55d8341
+* audioplayer: show embedded coverart as fallback for cover.jpg in OS widgets 9746b4e2
+* #928 option to [hide certain ui-elements](https://github.com/9001/copyparty/tree/hovudstraum/docs/rice#hide-ui-elements), either with volflags or url-params 98da5cc5
+* #911 users can now avoid autoban according to permissions 6f02812a
+* verbosity and permssion options for `?stack` 677fd8ee
+  * default is now admin-only; previously it was "admin or read+write"
+
+## 🩹 bugfixes
+
+* #914 ftp-server: resuming interrupted uploads (thx @Audionut!) 33b0cd5a
+* race-the-beam didn't work in non-toplevel shares d9cd7ec3
+
+## 🔧 other changes
+
+* #904 new example hook [wget-i.py](https://github.com/9001/copyparty/blob/hovudstraum/bin/hooks/wget-i.py); import-safe fork of [wget.py](https://github.com/9001/copyparty/blob/hovudstraum/bin/hooks/wget.py) dbd8f837
+* hide the search-ui while viewing a share because searching in shares is not possible cca1f9b2
+* config-parser now prevents invalid values for the lifetime volflag 5d96862c
+* translations are now [separate files](https://github.com/9001/copyparty/tree/hovudstraum/copyparty/web/tl) instead of all chilling inside browser.js d099e5e8 d6433b78 a7840beb a7cdc5de 98086948 a85ad201 c2e03bf6 b9d7ede3 5a29df6b 52446bb5 bb166c98 0fa862e1 6de6aa4b 748aaa95 07ace416 b61b910e 28b93238 14bd4cf5 50109f76 3b009d97 f5425a88 5232ce6a 02ba9ea7 ff01723c d099e5e8
+
+## 🌠 fun facts
+
+* looks like i'll be in Japan november 7～26 and then at CCC for newyears!
+  * wait, I never made stickers... orz
+
+
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
 # 2025-1005-2259  `v1.19.16`  FULLBURST
 
 ## 🧪 new features
