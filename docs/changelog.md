@@ -1,4 +1,34 @@
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
+# 2025-1025-1434  `v1.19.18`  copyparty.eu
+
+## 🧪 new features
+
+* #949 when all uploads have finished, the client (both the browser and u2c) sends a message to the server saying it's done db87ea5c
+* #941 [copyparty-en.pyz](https://github.com/9001/copyparty/releases/latest/download/copyparty-en.pyz), yet another copyparty variant, with enterprise-friendly tweaks:
+  * does not include the smb-server, so antivirus doesn't think it's malware 7f5810f1
+  * english-only, because antivirus apparently hates certain translations too 7f5810f1
+  * renamed the webdav-config `.bat` to `.txt` because clearly only one of those are "dangerous" b624a387
+* show volumes with permssion `h` in the navpane fff7291d 
+* #937 global-option `--notooltips` to default-disable tooltips a325353b
+
+## 🩹 bugfixes
+
+* #948 fix the u2c `--dr` option when the server is running on windows d3dd3456
+* fix crash on startup when using volflags `unlistc*` and the parent folder is not a volume cdd5e78a
+* `og` / opengraph / discord-embed fixes:
+  * using the `h` permission could result in unexpected 404 c9e45c12
+  * a single-file volume could make filenames in its parent volume unintentionally visible 36ab77e0
+    * this would only happen when combined with `--og`
+* fix some harmless warnings from single-file volumes b1efc006
+* fix filesize-colors in selected rows 1c17b63b
+
+## 🔧 other changes
+
+* releases can now also be downloaded from https://copyparty.eu/ 547a7ab1
+
+
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
 # 2025-1017-2313  `v1.19.17`  read:cbz + re:ftp
 
 ## 🧪 new features
