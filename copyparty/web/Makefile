@@ -7,7 +7,9 @@ pk: $(addsuffix .gz, $(wildcard tl/*.js *.js *.css) \
 un: $(addsuffix .un, $(wildcard tl/*.gz *.gz a/*.gz))
 
 %.gz: %
-	pigz -11 -J 34 -I 573 $<
+	pigz -c11 -J 34 -I 573 <$< >$@
+	touch -r $< $@
+	rm $<
 
 %.un: %
 	pigz -d $<
