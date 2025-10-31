@@ -6014,6 +6014,15 @@ class HttpCli(object):
         if self.uname != self.args.shr_adm:
             rows = [x for x in rows if x[5] == self.uname]
 
+        q = "select vp from sf where k=? limit 99"
+        for r in rows:
+            if not r[4]:
+                r[4] = "---"
+            else:
+                zstl = cur.execute(q, (r[0],)).fetchall()
+                zsl = [html_escape(zst[0]) for zst in zstl]
+                r[4] = "<br />".join(zsl)
+
         html = self.j2s(
             "shares", this=self, shr=self.args.shr, rows=rows, now=int(time.time())
         )
