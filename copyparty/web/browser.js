@@ -7148,6 +7148,8 @@ var treectl = (function () {
 			if (res.files[a].tags === undefined)
 				res.files[a].tags = {};
 
+		sb_lg = res.sb_lg;
+		sb_md = res.sb_md;
 		dnsort = res.dnsort;
 		read_dsort(res.dsort);
 		dcrop = res.dcrop;
@@ -7194,7 +7196,6 @@ var treectl = (function () {
 
 		var lg0 = res.logues ? res.logues[0] || "" : "",
 			lg1 = res.logues ? res.logues[1] || "" : "",
-			sb_lg = res.sb_lg || "",
 			mds = res.readmes && treectl.ireadme,
 			md0 = mds ? res.readmes[0] || "" : "",
 			md1 = mds ? res.readmes[1] || "" : "",
@@ -8798,7 +8799,7 @@ function show_md(md, name, div, url, depth) {
 		var els = QSA('#epi a');
 		for (var a = 0, aa = els.length; a < aa; a++) {
 			var href = els[a].getAttribute('href');
-			if (!href.startsWith('#') || href.startsWith('#md-'))
+			if (!href || !href.startsWith('#') || href.startsWith('#md-'))
 				continue;
 
 			els[a].setAttribute('href', '#md-' + href.slice(1));

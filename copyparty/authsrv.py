@@ -3051,6 +3051,7 @@ class AuthSrv(object):
                 "lifetime": vf.get("lifetime") or 0,
                 "unlist": vf.get("unlist") or "",
                 "sb_lg": "" if "no_sb_lg" in vf else (vf.get("lg_sbf") or "y"),
+                "sb_md": "" if "no_sb_md" in vf else (vf.get("md_sbf") or "y"),
             }
             if "ufavico_h" in vf:
                 vn.js_ls["ufavico"] = vf["ufavico_h"]
@@ -3072,7 +3073,8 @@ class AuthSrv(object):
                 "have_emp": int(self.args.emp),
                 "md_no_br": int(vf.get("md_no_br") or 0),
                 "ext_th": vf.get("ext_th_d") or {},
-                "sb_md": "" if "no_sb_md" in vf else (vf.get("md_sbf") or "y"),
+                "sb_lg": vn.js_ls["sb_lg"],
+                "sb_md": vn.js_ls["sb_md"],
                 "sba_md": vf.get("md_sba") or "",
                 "sba_lg": vf.get("lg_sba") or "",
                 "txt_ext": self.args.textfiles.replace(",", " "),
