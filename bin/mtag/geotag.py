@@ -14,7 +14,7 @@ adds four new metadata keys:
     .masl = meters above sea level
     city = "city, subregion, region"
 
-usage: -mtp crc32,md5,sha1,sha256b=ad,bin/mtag/cksum.py
+usage: -mtp .masl,.gps_lat,.gps_lon,city=ad,t10,bin/mtag/geotag.py
 
 example: https://a.ocv.me/pub/blog/j7/8/?grid=0
 """
