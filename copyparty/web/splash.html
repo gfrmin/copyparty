@@ -120,7 +120,11 @@
 			</form>
 		</div>
 		{%- else %}
+			{%- if this.uname == '*' %}
 		<h1 id="l">login for more:</h1>
+			{%- else %}
+		<h1 id="l">change account:</h1>
+			{%- endif %}
 		<div>
 			{%- if this.args.idp_login %}
 			<ul><li>
