@@ -1812,6 +1812,15 @@ class AuthSrv(object):
         derive_args(self.args)
         self.setup_auth_ord()
 
+        if self.args.ipu:
+            # syntax (CIDR=UNAME) is verified in load_ipu
+            zsl = [x.split("=", 1)[1] for x in self.args.ipu]
+            zsl = [x for x in zsl if x not in acct]
+            if zsl:
+                t = "ERROR: unknown users in ipu: %s" % (zsl,)
+                self.log(t, 1)
+                raise Exception(t)
+
         self.setup_pwhash(acct)
         defpw = acct.copy()
         self.setup_chpw(acct)
