@@ -270,6 +270,9 @@ class ThumbSrv(object):
 
     def shutdown(self) -> None:
         self.stopping = True
+        Daemon(self._fire_sentinels, "thumbstopper")
+
+    def _fire_sentinels(self):
         for _ in range(self.nthr):
             self.q.put(None)
 
