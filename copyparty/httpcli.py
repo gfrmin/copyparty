@@ -5269,10 +5269,11 @@ class HttpCli(object):
                     fdone = max(0.001, 1 - rem)
                     td = max(0.1, now - t0)
                     rd, fn = vsplit(vp.replace(os.sep, "/"))
-                    if not rd:
-                        rd = "/"
-                    erd = quotep(rd)
-                    rds = rd.replace("/", " / ")
+                    if rd:
+                        rds = rd.replace("/", " / ")
+                        erd = "/%s/" % (quotep(rd),)
+                    else:
+                        erd = rds = "/"
                     spd = humansize(sz * fdone / td, True) + "/s"
                     eta = s2hms((td / fdone) - td, True) if rem < 1 else "--"
                     idle = s2hms(now - poke, True)
@@ -5299,10 +5300,11 @@ class HttpCli(object):
         for t0, t1, sent, sz, vp, dl_id, uname in dl_list:
             td = max(0.1, now - t0)
             rd, fn = vsplit(vp)
-            if not rd:
-                rd = "/"
-            erd = quotep(rd)
-            rds = rd.replace("/", " / ")
+            if rd:
+                rds = rd.replace("/", " / ")
+                erd = "/%s/" % (quotep(rd),)
+            else:
+                erd = rds = "/"
             spd = humansize(sent / td, True) + "/s"
             hsent = humansize(sent, True)
             idle = s2hms(now - t1, True)
