@@ -3131,7 +3131,10 @@ class AuthSrv(object):
                     self.log("BUG: /%s not in all_nodes" % (vol.vpath,), 1)
                     vols.append(vol)
             if shr in vfs.all_nodes:
-                self.log("BUG: %s found in all_nodes" % (shr,), 1)
+                t = "invalid config: a volume is overlapping with the --shr global-option (/%s)"
+                t = t % (shr,)
+                self.log(t, 1)
+                raise Exception(t)
 
         for vol in vols:
             dbv = vol.get_dbv("")[0]
