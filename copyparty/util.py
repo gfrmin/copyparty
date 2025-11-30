@@ -3930,7 +3930,13 @@ def _runhook(
         zi, zs = _zmq_hook(log, verbose, src, acmd[0][4:].lower(), arg, wait, sp_ka)
         if zi:
             raise Exception("zmq says %d" % (zi,))
-        return {"rc": 0, "stdout": zs}
+        try:
+            ret = json.loads(zs)
+            if "rc" not in ret:
+                ret["rc"] = 0
+            return ret
+        except:
+            return {"rc": 0, "stdout": zs}
 
     if sin:
         sp_ka["sin"] = (arg + "\n").encode("utf-8", "replace")
@@ -3949,20 +3955,23 @@ def _runhook(
         rc, v, err = runcmd(bcmd, **sp_ka)  # type: ignore
         if chk and rc:
             ret["rc"] = rc
-            retchk(rc, bcmd, err, log, 5)
+            zi = 0 if rc == 100 else rc
+            retchk(zi, bcmd, err, log, 5)
         else:
             try:
                 ret = json.loads(v)
             except:
-                ret = {}
+                pass
 
             try:
                 if "stdout" not in ret:
                     ret["stdout"] = v
+                if "stderr" not in ret:
+                    ret["stderr"] = err
                 if "rc" not in ret:
                     ret["rc"] = rc
             except:
-                ret = {"rc": rc, "stdout": v}
+                ret = {"rc": rc, "stdout": v, "stderr": err}
 
     if wait:
         wait -= time.time() - t0
@@ -3994,6 +4003,7 @@ def runhook(
     verbose = args.hook_v
     vp = vp.replace("\\", "/")
     ret = {"rc": 0}
+    stop = False
     for cmd in cmds:
         try:
             hr = _runhook(
@@ -4001,8 +4011,6 @@ def runhook(
             )
             if verbose and log:
                 log("hook(%s) %r => \033[32m%s" % (src, cmd, hr), 6)
-            if not hr:
-                return {}
             for k, v in hr.items():
                 if k in ("idx", "del") and v:
                     if broker:
@@ -4013,17 +4021,20 @@ def runhook(
                 elif k == "reloc" and v:
                     # idk, just take the last one ig
                     ret["reloc"] = v
+                elif k == "rc" and v:
+                    stop = True
+                    ret[k] = 0 if v == 100 else v
                 elif k in ret:
-                    if k == "rc" and v:
-                        ret[k] = v
-                    elif k == "stdout" and v and not ret[k]:
+                    if k == "stdout" and v and not ret[k]:
                         ret[k] = v
                 else:
                     ret[k] = v
         except Exception as ex:
             (log or print)("hook: %r, %s" % (ex, ex))
             if ",c," in "," + cmd:
-                return {}
+                return {"rc": 1}
+            break
+        if stop:
             break
 
     return ret

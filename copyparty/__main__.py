@@ -809,7 +809,8 @@ def get_sects():
             \033[0m
             hooks specified as commandline --args are appended to volflags;
             each commandline --arg and volflag can be specified multiple times,
-            each hook will execute in order unless one returns non-zero
+            each hook will execute in order unless one returns non-zero, or
+            "100" which means "stop daisychaining and return 0 (success/OK)"
 
             optionally prefix the command with comma-sep. flags similar to -mtp:
 

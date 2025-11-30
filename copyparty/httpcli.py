@@ -913,29 +913,31 @@ class HttpCli(object):
             return False
 
         xban = self.vn.flags.get("xban")
-        if not xban or not runhook(
-            self.log,
-            self.conn.hsrv.broker,
-            None,
-            "xban",
-            xban,
-            self.vn.canonical(self.rem),
-            self.vpath,
-            self.host,
-            self.uname,
-            "",
-            time.time(),
-            0,
-            self.ip,
-            time.time(),
-            [reason, reason],
-        ):
-            self.log("client banned: %s" % (descr,), 1)
-            self.conn.hsrv.bans[ip] = bonk
-            self.conn.hsrv.nban += 1
-            return True
+        if xban:
+            hr = runhook(
+                self.log,
+                self.conn.hsrv.broker,
+                None,
+                "xban",
+                xban,
+                self.vn.canonical(self.rem),
+                self.vpath,
+                self.host,
+                self.uname,
+                "",
+                time.time(),
+                0,
+                self.ip,
+                time.time(),
+                [reason, reason],
+            )
+            if hr.get("rv") == 0:
+                return False
 
-        return False
+        self.log("client banned: %s" % (descr,), 1)
+        self.conn.hsrv.bans[ip] = bonk
+        self.conn.hsrv.nban += 1
+        return True
 
     def is_banned(self) -> bool:
         if not self.conn.bans:
@@ -2386,7 +2388,7 @@ class HttpCli(object):
                 None,
             )
             t = hr.get("rejectmsg") or ""
-            if t or not hr:
+            if t or hr.get("rc") != 0:
                 if not t:
                     t = "upload blocked by xbu server config: %r" % (vp,)
                 self.log(t, 1)
@@ -2521,7 +2523,7 @@ class HttpCli(object):
                 None,
             )
             t = hr.get("rejectmsg") or ""
-            if t or not hr:
+            if t or hr.get("rc") != 0:
                 if not t:
                     t = "upload blocked by xau server config: %r" % (vp,)
                 self.log(t, 1)
@@ -3359,7 +3361,7 @@ class HttpCli(object):
                     None,
                 )
                 t = hr.get("rejectmsg") or ""
-                if t or not hr:
+                if t or hr.get("rc") != 0:
                     if not t:
                         t = "new-md blocked by " + hn + " server config: %r"
                         t = t % (vjoin(vfs.vpath, rem),)
@@ -3530,7 +3532,7 @@ class HttpCli(object):
                         None,
                     )
                     t = hr.get("rejectmsg") or ""
-                    if t or not hr:
+                    if t or hr.get("rc") != 0:
                         if not t:
                             t = "upload blocked by xbu server config: %r"
                             t = t % (vjoin(upload_vpath, fname),)
@@ -3637,7 +3639,7 @@ class HttpCli(object):
                             None,
                         )
                         t = hr.get("rejectmsg") or ""
-                        if t or not hr:
+                        if t or hr.get("rc") != 0:
                             if not t:
                                 t = "upload blocked by xau server config: %r"
                                 t = t % (vjoin(upload_vpath, fname),)
@@ -3950,7 +3952,7 @@ class HttpCli(object):
                 None,
             )
             t = hr.get("rejectmsg") or ""
-            if t or not hr:
+            if t or hr.get("rc") != 0:
                 if not t:
                     t = "save blocked by xbu server config"
                 self.log(t, 1)
@@ -3998,7 +4000,7 @@ class HttpCli(object):
                 None,
             )
             t = hr.get("rejectmsg") or ""
-            if t or not hr:
+            if t or hr.get("rc") != 0:
                 if not t:
                     t = "save blocked by xau server config"
                 self.log(t, 1)
