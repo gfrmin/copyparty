@@ -4771,6 +4771,7 @@ var showfile = (function () {
 		'.log': 'ans',
 		'.m': 'matlab',
 		'.moon': 'moonscript',
+		'.nfo': 'ans',
 		'.patch': 'diff',
 		'.ps1': 'powershell',
 		'.psm1': 'powershell',
@@ -4778,6 +4779,7 @@ var showfile = (function () {
 		'.rs': 'rust',
 		'.sh': 'bash',
 		'.service': 'systemd',
+		'.txt': 'ans',
 		'.vb': 'vbnet',
 		'.v': 'verilog',
 		'.vert': 'glsl',
@@ -4791,7 +4793,8 @@ var showfile = (function () {
 	var x = txt_ext + ' ans c cfg conf cpp cs css diff glsl go html ini java js json jsx kt kts latex less lisp lua makefile md nim py r rss rb ruby sass scss sql svg swift tex toml ts vhdl xml yaml zig';
 	x = x.split(/ +/g);
 	for (var a = 0; a < x.length; a++)
-		r.map["." + x[a]] = x[a];
+		if (!r.map["." + x[a]])
+			r.map["." + x[a]] = x[a];
 
 	r.sname = function (srch) {
 		return srch.split(/[?&]doc=/)[1].split('&')[0];
