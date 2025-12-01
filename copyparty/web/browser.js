@@ -7170,6 +7170,10 @@ var treectl = (function () {
 		if (!sread('dlni'))
 			clmod(ebi('dlni'), 'on', treectl.dlni = dlni);
 
+		dgrid = res.dgrid;
+		if (!sread('griden'))
+			clmod(ebi('griden'), 'on', thegrid.en = dgrid);
+
 		srvinf = res.srvinf;
 		if (rtt !== null)
 			srvinf += (srvinf ? '</span> // <span>rtt: ' : 'rtt: ') + rtt;
