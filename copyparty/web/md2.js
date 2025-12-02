@@ -334,7 +334,7 @@ window.onbeforeunload = function (e) {
 
 // save handler
 function save(e) {
-    if (e) e.preventDefault();
+    ev(e);
     var save_btn = ebi("save"),
         save_cls = save_btn.className + '';
 
@@ -700,7 +700,7 @@ function reLastIndexOf(txt, ptn, end) {
 
 // table formatter
 function fmt_table(e) {
-    if (e) e.preventDefault();
+    ev(e);
     try {
         fmt_table2();
     }
@@ -857,7 +857,7 @@ function fmt_table2() {
 
 // show unicode
 function mark_uni(e) {
-    if (e) e.preventDefault();
+    ev(e);
     dom_tbox.className = '';
 
     var txt = dom_src.value,
@@ -873,7 +873,7 @@ function mark_uni(e) {
 
 // iterate unicode
 function iter_uni(e) {
-    if (e) e.preventDefault();
+    ev(e);
 
     var txt = dom_src.value,
         ofs = dom_src.selectionDirection == "forward" ? dom_src.selectionEnd : dom_src.selectionStart,
@@ -895,7 +895,7 @@ function iter_uni(e) {
 
 // configure whitelist
 function cfg_uni(e) {
-    if (e) e.preventDefault();
+    ev(e);
 
     modal.prompt("unicode whitelist", esc_uni_whitelist, function (reply) {
         esc_uni_whitelist = reply;
@@ -1040,14 +1040,14 @@ var set_lno = (function () {
 
 
 ebi('tools').onclick = function (e) {
-    if (e) e.preventDefault();
+    ev(e);
     var is_open = dom_tbox.className != 'open';
     dom_tbox.className = is_open ? 'open' : '';
 };
 
 
 ebi('help').onclick = function (e) {
-    if (e) e.preventDefault();
+    ev(e);
     dom_tbox.className = '';
 
     var dom = ebi('helpbox');
