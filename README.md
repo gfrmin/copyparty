@@ -194,7 +194,7 @@ some recommended options:
 * `-e2ts` enables audio metadata indexing (needs either FFprobe or Mutagen)
 * `-v /mnt/music:/music:r:rw,foo -a foo:bar` shares `/mnt/music` as `/music`, `r`eadable by anyone, and read-write for user `foo`, password `bar`
   * replace `:r:rw,foo` with `:r,foo` to only make the folder readable by `foo` and nobody else
-  * see [accounts and volumes](#accounts-and-volumes) (or `--help-accounts`) for the syntax and other permissions
+  * see [accounts and volumes](#accounts-and-volumes) (or [`--help-accounts`](https://copyparty.eu/cli/#accounts-help-page)) for the syntax and other permissions
 
 
 ### mirrors
@@ -498,7 +498,7 @@ per-folder, per-user permissions  - if your setup is getting complex, consider m
 * much easier to manage, and you can modify the config at runtime with `systemctl reload copyparty` or more conveniently using the `[reload cfg]` button in the control-panel (if the user has `a`/admin in any volume)
   * changes to the `[global]` config section requires a restart to take effect
 
-a quick summary can be seen using `--help-accounts`
+a quick summary can be seen using [`--help-accounts`](https://copyparty.eu/cli/#accounts-help-page)
 
 configuring accounts/volumes with arguments:
 * `-a usr:pwd` adds account `usr` with password `pwd`
@@ -1263,7 +1263,7 @@ see [./srv/expand/](./srv/expand/) for usage and examples
 
   * and `PREADME.md` / `preadme.md` is shown above directory listings unless `--no-readme` or `.prologue.html`
 
-* `README.md` and `*logue.html` can contain placeholder values which are replaced server-side before embedding into directory listings; see `--help-exp`
+* `README.md` and `*logue.html` can contain placeholder values which are replaced server-side before embedding into directory listings; see [`--help-exp`](https://copyparty.eu/cli/#exp-help-page)
 
 
 ## searching
@@ -1293,10 +1293,9 @@ using arguments or config files, or a mix of both:
   * or click the `[reload cfg]` button in the control-panel if the user has `a`/admin in any volume
   * changes to the `[global]` config section requires a restart to take effect
 
-**NB:** as humongous as this readme is, there is also a lot of undocumented features. Run copyparty with `--help` to see all available global options; all of those can be used in the `[global]` section of config files, and everything listed in `--help-flags` can be used in volumes as volflags.
+**NB:** as humongous as this readme is, there is also a lot of undocumented features. Run copyparty with [`--help`](https://copyparty.eu/cli/) (or click that link) to see all available global options; all of those can be used in the `[global]` section of config files, and everything listed in [`--help-flags`](https://copyparty.eu/cli/#flags-help-page) can be used in volumes as volflags. 
 * if running in docker/podman, try this: `docker run --rm -it copyparty/ac --help`
-* or see this: https://ocv.me/copyparty/helptext.html
-* or if you prefer plaintext, https://ocv.me/copyparty/helptext.txt
+* or if you prefer plaintext, https://copyparty.eu/helptext.txt
 
 
 ## zeroconf
@@ -1889,7 +1888,7 @@ trigger a program on uploads, renames etc ([examples](./bin/hooks/))
 
 you can set hooks before and/or after an event happens, and currently you can hook uploads, moves/renames, and deletes
 
-there's a bunch of flags and stuff, see `--help-hooks`
+there's a bunch of flags and stuff, see [`--help-hooks`](https://copyparty.eu/cli/#hooks-help-page)
 
 if you want to write your own hooks, see [devnotes](./docs/devnotes.md#event-hooks)
 
@@ -2820,7 +2819,7 @@ some notes on hardening
   * cors doesn't work right otherwise
 * if you allow anonymous uploads or otherwise don't trust the contents of a volume, you can prevent XSS with volflag `nohtml`
   * this returns html documents as plaintext, and also disables markdown rendering
-* when running behind a reverse-proxy, listen on a unix-socket for tighter access control (and more performance); see [reverse-proxy](#reverse-proxy) or `--help-bind`
+* when running behind a reverse-proxy, listen on a unix-socket for tighter access control (and more performance); see [reverse-proxy](#reverse-proxy) or [`--help-bind`](https://copyparty.eu/cli/#bind-help-page)
 
 safety profiles:
 
@@ -2908,7 +2907,7 @@ dirkeys are generated based on another salt (`--dk-salt`) + filesystem-path and 
 
 ## password hashing
 
-you can hash passwords  before putting them into config files / providing them as arguments; see `--help-pwhash` for all the details
+you can hash passwords  before putting them into config files / providing them as arguments; see [`--help-pwhash`](https://copyparty.eu/cli/#pwhash-help-page) for all the details
 
 `--ah-alg argon2` enables it, and if you have any plaintext passwords then it'll print the hashed versions on startup so you can replace them
 
