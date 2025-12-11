@@ -150,7 +150,7 @@ NO_CACHE = {"Cache-Control": "no-cache"}
 
 ALL_COOKIES = "k304 no304 js idxh dots cppwd cppws".split()
 
-BADXFF = " due to dangerous misconfiguration (the http-header specified by --xff-hdr was received from an untrusted reverse-proxy, or --xf-host is incorrect)"
+BADXFF = " due to dangerous misconfiguration (the http-header specified by --xff-hdr was received from an untrusted reverse-proxy)"
 BADXFF2 = ". Some copyparty features are now disabled as a safety measure."
 
 H_CONN_KEEPALIVE = "Connection: Keep-Alive"
@@ -446,18 +446,14 @@ class HttpCli(object):
                 else:
                     self.ip = cli_ip
                     self.log_src = self.conn.set_rproxy(self.ip)
+                    self.host = self.headers.get(self.args.xf_host, self.host)
                     try:
-                        self.host = self.headers[self.args.xf_host]
                         self.is_https = len(self.headers[self.args.xf_proto]) == 5
                     except:
                         self.bad_xff = True
-                        if self.args.xf_host not in self.headers:
-                            self.host = "example.com"
-                            t = 'got proxied request without header "%s" (global-option "xf-host"). This header must contain the true external "Host" value (the domain-name of the website). Either fix your reverse-proxy config to include this header, or change the copyparty global-option "xf-host" to another header-name to read this value from'
-                            self.log(t % (self.args.xf_host,) + BADXFF2, 3)
-                        if self.args.xf_proto not in self.headers:
-                            t = 'got proxied request without header "%s" (global-option "xf-proto"). This header must contain either "http" or "https". Either fix your reverse-proxy config to include this header, or change the copyparty global-option "xf-proto" to another header-name to read this value from'
-                            self.log(t % (self.args.xf_proto,) + BADXFF2, 3)
+                        self.host = "example.com"
+                        t = 'got proxied request without header "%s" (global-option "xf-proto"). This header must contain either "http" or "https". Either fix your reverse-proxy config to include this header, or change the copyparty global-option "xf-proto" to another header-name to read this value from'
+                        self.log(t % (self.args.xf_proto,) + BADXFF2, 3)
 
                     # the semantics of trusted_xff and bad_xff are different;
                     # trusted_xff is whether the connection came from a trusted reverseproxy,
