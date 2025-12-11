@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import print_function, unicode_literals
 
-S_VERSION = "2.15"
-S_BUILD_DT = "2025-10-25"
+S_VERSION = "2.16"
+S_BUILD_DT = "2025-12-11"
 
 """
 u2c.py: upload to copyparty
@@ -492,6 +492,12 @@ print = safe_print if VT100 else flushing_print
 
 
 def termsize():
+    try:
+        w, h = os.get_terminal_size()
+        return w, h
+    except:
+        pass
+
     env = os.environ
 
     def ioctl_GWINSZ(fd):
