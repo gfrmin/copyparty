@@ -1242,6 +1242,7 @@ var mpl = (function () {
 		"os_ctl": bcfg_get('au_os_ctl', have_mctl) && have_mctl,
 		'traversals': 0,
 		'm3ut': '#EXTM3U\n',
+		'np': [{'file': 'nothing'}, ['file']],
 	};
 	bcfg_bind(r, 'one', 'au_one', false, function (v) {
 		if (mp.au)
@@ -1438,7 +1439,7 @@ var mpl = (function () {
 		if (!r.os_ctl || !mp.au)
 			return;
 
-		var np = get_np()[0],
+		var np = mpl.np[0],
 			fns = np.file.split(' - '),
 			artist = (np.circle && np.circle != np.artist ? np.circle + ' // ' : '') + (np.artist || (fns.length > 1 ? fns[0] : '')),
 			title = np.title || fns.pop(),
@@ -1784,12 +1785,6 @@ function ft2dict(tr, skip) {
 }
 
 
-function get_np() {
-	var tr = QS('#files tr.play');
-	return ft2dict(tr, { 'up_ip': 1 });
-};
-
-
 // toggle player widget
 var widget = (function () {
 	var r = {},
@@ -1847,9 +1842,8 @@ var widget = (function () {
 			ck = irc ? '06' : '',
 			cv = irc ? '07' : '',
 			m = ck + 'np: ',
-			npr = get_np(),
-			npk = npr[1],
-			np = npr[0];
+			npk = mpl.np[1],
+			np = mpl.np[0];
 
 		for (var a = 0; a < npk.length; a++)
 			m += (npk[a] == 'file' ? '' : npk[a]).replace(/^\./, '') + '(' + cv + np[npk[a]] + ck + ') // ';
@@ -3103,9 +3097,12 @@ function play(tid, is_ev, seek) {
 	for (var a = 0, aa = trs.length; a < aa; a++)
 		clmod(trs[a], 'play');
 
-	var oid = 'a' + tid;
-	clmod(ebi(oid), 'act', 1);
-	clmod(ebi(oid).closest('tr'), 'play', 1);
+	var oid = 'a' + tid,
+		t_a = ebi(oid),
+		t_tr = t_a.closest('tr');
+
+	clmod(t_a, 'act', 1);
+	clmod(t_tr, 'play', 1);
 	clmod(ebi('wtoggle'), 'np', mpl.clip);
 	clmod(ebi('wtoggle'), 'm3u', mpl.m3uen);
 	if (thegrid)
@@ -3127,12 +3124,12 @@ function play(tid, is_ev, seek) {
 		}
 
 		if (!seek && !ebi('unsearch')) {
-			var o = ebi(oid);
-			o.setAttribute('id', 'thx_js');
+			t_a.setAttribute('id', 'thx_js');
 			if (mpl.aplay)
 				sethash(oid + getsort());
-			o.setAttribute('id', oid);
+			t_a.setAttribute('id', oid);
 		}
+		mpl.np = ft2dict(t_tr, { 'up_ip': 1 });
 
 		pbar.unwave();
 		if (mpl.waves)
@@ -3147,7 +3144,7 @@ function play(tid, is_ev, seek) {
 	catch (ex) {
 		toast.err(0, esc(L.mm_playerr + basenames(ex)));
 	}
-	clmod(ebi(oid), 'act');
+	clmod(t_a, 'act');
 	mpl.t_eplay = setTimeout(next_song, 5000);
 }
 
