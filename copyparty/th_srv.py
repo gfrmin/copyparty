@@ -358,6 +358,7 @@ class ThumbSrv(object):
                 if not bos.path.exists(inf_path):
                     with open(inf_path, "wb") as f:
                         f.write(afsenc(os.path.dirname(abspath)))
+                    self.writevolcfg(histpath)
 
                 self.busy[tpath] = [cond]
                 do_conv = True
@@ -400,6 +401,47 @@ class ThumbSrv(object):
             "ffv": self.fmt_ffv,
             "ffa": self.fmt_ffa,
         }
+
+    def volcfgi(self, vn: VFS) -> str:
+        ret = []
+        zs = "th_dec th_no_webp th_no_jpg"
+        for zs in zs.split(" "):
+            ret.append("%s(%s)\n" % (zs, getattr(self.args, zs)))
+        zs = "th_qv thsize th_spec_p convt"
+        for zs in zs.split(" "):
+            ret.append("%s(%s)\n" % (zs, vn.flags.get(zs)))
+        return "".join(ret)
+
+    def volcfga(self, vn: VFS) -> str:
+        ret = []
+        zs = "q_opus q_mp3"
+        for zs in zs.split(" "):
+            ret.append("%s(%s)\n" % (zs, getattr(self.args, zs)))
+        zs = "aconvt"
+        for zs in zs.split(" "):
+            ret.append("%s(%s)\n" % (zs, vn.flags.get(zs)))
+        return "".join(ret)
+
+    def writevolcfg(self, histpath: str) -> None:
+        try:
+            bos.stat(os.path.join(histpath, "th", "cfg.txt"))
+            bos.stat(os.path.join(histpath, "ac", "cfg.txt"))
+            return
+        except:
+            pass
+        cfgi = cfga = ""
+        for vn in self.asrv.vfs.all_vols.values():
+            if vn.histpath == histpath:
+                cfgi = self.volcfgi(vn)
+                cfga = self.volcfga(vn)
+                break
+        t = "writing thumbnailer-config %d,%d to %s"
+        self.log(t % (len(cfgi), len(cfga), histpath))
+        chmod = bos.MKD_700 if self.args.free_umask else bos.MKD_755
+        for cfg, cat in ((cfgi, "th"), (cfga, "ac")):
+            bos.makedirs(os.path.join(histpath, cat), vf=chmod)
+            with open(os.path.join(histpath, cat, "cfg.txt"), "wb") as f:
+                f.write(cfg.encode("utf-8"))
 
     def wait4ram(self, need: float, ttpath: str) -> None:
         ram = self.args.th_ram_max
@@ -1241,6 +1283,28 @@ class ThumbSrv(object):
             time.sleep(interval)
 
     def clean(self, histpath: str) -> int:
+        cfgi = cfga = ""
+        for vn in self.asrv.vfs.all_vols.values():
+            if vn.histpath == histpath:
+                cfgi = self.volcfgi(vn)
+                cfga = self.volcfga(vn)
+                break
+        for cfg, cat in ((cfgi, "th"), (cfga, "ac")):
+            if not cfg:
+                continue
+            try:
+                with open(os.path.join(histpath, cat, "cfg.txt"), "rb") as f:
+                    oldcfg = f.read().decode("utf-8")
+            except:
+                oldcfg = ""
+            if cfg == oldcfg:
+                continue
+            zs = os.path.join(histpath, cat)
+            if not os.path.exists(zs):
+                continue
+            self.log("thumbnailer-config changed; deleting %s" % (zs,), 3)
+            shutil.rmtree(zs)
+
         ret = 0
         for cat in ["th", "ac"]:
             top = os.path.join(histpath, cat)
@@ -1299,7 +1363,7 @@ class ThumbSrv(object):
                 if len(b64) != 24 or len(ts) != 8 or ext not in exts:
                     raise Exception()
             except:
-                if f != "dir.txt":
+                if f != "dir.txt" and f != "cfg.txt":
                     self.log("foreign file in thumbs dir: [{}]".format(fp), 1)
 
                 continue
