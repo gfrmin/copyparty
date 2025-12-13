@@ -1607,6 +1607,7 @@ def add_logging(ap):
     ap2.add_argument("--no-voldump", action="store_true", help="do not list volumes and permissions on startup")
     ap2.add_argument("--log-utc", action="store_true", help="do not use local timezone; assume the TZ env-var is UTC (tiny bit faster)")
     ap2.add_argument("--log-tdec", metavar="N", type=int, default=3, help="timestamp resolution / number of timestamp decimals")
+    ap2.add_argument("--log-date", metavar="TXT", type=u, default="", help="date-format, for example [\033[32m%%Y-%%m-%%d\033[0m] (default is disabled; no date, just HH:MM:SS)")
     ap2.add_argument("--log-badpwd", metavar="N", type=int, default=2, help="log failed login attempt passwords: 0=terse, 1=plaintext, 2=hashed")
     ap2.add_argument("--log-badxml", action="store_true", help="log any invalid XML received from a client")
     ap2.add_argument("--log-conn", action="store_true", help="debug: print tcp-server msgs")

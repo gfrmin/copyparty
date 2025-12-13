@@ -1558,6 +1558,9 @@ class SvcHub(object):
         with self.log_mutex:
             dt = datetime.now(self.tz)
             if dt.day != self.cday or dt.month != self.cmon:
+                if self.args.log_date:
+                    zs = dt.strftime(self.args.log_date)
+                    self.log_efmt = "%s %s" % (zs, self.log_efmt.split(" ")[-1])
                 zs = "{}\n" if self.no_ansi else "\033[36m{}\033[0m\n"
                 zs = zs.format(dt.strftime("%Y-%m-%d"))
                 print(zs, end="")
