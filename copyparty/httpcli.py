@@ -49,6 +49,9 @@ from .util import (
     HAVE_SQLITE3,
     HTTPCODE,
     UTC,
+    VPTL_MAC,
+    VPTL_OS,
+    VPTL_WIN,
     Garda,
     MultipartParser,
     ODict,
@@ -167,6 +170,7 @@ A_FILE = os.stat_result(
 )
 
 RE_CC = re.compile(r"[\x00-\x1f]")  # search always faster
+RE_USAFE = re.compile(r'[\x00-\x1f<>"]')  # search always faster
 RE_HSAFE = re.compile(r"[\x00-\x1f<>\"'&]")  # search always much faster
 RE_HOST = re.compile(r"[^][0-9a-zA-Z.:_-]")  # search faster <=17ch
 RE_MHOST = re.compile(r"^[][0-9a-zA-Z.:_-]+$")  # match faster >=18ch
@@ -515,8 +519,7 @@ class HttpCli(object):
                 self.loud_reply(t, status=400)
                 return False
 
-        ptn_cc = RE_CC
-        m = ptn_cc.search(self.req)
+        m = RE_USAFE.search(self.req)
         if m:
             zs = self.req
             t = "malicious user; Cc in req0 %r => %r"
@@ -538,6 +541,7 @@ class HttpCli(object):
             vpath = undot(vpath)
 
             re_k = RE_K
+            ptn_cc = RE_CC
             k_safe = UPARAM_CC_OK
             for k in arglist.split("&"):
                 if "=" in k:
@@ -620,17 +624,18 @@ class HttpCli(object):
             self.loud_reply("u wot m8", status=400)
             return False
 
+        if VPTL_OS:
+            vpath = vpath.translate(VPTL_OS)
+
         self.uparam = uparam
         self.cookies = cookies
         self.vpath = vpath
-        self.vpaths = (
-            self.vpath + "/" if self.trailing_slash and self.vpath else self.vpath
-        )
+        self.vpaths = vpath + "/" if self.trailing_slash and vpath else vpath
 
         if "qr" in uparam:
             return self.tx_qr()
 
-        if relchk(self.vpath) and (self.vpath != "*" or self.mode != "OPTIONS"):
+        if "\x00" in vpath or (ANYWIN and ("\n" in vpath or "\r" in vpath)):
             self.log("illegal relpath; req(%r) => %r" % (self.req, "/" + self.vpath))
             self.cbonk(self.conn.hsrv.gmal, self.req, "bad_vp", "invalid relpaths")
             return self.tx_404() and False
@@ -2807,6 +2812,11 @@ class HttpCli(object):
             raise Pebkac(400, "your client is old; press CTRL-SHIFT-R and try again")
 
         vfs, rem = self.asrv.vfs.get(self.vpath, self.uname, False, True)
+        fsnt = vfs.flags["fsnt"]
+        if fsnt != "lin":
+            tl = VPTL_WIN if fsnt == "win" else VPTL_MAC
+            rem = rem.translate(tl)
+            name = name.translate(tl)
         dbv, vrem = vfs.get_dbv(rem)
 
         name = sanitize_fn(name, "")

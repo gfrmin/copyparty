@@ -2,6 +2,7 @@
 from __future__ import print_function, unicode_literals
 
 import argparse
+import json
 import os
 import re
 import time
@@ -9,7 +10,7 @@ import time
 from .__init__ import ANYWIN, MACOS
 from .authsrv import AXS, VFS, AuthSrv
 from .bos import bos
-from .util import chkcmd, min_ex, undot
+from .util import chkcmd, json_hesc, min_ex, undot
 
 if True:  # pylint: disable=using-constant-test
     from typing import Optional, Union
@@ -212,19 +213,26 @@ class Fstab(object):
         return ret.realpath, ""
 
 
+_fstab: Optional[Fstab] = None
+winfs = set(("msdos", "vfat", "ntfs", "exfat"))
+# "msdos" = vfat on macos
+
+
 def ramdisk_chk(asrv: AuthSrv) -> None:
     # should have been in authsrv but that's a circular import
+    global _fstab
     mods = []
     ramfs = ("tmpfs", "overlay")
     log = asrv.log_func or print
-    fstab = Fstab(log, asrv.args, False)
+    if not _fstab:
+        _fstab = Fstab(log, asrv.args, False)
     for vn in asrv.vfs.all_nodes.values():
         if not vn.axs.uwrite or "wram" in vn.flags:
             continue
         ap = vn.realpath
         if not ap or os.path.isfile(ap):
             continue
-        fs, mp = fstab.get(ap)
+        fs, mp = _fstab.get(ap)
         mp = "/" + mp.strip("/")
         if fs == "tmpfs" or (mp == "/" and fs in ramfs):
             mods.append((vn.vpath, ap, fs, mp))
@@ -234,8 +242,24 @@ def ramdisk_chk(asrv: AuthSrv) -> None:
                 zsl = list(ztsp)
                 zsl[1] = False
                 zsl[2] = False
-                vn.uaxs[un] = zsl
+                vn.uaxs[un] = tuple(zsl)
     if mods:
         t = "WARNING: write-access was removed from the following volumes because they are not mapped to an actual HDD for storage! All uploaded data would live in RAM only, and all uploaded files would be LOST on next reboot. To allow uploading and ignore this hazard, enable the 'wram' option (global/volflag). List of affected volumes:"
         t2 = ["\n  volume=[/%s], abspath=%r, type=%s, root=%r" % x for x in mods]
         log("vfs", t + "".join(t2) + "\n", 1)
+
+    assume = "mac" if MACOS else "lin"
+    for vol in asrv.vfs.all_nodes.values():
+        if not vol.realpath or vol.flags.get("is_file"):
+            continue
+        zs = vol.flags["fsnt"].strip()[:3].lower()
+        if ANYWIN and not zs:
+            zs = "win"
+        if zs in ("lin", "win", "mac"):
+            vol.flags["fsnt"] = zs
+            continue
+        fs = _fstab.get(vol.realpath)[0]
+        fs = "win" if fs in winfs else assume
+        htm = json.loads(vol.js_htm)
+        vol.flags["fsnt"] = vol.js_ls["fsnt"] = htm["fsnt"] = fs
+        vol.js_htm = json_hesc(json.dumps(htm))

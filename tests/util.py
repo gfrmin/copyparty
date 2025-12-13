@@ -193,6 +193,7 @@ class Cfg(Namespace):
             du_who="all",
             dk_salt="b" * 16,
             fk_salt="a" * 16,
+            fsnt="lin",
             grp_all="acct",
             idp_gsep=re.compile("[|:;+,]"),
             iobuf=256 * 1024,

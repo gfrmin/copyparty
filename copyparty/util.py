@@ -294,6 +294,23 @@ RE_MEMTOTAL = re.compile("^MemTotal:.* kB")
 RE_MEMAVAIL = re.compile("^MemAvailable:.* kB")
 
 
+if PY2:
+
+    def umktrans(s1, s2):
+        return {ord(c1): ord(c2) for c1, c2 in zip(s1, s2)}
+
+else:
+    umktrans = str.maketrans
+
+FNTL_WIN = umktrans('<>:|?*"\\/', "＜＞：｜？＊＂＼／")
+VPTL_WIN = umktrans('<>:|?*"\\', "＜＞：｜？＊＂＼")
+APTL_WIN = umktrans('<>:|?*"/', "＜＞：｜？＊＂／")
+FNTL_MAC = VPTL_MAC = APTL_MAC = umktrans(":", "：")
+FNTL_OS = FNTL_WIN if ANYWIN else FNTL_MAC if MACOS else None
+VPTL_OS = VPTL_WIN if ANYWIN else VPTL_MAC if MACOS else None
+APTL_OS = APTL_WIN if ANYWIN else APTL_MAC if MACOS else None
+
+
 BOS_SEP = ("%s" % (os.sep,)).encode("ascii")
 
 
@@ -684,7 +701,7 @@ except Exception as ex:
     ub64dec = base64.urlsafe_b64decode  # type: ignore
     b64enc = base64.b64encode  # type: ignore
     b64dec = base64.b64decode  # type: ignore
-    if not PY36:
+    if PY36:
         print("using fallback base64 codec due to %r" % (ex,))
 
 
@@ -2232,32 +2249,22 @@ def sanitize_fn(fn: str, ok: str) -> str:
     if "/" not in ok:
         fn = fn.replace("\\", "/").split("/")[-1]
 
-    if ANYWIN:
-        remap = [
-            ["<", "＜"],
-            [">", "＞"],
-            [":", "："],
-            ['"', "＂"],
-            ["/", "／"],
-            ["\\", "＼"],
-            ["|", "｜"],
-            ["?", "？"],
-            ["*", "＊"],
-        ]
-        for a, b in [x for x in remap if x[0] not in ok]:
-            fn = fn.replace(a, b)
+    if APTL_OS:
+        fn = fn.translate(APTL_OS)
+        if ANYWIN:
+            bad = ["con", "prn", "aux", "nul"]
+            for n in range(1, 10):
+                bad += ("com%s lpt%s" % (n, n)).split(" ")
 
-        bad = ["con", "prn", "aux", "nul"]
-        for n in range(1, 10):
-            bad += ("com%s lpt%s" % (n, n)).split(" ")
-
-        if fn.lower().split(".")[0] in bad:
-            fn = "_" + fn
+            if fn.lower().split(".")[0] in bad:
+                fn = "_" + fn
 
     return fn.strip()
 
 
 def sanitize_vpath(vp: str, ok: str) -> str:
+    if not FNTL_OS:
+        return vp
     parts = vp.replace(os.sep, "/").split("/")
     ret = [sanitize_fn(x, ok) for x in parts]
     return "/".join(ret)
