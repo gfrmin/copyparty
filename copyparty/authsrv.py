@@ -1812,7 +1812,7 @@ class AuthSrv(object):
         derive_args(self.args)
         self.setup_auth_ord()
 
-        if self.args.ipu:
+        if self.args.ipu and not self.args.have_idp_hdrs:
             # syntax (CIDR=UNAME) is verified in load_ipu
             zsl = [x.split("=", 1)[1] for x in self.args.ipu]
             zsl = [x for x in zsl if x not in acct]
