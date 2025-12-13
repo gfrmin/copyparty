@@ -2411,6 +2411,8 @@ it comes with a [systemd service](./contrib/systemd/copyparty@.service) as well 
 
 after installing, start either the system service or the user service and navigate to http://127.0.0.1:3923 for further instructions (unless you already edited the config files, in which case you are good to go, probably)
 
+> to start the systemd service, either do `systemctl start --user copyparty` to start it as your own user, or `systemctl start copyparty@bob` to use unix-user `bob`
+
 
 ## fedora package
 
