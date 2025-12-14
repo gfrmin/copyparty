@@ -451,6 +451,12 @@ upgrade notes
 * CopyParty?
   * nope! the name is either copyparty (all-lowercase) or Copyparty -- it's [one word](https://en.wiktionary.org/wiki/copyparty) after all :>
 
+* what is a volflag?
+  * per-volume configuration; many (not all) global-options can be set as volflags, and most (not all) volflags can be set as global-options; [complete list of volflags](https://copyparty.eu/cli/#flags-help-page)
+
+* what is a volume?
+  * a mapping from a URL (`/music/`) to a folder on your server's local filesystem (`/home/ed/Music` or `C:\Users\ed\Music`) which can then be accessed through copyparty, depending on the permissions and options you set on it -- see [accounts and volumes](#accounts-and-volumes)
+
 * can I change the 🌲 spinning pine-tree loading animation?
   * [yeah...](https://github.com/9001/copyparty/tree/hovudstraum/docs/rice#boring-loader-spinner) :-(
 
@@ -1293,7 +1299,7 @@ using arguments or config files, or a mix of both:
   * or click the `[reload cfg]` button in the control-panel if the user has `a`/admin in any volume
   * changes to the `[global]` config section requires a restart to take effect
 
-**NB:** as humongous as this readme is, there is also a lot of undocumented features. Run copyparty with [`--help`](https://copyparty.eu/cli/) (or click that link) to see all available global options; all of those can be used in the `[global]` section of config files, and everything listed in [`--help-flags`](https://copyparty.eu/cli/#flags-help-page) can be used in volumes as volflags. 
+**NB:** as humongous as this readme is, there is also a lot of undocumented features. Run copyparty with [`--help`](https://copyparty.eu/cli/) (or click that link) to see all available global options; all of those can be used in the `[global]` section of config files, and everything listed in [`--help-flags`](https://copyparty.eu/cli/#flags-help-page) can be used in volumes as volflags (per-volume configuration).
 * if running in docker/podman, try this: `docker run --rm -it copyparty/ac --help`
 * or if you prefer plaintext, https://copyparty.eu/helptext.txt
 
