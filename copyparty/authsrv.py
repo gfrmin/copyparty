@@ -2616,18 +2616,16 @@ class AuthSrv(object):
                     vol.flags[k] = int(vol.flags[k])
 
             if "e2d" not in vol.flags:
-                if "lifetime" in vol.flags:
-                    t = 'removing lifetime config from volume "/{}" because e2d is disabled'
-                    self.log(t.format(vol.vpath), 1)
-                    del vol.flags["lifetime"]
+                zs = "lifetime rss"
+                drop = [x for x in zs.split() if x in vol.flags]
 
-                needs_e2d = [x for x in hooks if x in ("xau", "xiu")]
-                drop = [x for x in needs_e2d if vol.flags.get(x)]
-                if drop:
-                    t = 'removing [{}] from volume "/{}" because e2d is disabled'
-                    self.log(t.format(", ".join(drop), vol.vpath), 1)
-                    for x in drop:
-                        vol.flags.pop(x)
+                zs = "xau xiu"
+                drop += [x for x in zs.split() if vol.flags.get(x)]
+
+                for k in drop:
+                    t = 'cannot enable [%s] for volume "/%s" because this requires one of the following: e2d / e2ds / e2dsa  (either as volflag or global-option)'
+                    self.log(t % (k, vol.vpath), 1)
+                    vol.flags.pop(k)
 
             zi = vol.flags.get("lifetime") or 0
             zi2 = time.time() // (86400 * 365)
