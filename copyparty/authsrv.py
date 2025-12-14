@@ -3306,7 +3306,7 @@ class AuthSrv(object):
                 pwdb = {}
             else:
                 jtxt = read_utf8(self.log, ap, True)
-                pwdb = json.loads(jtxt)
+                pwdb = json.loads(jtxt) if jtxt.strip() else {}
 
             pwdb = [x for x in pwdb if x[0] != uname]
             pwdb.append((uname, self.defpw[uname], hpw))
@@ -3330,7 +3330,7 @@ class AuthSrv(object):
             return
 
         jtxt = read_utf8(self.log, ap, True)
-        pwdb = json.loads(jtxt)
+        pwdb = json.loads(jtxt) if jtxt.strip() else {}
 
         useen = set()
         urst = set()
