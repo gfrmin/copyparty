@@ -115,3 +115,9 @@ if (ebi('lf'))
 		ebi('lm').innerHTML = un ? d.nou : d.nop;
 		return false;
 	};
+
+if (ebi('lp'))
+	ebi('lp').oninput = function() {
+		ebi('lm').innerHTML = this.value.length <= 64 ?
+			'' : 'ERROR: Password too long (max=64)';
+	};
