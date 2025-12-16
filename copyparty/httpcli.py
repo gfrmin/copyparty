@@ -5466,7 +5466,7 @@ class HttpCli(object):
     def setck(self) -> bool:
         k, v = self.uparam["setck"].split("=", 1)
         t = 0 if v in ("", "x") else 86400 * 299
-        ck = gencookie(k, v, self.args.R, self.args.cookie_lax, False, t)
+        ck = gencookie(k, v, self.args.R, True, False, t)
         self.out_headerlist.append(("Set-Cookie", ck))
         if "cc" in self.ouparam:
             self.redirect("", "?h#cc")
@@ -5478,7 +5478,7 @@ class HttpCli(object):
         for k in ALL_COOKIES:
             if k not in self.cookies:
                 continue
-            cookie = gencookie(k, "x", self.args.R, self.args.cookie_lax, False)
+            cookie = gencookie(k, "x", self.args.R, True, False)
             self.out_headerlist.append(("Set-Cookie", cookie))
 
         self.redirect("", "?h#cc")
@@ -5512,8 +5512,9 @@ class HttpCli(object):
             rc == 403
             and self.uname == "*"
             and "sec-fetch-site" not in self.headers
+            and self.cookies.get("js") != "y"
             and (
-                not self.ua.startswith("Mozilla/")
+                not self.args.ua_nodav.search(self.ua)
                 or (self.args.dav_ua1 and self.args.dav_ua1.search(self.ua))
             )
         ):

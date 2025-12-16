@@ -1439,7 +1439,8 @@ def add_webdav(ap):
     ap2.add_argument("--dav-mac", action="store_true", help="disable apple-garbage filter -- allow macos to create junk files (._* and .DS_Store, .Spotlight-*, .fseventsd, .Trashes, .AppleDouble, __MACOS)")
     ap2.add_argument("--dav-rt", action="store_true", help="show symlink-destination's lastmodified instead of the link itself; always enabled for recursive listings (volflag=davrt)")
     ap2.add_argument("--dav-auth", action="store_true", help="force auth for all folders (required by davfs2 when only some folders are world-readable) (volflag=davauth)")
-    ap2.add_argument("--dav-ua1", metavar="PTN", type=u, default=r" kioworker/", help="regex of tricky user-agents which expect 401 from GET requests; disable with [\033[32mno\033[0m] or blank")
+    ap2.add_argument("--dav-ua1", metavar="PTN", type=u, default=r" kioworker/", help="regex of user-agents which ARE webdav-clients, and expect 401 from GET requests; disable with [\033[32mno\033[0m] or blank")
+    ap2.add_argument("--ua-nodav", metavar="PTN", type=u, default=r"^(Mozilla/|NetworkingExtension/|com\.apple\.WebKit)", help="regex of user-agents which are NOT webdav-clients")
 
 
 def add_tftp(ap):
