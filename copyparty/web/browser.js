@@ -664,6 +664,7 @@ var LANGN = [
 	["swe", "Svenska"],
 	["tur", "Türkçe"],
 	["ukr", "Українська"],
+	["vie", "Tiếng Việt"],
 ];
 
 if (window.langmod)

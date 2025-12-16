@@ -118,6 +118,7 @@ web/tl/spa.js
 web/tl/swe.js
 web/tl/tur.js
 web/tl/ukr.js
+web/tl/vie.js
 web/ui.css
 web/up2k.js
 web/util.js

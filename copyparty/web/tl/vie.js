@@ -687,14 +687,14 @@ Ls.vie = {
 		"a1": "tải lại",
 		"b1": "xin chào khách &nbsp; <small>(bạn chưa đăng nhập)</small>",
 		"c1": "đăng xuất",
-		"d1": "ghi lại ngăn xếp",  // TLNote: "d2" is the tooltip for this button
+		"d1": "ghi lại ngăn xếp",
 		"d2": "hiển thị trạng thái của tất cả các luồng đang hoạt động",
 		"e1": "tải lại cấu hình",
 		"e2": "tải lại các tệp cấu hình (tài khoản/ổ đĩa/cờ ổ đĩa),$Nvà quét lại tất cả các ổ đĩa e2ds$N$Nchú ý: bất kỳ thay đổi nào đối với cài đặt toàn cục$Ncần khởi động lại hoàn toàn để có hiệu lực",
 		"f1": "bạn có thể duyệt:",
 		"g1": "bạn có thể tải lên:",
 		"cc1": "thứ khác:",
-		"h1": "vô hiệu hoá k304",  // TLNote: "j1" explains what k304 is
+		"h1": "vô hiệu hoá k304",
 		"i1": "bật k304",
 		"j1": "bật k304 sẽ ngắt kết nối client của bạn trên mỗi HTTP 304, tùy chọn này có thể ngăn một số proxy bị lỗi kẹt (đột ngột không tải được trang), <em>nhưng</em> nó cũng sẽ làm mọi thứ chậm hơn",
 		"k1": "đặt lại cài đặt client",
@@ -706,14 +706,14 @@ Ls.vie = {
 		"q1": 'sử dụng mật khẩu hoặc <a href="' + SR + '/?h">về trang chủ</a>',
 		"r1": "về trang chủ",
 		".s1": "quét lại",
-		"t1": "hành động",  // TLNote: this is the header above the "rescan" buttons
+		"t1": "hành động",
 		"u2": "thời gian kể từ lần ghi máy chủ cuối cùng$N( tải lên / đổi tên / ... )$N$N17d = 17 ngày$N1h23 = 1 giờ 23 phút$N4m56 = 4 phút 56 giây",
 		"v1": "kết nối",
 		"v2": "sử dụng máy chủ này như một ổ cứng cục bộ",
 		"w1": "chuyển sang https",
 		"x1": "đổi mật khẩu",
-		"y1": "chỉnh sửa chia sẻ",  // TLNote: shows the list of folders that the user has decided to share
-		"z1": "mở khóa chia sẻ này:",  // TLNote: the password prompt to see a hidden share
+		"y1": "chỉnh sửa chia sẻ",
+		"z1": "mở khóa chia sẻ này:",
 		"ta1": "điền mật khẩu mới:",
 		"ta2": "nhập lại mật khẩu mới:",
 		"ta3": "mật khẩu không khớp, xin hãy thử lại",
