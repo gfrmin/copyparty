@@ -1,4 +1,57 @@
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
+# 2025-1214-2304  `v1.19.22`  merikuri
+
+## 🧪 new features
+
+* #1068 #1089 add [options](https://copyparty.eu/cli#g-prologues) to customize which textfiles (readme/prologue/epilogue) to embed above/below directory listings 14bef85b
+  * `prologues`, `epilogues`, `readmes`, `preadmes` (global-options and/or volflags) accept a comma-separated list of filenames to look for
+* #1092 add option [th-qv](https://copyparty.eu/cli#g-th-qv) to change the thumbnail quality a1cbac02
+  * also found and enabled a size-optimization for libvips, so:
+* #1092 automatically delete and rebuild thumbnails if thumbnailer-config is changed ca6c4dea
+* #1049 add option [log-date](https://copyparty.eu/cli#g-log-date) to display dates in logs 965a4a69
+* #1047 rss-feed: title/description of each entry is now a [template-string](https://copyparty.eu/cli#g-rss-fmt-t) which can reference arbitrary metadata properties (thx @djjeane!) 5e85e3d6
+* extend the ramdisk safeguard to also prevent moving files into ephemeral storage fa918228
+  * would previously prevent creating new files, but this was another potential source for confusion (thx coworker!)
+* now possible to [customize](https://copyparty.eu/cli#g-banmsg) the `thank you for playing` ban-message ce2eeba2
+* #964 option to change the default value of the [`Cache-Control`](https://github.com/9001/copyparty/#other-flags) response-header 3bc0bf19
+  * [don't let this be you](https://a.ocv.me/pub/g/2025/12/f7mc7gbkvkdd1.jpeg) :^)
+
+## 🩹 bugfixes
+
+* #1010 correctly replace illegal characters in filenames according to underlying filesystem ba017f7b
+  * for example, uploading a folder named [COMPLE:X](https://www.youtube.com/watch?v=U9QKCUufpDc&list=OLAK5uy_lMgzSTDg0XcZcqYSVAlfZ4O3rlGckolW4) into an exFAT flashdrive on linux is now possible
+  * and, to make that possible, filesystem-detection now sees the true filesystem behind FUSE (for example ntfs-3g) 3bbed1bc
+* audio-playback would skip into the next folder rather than play the rest of the current one if the folder was sufficiently massive 8e2fb05a
+* #1094 fix `ipu` with idp users 594ec394
+* [commandline uploader](https://github.com/9001/copyparty/tree/hovudstraum/bin#u2cpy): fix termsize detection on windows 7d526eab
+* #1104 the rss feature now complains loudly if e2d is not enabled (because that was always necessary but not obvious) 92195403
+* ui/ux:
+  * #1102 the option to cosmetically hide server info did not apply for all themes e440578c
+  * the metadata-property `date` (default-disabled) was renamed to `tdate` to avoid colliding with the last-modified timestamp if enabled fecc3fd5
+* docs:
+  * #1070 how to use the bundled [archlinux](https://github.com/9001/copyparty/#arch-package) systemd scripts 7f82189d
+  * [podman-systemd](https://github.com/9001/copyparty/tree/hovudstraum/contrib/podman-systemd): fix paths in guide (thx @emiliatheworst!) a8698392
+  * [synology](https://github.com/9001/copyparty/blob/hovudstraum/docs/synology-dsm.md): better way to hide `@eaDir` 1b0eb450
+
+## 🔧 other changes
+
+* add a loud warning in logs if `X-Forwarded-Proto` is not added by the reverseproxy ad45de94 1b222fb5
+  * almost did the same for `X-Forwarded-Host` too before realizing that's generally not a thing
+* #1038 creating a blank `chpw.json` before starting copyparty is now supported and no longer crashes on startup efc6a09d
+* #1105 better feedback in the login ui (thx @stackxp!) 08474dbe
+* [mtag/audio-key.py](https://github.com/9001/copyparty/blob/hovudstraum/bin/mtag/audio-key.py): replaced the [melodic key detector](https://github.com/9001/copyparty/tree/hovudstraum/scripts/docker#detecting-bpm-and-musical-key) since ffmpeg-8 / alpine-3.23 broke it 67ddc641
+* updated deps:
+  * webdeps: dompurify-3.3.1 e0b04d9c
+  * copyparty.exe: python-3.13.11 9e64fe02
+
+## 🌠 fun facts
+
+* 39c3 has a LOT of awesome [self-organized sessions](https://events.ccc.de/congress/2025/hub/en/event/list/so)
+  * didn't have anything copyparty-related this time but CCC HYPE!
+
+
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
 # 2025-1202-2047  `v1.19.21`  tadaimback
 
 ## 🧪 new features
