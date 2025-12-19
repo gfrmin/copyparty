@@ -6387,10 +6387,10 @@ class HttpCli(object):
         eses = ["", ""]
         rvol = self.rvol
         wvol = self.wvol
+        allvols = self.asrv.vfs.all_nodes
         if self.args.have_unlistc:
-            allvols = self.asrv.vfs.all_vols
-            rvol = [x for x in rvol if "unlistcr" not in allvols[x[1:-1]].flags]
-            wvol = [x for x in wvol if "unlistcw" not in allvols[x[1:-1]].flags]
+            rvol = [x for x in rvol if "unlistcr" not in allvols[x].flags]
+            wvol = [x for x in wvol if "unlistcw" not in allvols[x].flags]
         vols = list(set(rvol + wvol))
         if self.vpath:
             zs = "%s/" % (self.vpath,)
@@ -6408,6 +6408,7 @@ class HttpCli(object):
                 "tags": e_d,
                 "dt": 0,
                 "name": 0,
+                "perms": allvols[x].get_perms("", self.uname),
             }
             for x in sorted(vols)
         ]
