@@ -167,6 +167,9 @@ class Lim(object):
         self.vbmax = 0  # volume bytes max
         self.vnmax = 0  # volume max num files
 
+        self.c_vb_v = 0  # cache: volume bytes used (value)
+        self.c_vb_r = 0  # cache: volume bytes used (ref)
+
         self.smin = 0  # filesize min
         self.smax = 0  # filesize max
 

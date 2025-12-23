@@ -1834,13 +1834,18 @@ class HttpCli(object):
             bfree, btot, _ = get_df(vn.realpath, False)
             if btot:
                 if "vmaxb" in vn.flags:
-                    try:
-                        zi, _ = self.conn.hsrv.broker.ask(
-                            "up2k.get_volsizes", [vn.realpath]
-                        ).get()[0]
-                        bfree = min(bfree, max(0, vn.lim.vbmax - zi))
-                    except:
-                        pass
+                    if bfree == vn.lim.c_vb_r:
+                        bfree = min(bfree, max(0, vn.lim.vbmax - vn.lim.c_vb_v))
+                    else:
+                        try:
+                            zi, _ = self.conn.hsrv.broker.ask(
+                                "up2k.get_volsizes", [vn.realpath]
+                            ).get()[0]
+                            vn.lim.c_vb_v = zi
+                            vn.lim.c_vb_r = bfree
+                            bfree = min(bfree, max(0, vn.lim.vbmax - zi))
+                        except:
+                            pass
                 df = {
                     "quota-available-bytes": str(bfree),
                     "quota-used-bytes": str(btot - bfree),
@@ -6738,6 +6743,19 @@ class HttpCli(object):
         ):
             free, total, zs = get_df(abspath, False)
             if total:
+                if "vmaxb" in vn.flags:
+                    if free == vn.lim.c_vb_r:
+                        free = min(free, max(0, vn.lim.vbmax - vn.lim.c_vb_v))
+                    else:
+                        try:
+                            zi, _ = self.conn.hsrv.broker.ask(
+                                "up2k.get_volsizes", [vn.realpath]
+                            ).get()[0]
+                            vn.lim.c_vb_v = zi
+                            vn.lim.c_vb_r = free
+                            free = min(free, max(0, vn.lim.vbmax - zi))
+                        except:
+                            pass
                 h1 = humansize(free or 0)
                 h2 = humansize(total)
                 srv_info.append("{} free of {}".format(h1, h2))
