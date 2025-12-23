@@ -1833,6 +1833,14 @@ class HttpCli(object):
         ):
             bfree, btot, _ = get_df(vn.realpath, False)
             if btot:
+                if "vmaxb" in vn.flags:
+                    try:
+                        zi, _ = self.conn.hsrv.broker.ask(
+                            "up2k.get_volsizes", [vn.realpath]
+                        ).get()[0]
+                        bfree = min(bfree, max(0, vn.lim.vbmax - zi))
+                    except:
+                        pass
                 df = {
                     "quota-available-bytes": str(bfree),
                     "quota-used-bytes": str(btot - bfree),
