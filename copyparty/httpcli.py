@@ -7134,6 +7134,7 @@ class HttpCli(object):
             os.path.join(abspath, lnames["descript.ion"])
         ):
             rem = []
+            items = {x["name"].lower(): x for x in files + dirs}
             with open(os.path.join(abspath, lnames["descript.ion"]), "rb") as f:
                 for bln in [x.strip() for x in f]:
                     try:
@@ -7146,12 +7147,9 @@ class HttpCli(object):
                             fn = fn[1:]
                         else:
                             fn, desc = ln.split(" ", 1)
-                        fe = next(
-                            (x for x in files if x["name"].lower() == fn.lower()), None
-                        )
-                        if fe:
-                            fe["tags"]["descript.ion"] = desc
-                        else:
+                        try:
+                            items[fn.lower()]["tags"]["descript.ion"] = desc
+                        except:
                             t = "<li><code>%s</code> %s</li>"
                             rem.append(t % (html_escape(fn), html_escape(desc)))
                     except:
