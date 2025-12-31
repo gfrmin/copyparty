@@ -261,7 +261,7 @@ also see [comparison to similar software](./docs/versus.md)
   * ☑ [upnp / zeroconf / mdns / ssdp](#zeroconf)
   * ☑ [event hooks](#event-hooks) / script runner
   * ☑ [reverse-proxy support](https://github.com/9001/copyparty#reverse-proxy)
-  * ☑ cross-platform (Windows, Linux, Macos, Android, iOS, FreeBSD, arm32/arm64, ppc64le, s390x, risc-v/riscv64)
+  * ☑ cross-platform (Windows, Linux, Macos, Android, iOS, FreeBSD, arm32/arm64, ppc64le, s390x, risc-v/riscv64, SGI IRIX)
 * upload
   * ☑ basic: plain multipart, ie6 support
   * ☑ [up2k](#uploading): js, resumable, multithreaded
@@ -2658,7 +2658,9 @@ quick summary of more eccentric web-browsers trying to view a directory index:
 unexpected things that run copyparty:
 
 * an old [allwinner](https://a.ocv.me/pub/g/nerd-stuff/cpp/servers/aallwinner.jpg) android tv-box (ziptie-strapped to an HDD) running a firmware which flips the CPU into Big-Endian mode early during boot
-  * copyparty is [certified BE ready](https://a.ocv.me/pub/g/nerd-stuff/cpp/servers/be-ready.png)
+  * copyparty is [certified BE ready](https://a.ocv.me/pub/g/nerd-stuff/cpp/servers/be-ready.png) -- thanks, [Øl Telecom](http://ol-tele.com/)!
+* an [SGI O2 (photo)](https://a.ocv.me/pub/g/nerd-stuff/cpp/servers/sgi-o2.jpg?cache) with a grand total of 64 MiB RAM running SGI IRIX; [screenshot](https://a.ocv.me/pub/g/nerd-stuff/cpp/servers/sgi-o2.png?cache)
+  * thanks again to the wonderful people at [Øl Telecom](http://ol-tele.com/)
 * a [wristwatch](https://a.ocv.me/pub/g/nerd-stuff/cpp/servers/clockyparty.jpg)
 
 

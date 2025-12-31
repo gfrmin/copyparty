@@ -147,6 +147,8 @@ symbol legend,
 | runs on Macos           | █ |   | █ | █ | █ | █ | █ | █ | █ | █ | █ | █ |   |
 | runs on FreeBSD         | █ |   | █ | • | █ | █ | █ | • | █ | █ |   | █ |   |
 | runs on Risc-V          | █ |   |   | █ | █ | █ |   | • |   | █ |   |   |   |
+| runs on SGI IRIX        | █ |   |   | • |   |   |   |   |   |   |   |   |   |
+| runs on aarch64-BE      | █ |   |   | • |   | • |   |   |   | • |   | • |   |
 | portable binary         | █ | █ | █ |   |   | █ | █ |   |   | █ |   | █ | █ |
 | zero setup, just go     | █ | █ | █ |   |   | ╱ | █ |   |   | █ |   | ╱ | █ |
 | android app             | ╱ |   |   | █ | █ |   |   |   |   |   |   |   |   |
@@ -158,6 +160,8 @@ symbol legend,
   * runs on iOS / iPads using [a-Shell](https://holzschu.github.io/a-Shell_iOS/) (pretty good) or [iSH](https://ish.app/) (very slow) but cannot run in the background and is not able to share all of your phone storage (just a separate dedicated folder)
   * [android app](https://f-droid.org/en/packages/me.ocv.partyup/) is for uploading only
   * no iOS app but has [shortcuts](https://github.com/9001/copyparty#ios-shortcuts) for easy uploading
+  * validated on aarch64-BE by [Øl Telecom](http://ol-tele.com/) during eth0:2025; [photo1](https://a.ocv.me/pub/g/nerd-stuff/cpp/servers/aallwinner.jpg?cache) and [diploma](https://a.ocv.me/pub/g/nerd-stuff/cpp/servers/be-ready.png?cache)
+  * validated on [SGI IRIX](https://en.wikipedia.org/wiki/IRIX) ([an O2](https://en.wikipedia.org/wiki/SGI_O2)) by [Øl Telecom](http://ol-tele.com/) during 39c3; [photo1](https://a.ocv.me/pub/g/nerd-stuff/cpp/servers/sgi-o2.jpg?cache) and [screenshot](https://a.ocv.me/pub/g/nerd-stuff/cpp/servers/sgi-o2.png?cache)
 * `b`/hfs2 runs on linux through wine
 * `f`/rclone must be started with the command `rclone serve webdav .` or similar
 * `h`/chibisafe has undocumented windows support
