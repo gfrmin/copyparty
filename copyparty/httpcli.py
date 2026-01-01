@@ -1779,6 +1779,7 @@ class HttpCli(object):
                 set(),
                 self.uname,
                 True,
+                1,
                 not self.args.no_scandir,
                 wrap=False,
             )
@@ -5014,6 +5015,9 @@ class HttpCli(object):
             packer = StreamZip
             ext = "zip"
 
+        dots = 0 if "nodot" in self.uparam else 1
+        scandir = not self.args.no_scandir
+
         fn = self.vpath.split("/")[-1] or self.host.split(":")[0]
         if items:
             fn = "sel-" + fn
@@ -5025,9 +5029,7 @@ class HttpCli(object):
             maxn = vn.flags.get("zipmaxn_v") or 0
             nf = 0
             nb = 0
-            fgen = vn.zipgen(
-                vpath, rem, set(items), self.uname, False, not self.args.no_scandir
-            )
+            fgen = vn.zipgen(vpath, rem, set(items), self.uname, False, dots, scandir)
             t = "total size exceeds a limit specified in server config"
             t = vn.flags.get("zipmaxt") or t
             if maxs and maxn:
@@ -5051,9 +5053,7 @@ class HttpCli(object):
         self.log(repr(cdis))
         self.send_headers(None, mime=mime, headers={"Content-Disposition": cdis})
 
-        fgen = vn.zipgen(
-            vpath, rem, set(items), self.uname, False, not self.args.no_scandir
-        )
+        fgen = vn.zipgen(vpath, rem, set(items), self.uname, False, dots, scandir)
         # for f in fgen: print(repr({k: f[k] for k in ["vp", "ap"]}))
         cfmt = ""
         if self.thumbcli and not self.args.no_bacode:
