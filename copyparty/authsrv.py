@@ -1120,9 +1120,6 @@ class AuthSrv(object):
     def idp_checkin(
         self, broker: Optional["BrokerCli"], uname: str, gname: str
     ) -> bool:
-        if uname in self.acct:
-            return False
-
         if self.idp_usr_gh.get(uname) == gname:
             return False
 
