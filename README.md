@@ -2684,6 +2684,10 @@ interact with copyparty using non-browser clients
   * `chunk(){ curl -H pw:wark -T- http://127.0.0.1:3923/;}`  
     `chunk <movie.mkv`
 
+* curl: append to existing file with `?apnd`
+  * `log(){ curl -H pw:wark -T- http://127.0.0.1:3923/logfile.txt?apnd;}`  
+    `echo hey | log`
+
 * bash: when curl and wget is not available or too boring
   * `(printf 'PUT /junk?pw=wark HTTP/1.1\r\n\r\n'; cat movie.mkv) | nc 127.0.0.1 3923`
   * `(printf 'PUT / HTTP/1.1\r\n\r\n'; cat movie.mkv) >/dev/tcp/127.0.0.1/3923`

@@ -226,11 +226,13 @@ authenticate using header `Cookie: cppwd=foo` or url param `&pw=foo`
 | PUT | `?ck=md5` | (binary data) | return md5 instead of sha512 |
 | PUT | `?gz` | (binary data) | compress with gzip and write into file at URL |
 | PUT | `?xz` | (binary data) | compress with xz and write into file at URL |
+| PUT | `?apnd` | (binary data) | append to existing file |
 | mPOST | | `f=FILE` | upload `FILE` into the folder at URL |
 | mPOST | `?j` | `f=FILE` | ...and reply with json |
 | mPOST | `?ck` | `f=FILE` | ...and disable checksum gen (faster) |
 | mPOST | `?ck=md5` | `f=FILE` | ...and return md5 instead of sha512 |
 | mPOST | `?replace` | `f=FILE` | ...and overwrite existing files |
+| mPOST | `?apnd` | `f=FILE` | ...and append to existing files |
 | mPOST | `?media` | `f=FILE` | ...and return medialink (not hotlink) |
 | mPOST | | `act=mkdir`, `name=foo` | create directory `foo` at URL |
 | POST | `?delete` | | delete URL recursively |

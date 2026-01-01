@@ -94,6 +94,7 @@ def vf_vmap() -> dict[str, str]:
         "th_x3": "th3x",
     }
     for k in (
+        "apnd_who",
         "bup_ck",
         "cachectl",
         "casechk",
@@ -232,6 +233,7 @@ flagcats = {
         "pk": "forces server-side compression, optional arg: xz,9",
     },
     "upload rules": {
+        "apnd_who=dw": "who can append? (aw/dw/w/no)",
         "maxn=250,600": "max 250 uploads over 15min",
         "maxb=1g,300": "max 1 GiB over 5min (suffixes: b, k, m, g, t)",
         "vmaxb=1g": "total volume size max 1 GiB (suffixes: b, k, m, g, t)",

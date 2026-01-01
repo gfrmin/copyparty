@@ -2478,7 +2478,12 @@ class HttpCli(object):
                             self.vpath = vjoin(self.vpath, fn)
                         params["fdir"] = fdir
 
-        if is_put and not (self.args.no_dav or self.args.nw) and bos.path.exists(path):
+        if (
+            is_put
+            and not (self.args.no_dav or self.args.nw)
+            and "append" not in self.uparam
+            and bos.path.exists(path)
+        ):
             # allow overwrite if...
             #  * volflag 'daw' is set, or client is definitely webdav
             #  * and account has delete-access
@@ -2526,7 +2531,22 @@ class HttpCli(object):
         else:
             raise Pebkac(500, "unknown hash alg")
 
-        f, fn = ren_open(fn, *open_a, **params)
+        if "apnd" in self.uparam and not self.args.nw and bos.path.exists(path):
+            zs = vfs.flags["apnd_who"]
+            if (
+                zs == "w"
+                or (zs == "aw" and self.can_admin)
+                or (zs == "dw" and self.can_delete)
+            ):
+                pass
+            else:
+                raise Pebkac(400, "you do not have permission to append")
+            zs = os.path.join(params["fdir"], fn)
+            self.log("upload will append to [%s]" % (zs,))
+            f = open(zs, "ab")
+        else:
+            f, fn = ren_open(fn, *open_a, **params)
+
         try:
             path = os.path.join(fdir, fn)
             post_sz, sha_hex, sha_b64 = copier(reader, f, hasher, 0, self.args.s_wr_slp)
