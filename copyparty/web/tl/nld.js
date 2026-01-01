@@ -155,7 +155,7 @@ Ls.nld = {
 	"ul_par": "Parallel uploads:",
 	"ut_rand": "Willekeurige bestandsnaam",
 	"ut_u2ts": "Kopieer de laatste-gewijzigde tijdstamp$Nvan je bestandsysteem naar de server\">📅",
-	"ut_ow": "Overschrijf bestaande bestanden op de server?$N🛡️: nooit (zal in plaats daarvan een nieuwe bestandsnaam genereren)$N🕒: overschrijven als de server-bestand ouder is dan het geüploade bestand$N♻️: altijd overschrijven als de bestanden verschillend zijn",
+	"ut_ow": "Overschrijf bestaande bestanden op de server?$N🛡️: nooit (zal in plaats daarvan een nieuwe bestandsnaam genereren)$N🕒: overschrijven als de server-bestand ouder is dan het geüploade bestand$N♻️: altijd overschrijven als de bestanden verschillend zijn$N⏭️: alle bestaande bestanden onvoorwaardelijk overslaan", //m
 	"ut_mt": "Ga door met hashen van andere bestanden tijdens het uploaden$N$Moet je misschien uitschakelen als je CPU of HDD het niet aan kan",
 	"ut_ask": 'Vraag voor bevestiging voordat het uploaden start">💭',
 	"ut_pot": "Verbeter de uploadsnelheid voor langzame apparaten$Ndoor de interface minder complex te maken",
@@ -220,6 +220,7 @@ Ls.nld = {
 	"cl_reset": "Reset",
 	"cl_hpick": "Tik op de kolomkoppen om ze in de onderstaande tabel te verbergen",
 	"cl_hcancel": "Kolumn verbergen geannuleerd",
+	"cl_rcm": "Rechtermuisknopmenu", //m
 
 	"ct_grid": '田 grid',
 	"ct_ttips": '◔ ◡ ◔">ℹ️ tooltips',
@@ -262,6 +263,7 @@ Ls.nld = {
 	"cdt_lim": "Max aantal bestanden laten zien in een map",
 	"cdt_ask": "Als helemaal naar beneden gescrolld bent,$Nin plaats van meer inladen,$Nvraag wat het moet doen",
 	"cdt_hsort": "Hoeveel sorteerregels (&lt;code&gt;,sorthref&lt;/code&gt;) moeten er in media-URL's worden opgenomen? Als je dit op 0 instelt, worden de sorteerregels in medialinks ook genegeerd wanneer erop geklikt word.",
+	"cdt_ren": "Aangepast rechtermuisknopmenu inschakelen, het normale menu blijft beschikbaar met shift + rechtermuisknop", //m
 
 	"tt_entree": "Laat navpane zien (directoryboom zijbalk)$NHotkey: B",
 	"tt_detree": "Laat breadcrumbs zien$NHotkey: B",
@@ -637,6 +639,22 @@ Ls.nld = {
 	"ur_asn": "De {0} bestanden zijn NIET gevonden op de server",
 	"ur_um": "Voltooid;\n{0} upload(s) OK,\n{1} upload(s) mislukt, sorry",
 	"ur_sm": "Voltooid;\n{0} bestand(en) gevonden op de server,\n{1} bestand(en) NIET gevonden op de server",
+
+	"rc_opn": "Openen", //m
+	"rc_ply": "Afspelen", //m
+	"rc_pla": "Afspelen als audio", //m
+	"rc_txt": "Openen in bestandsviewer", //m
+	"rc_md": "Openen in teksteditor", //m
+	"rc_dl": "Downloaden", //m
+	"rc_zip": "Downloaden als archief", //m
+	"rc_del": "Verwijderen", //m
+	"rc_cut": "Knippen", //m
+	"rc_cpy": "Kopiëren", //m
+	"rc_pst": "Plakken", //m
+	"rc_nfo": "Nieuwe map", //m
+	"rc_nfi": "Nieuw bestand", //m
+	"rc_sal": "Alles selecteren", //m
+	"rc_sin": "Selectie omkeren", //m
 
 	"lang_set": "Vernieuw de pagina om de wijziging door te voeren?",
 

@@ -155,7 +155,7 @@ Ls.por = {
 	"ul_par": "uploads paralelos:",
 	"ut_rand": "randomizar nomes de arquivos",
 	"ut_u2ts": "copiar o carimbo de data/hora de última modificação$Ndo seu sistema de arquivos para o servidor\">📅",
-	"ut_ow": "substituir arquivos existentes no servidor?$N🛡️: nunca (irá gerar um novo nome de arquivo em vez disso)$N🕒: substituir se o arquivo no servidor for mais antigo que o seu$N♻️: sempre substituir se os arquivos forem diferentes",
+	"ut_ow": "substituir arquivos existentes no servidor?$N🛡️: nunca (irá gerar um novo nome de arquivo em vez disso)$N🕒: substituir se o arquivo no servidor for mais antigo que o seu$N♻️: sempre substituir se os arquivos forem diferentes$N⏭️: ignorar incondicionalmente todos os arquivos existentes", //m
 	"ut_mt": "continuar a fazer o hash de outros arquivos enquanto faz upload$N$Ntalvez desativar se sua CPU ou HDD for um gargalo",
 	"ut_ask": 'pedir confirmação antes do upload começar">💭',
 	"ut_pot": "melhorar a velocidade de upload em dispositivos lentos$Ntornando a UI menos complexa",
@@ -220,6 +220,7 @@ Ls.por = {
 	"cl_reset": "resetar",
 	"cl_hpick": "toque nos cabeçalhos das colunas para ocultá-los na tabela abaixo",
 	"cl_hcancel": "ocultar coluna abortado",
+	"cl_rcm": "menu de clique direito", //m
 
 	"ct_grid": '田 a grade',
 	"ct_ttips": '◔ ◡ ◔">ℹ️ dicas de ferramentas',
@@ -262,6 +263,7 @@ Ls.por = {
 	"cdt_lim": "número máximo de arquivos para mostrar em uma pasta",
 	"cdt_ask": "ao rolar para o final,$nem vez de carregar mais arquivos,$nperguntar o que fazer",
 	"cdt_hsort": "quantas regras de ordenação (&lt;code&gt;,sorthref&lt;/code&gt;) incluir em URLs de mídia. Definir isso para 0 também ignorará as regras de ordenação incluídas em links de mídia quando você clicar neles",
+	"cdt_ren": "ativar menu de clique direito personalizado, o menu normal permanece acessível com shift + clique direito", //m
 
 	"tt_entree": "mostrar painel de navegação (árvore de diretórios)$NHotkey: B",
 	"tt_detree": "mostrar breadcrumbs$NHotkey: B",
@@ -637,6 +639,22 @@ Ls.por = {
 	"ur_asn": "Os {0} arquivos NÃO foram encontrados no servidor",
 	"ur_um": "Concluído;\n{0} uploads OK,\n{1} uploads falharam, desculpe",
 	"ur_sm": "Concluído;\n{0} arquivos encontrados no servidor,\n{1} arquivos NÃO encontrados no servidor",
+
+	"rc_opn": "abrir", //m
+	"rc_ply": "reproduzir", //m
+	"rc_pla": "reproduzir como áudio", //m
+	"rc_txt": "abrir no visualizador de arquivos", //m
+	"rc_md": "abrir no editor de texto", //m
+	"rc_dl": "baixar", //m
+	"rc_zip": "baixar como arquivo", //m
+	"rc_del": "excluir", //m
+	"rc_cut": "recortar", //m
+	"rc_cpy": "copiar", //m
+	"rc_pst": "colar", //m
+	"rc_nfo": "nova pasta", //m
+	"rc_nfi": "novo arquivo", //m
+	"rc_sal": "selecionar tudo", //m
+	"rc_sin": "inverter seleção", //m
 
 	"lang_set": "atualizar para a mudança ter efeito?",
 

@@ -155,7 +155,7 @@ Ls.epo = {
 	"ul_par": "paralelaj alŝutoj:",
 	"ut_rand": "hazardigi dosiernomojn",
 	"ut_u2ts": "kopii la tempon de lasta modifo$Nel via dosiersistemo al la servilo\">📅",
-	"ut_ow": "ĉu anstataŭigi dosierojn ĉe la servilo?$N🛡️: neniam (dosiero estos alŝutita kun nova dosiernomo)$N🕒: anstataŭigi, se servila dosiero estas pli malnova ol via$N♻️: ĉiam anstataŭigi, se dosieroj estas malsamaj",
+	"ut_ow": "ĉu anstataŭigi dosierojn ĉe la servilo?$N🛡️: neniam (dosiero estos alŝutita kun nova dosiernomo)$N🕒: anstataŭigi, se servila dosiero estas pli malnova ol via$N♻️: ĉiam anstataŭigi, se dosieroj estas malsamaj$N⏭️: senkondiĉe preterlasi ĉiujn ekzistantajn dosierojn", //m
 	"ut_mt": "daŭri kalkuladon de kontrolsumoj por aliaj dosieroj dum alŝutado$N$Nmalŝaltinda, se via procesoro aŭ disko ne estas sufiĉe rapidaj",
 	"ut_ask": 'peti konfirmon antaŭ komenco de alŝutado">💭',
 	"ut_pot": "plirapidigi alŝutadon por malrapidaj komputiloj$Nper malkomplikado de fasado",
@@ -220,6 +220,7 @@ Ls.epo = {
 	"cl_reset": "restarigi",
 	"cl_hpick": "alklaki la kapojn de kolumnoj por kasi en la suban tabelon",
 	"cl_hcancel": "kaŝado de kolumno nuligita",
+	"cl_rcm": "dekstra-klaka menuo", //m
 
 	"ct_grid": '田 krado',
 	"ct_ttips": '◔ ◡ ◔">ℹ️ ŝpruchelpiloj',
@@ -262,6 +263,7 @@ Ls.epo = {
 	"cdt_lim": "maks. nombro de dosieroj por montri en dosierujo",
 	"cdt_ask": "je malsupro de paĝo, peti por ago$Nanstataŭ ŝarĝi pli da dosieroj",
 	"cdt_hsort": "kiom da ordigo-reguloj (&lt;code&gt;,sorthref&lt;/code&gt;) inkludi en adreso de la paĝo. Se agordita kiel 0, reguloj, inkluditaj en la adreso, estos ignoritaj",
+	"cdt_ren": "ebligi propran dekstra-klakan menuon, la normala menuo restas alirebla per shift + dekstra klako", //m
 
 	"tt_entree": "montri arbovidan navig-panelon$NFulmoklavo: B",
 	"tt_detree": "montri paĝnivelan navig-panelon$NFulmoklavo: B",
@@ -637,6 +639,22 @@ Ls.epo = {
 	"ur_asn": "La {0} dosieroj estis NE trovitaj ĉe la servilo",
 	"ur_um": "Finita;\n{0} alŝutoj sukcesis,\n{1} alŝutoj malsukcesis, pardonon",
 	"ur_sm": "Finita;\n{0} dosieroj trovitaj ĉe la servilo,\n{1} dosieroj NE trovitaj ĉe la servilo",
+
+	"rc_opn": "malfermi", //m
+	"rc_ply": "Ludi", //m
+	"rc_pla": "Ludi kiel sonon", //m
+	"rc_txt": "malfermi en dosiera vidilo", //m
+	"rc_md": "malfermi en tekstredaktilo", //m
+	"rc_dl": "elŝuti", //m
+	"rc_zip": "elŝuti kiel arkivon", //m
+	"rc_del": "forigi", //m
+	"rc_cut": "eltondi", //m
+	"rc_cpy": "kopii", //m
+	"rc_pst": "alglui", //m
+	"rc_nfo": "nova dosierujo", //m
+	"rc_nfi": "nova dosiero", //m
+	"rc_sal": "elekti ĉion", //m
+	"rc_sin": "inversigi elekton", //m
 
 	"lang_set": "ĉu reŝargi paĝon por efektivigi lingvo-ŝanĝon?",
 

@@ -153,7 +153,7 @@ Ls.vie = {
 	"ul_par": "tải lên song song:",
 	"ut_rand": "ngẫu nhiên hoá tên tệp",
 	"ut_u2ts": "sao chép dấu thời gian chỉnh sửa cuối$Ntừ hệ thống tệp của bạn lên máy chủ\">📅",
-	"ut_ow": "ghi đè các tệp đã có trên máy chủ?$N🛡️: không bao giờ (sẽ tạo tên tệp mới)$N🕒: ghi đè nếu tệp trên máy chủ cũ hơn$N♻️: luôn ghi đè nếu hai tệp khác nhau",
+	"ut_ow": "ghi đè các tệp đã có trên máy chủ?$N🛡️: không bao giờ (sẽ tạo tên tệp mới)$N🕒: ghi đè nếu tệp trên máy chủ cũ hơn$N♻️: luôn ghi đè nếu hai tệp khác nhau$N⏭️: bỏ qua vô điều kiện tất cả các tệp hiện có", //m
 	"ut_mt": "tiếp tục hash các tệp khác trong khi tải lên$N$NCó thể tắt nếu CPU hoặc HDD của bạn bị nghẽn",
 	"ut_ask": 'yêu cầu xác nhận trước khi bắt đầu tải lên">💭',
 	"ut_pot": "cải thiện tốc độ tải lên trên các thiết bị chậm$Nbằng cách đơn giản hoá giao diện người dùng",
@@ -224,6 +224,7 @@ Ls.vie = {
 	"cl_reset": "đặt lại",
 	"cl_hpick": "chạm vào tiêu đề cột để ẩn trong bảng bên dưới",
 	"cl_hcancel": "đã hủy việc ẩn cột",
+	"cl_rcm": "menu chuột phải", //m
 
 	// settings / tuỳ chọn
 	"ct_grid": '田 chế độ lưới',
@@ -270,6 +271,7 @@ Ls.vie = {
 	"cdt_lim": "số tệp tối đa hiển thị trong thư mục",
 	"cdt_ask": "khi cuộn xuống cuối,$Nthay vì tải thêm tệp,$Nhỏi người dùng muốn làm gì",
 	"cdt_hsort": "số lượng luật sắp xếp(&lt;code&gt;,sorthref&lt;/code&gt;) được đưa vào URL media. Đặt bằng 0 cũng sẽ bỏ qua các quy tắc sắp xếp trong liên kết media khi nhấp vào chúng",
+	"cdt_ren": "bật menu chuột phải tùy chỉnh, menu mặc định vẫn truy cập được bằng shift + chuột phải", //m
 
 	"tt_entree": "hiển thị thanh điều hướng (cây thư mục)$NPhím tắt: B",
 	"tt_detree": "hiển thị đường dẫn$NPhím tắt: B",
@@ -681,6 +683,22 @@ Ls.vie = {
 
 	"ur_um": "Hoàn tất\n{0} tải lên thành công,\n{1} tải lên thất bại",
 	"ur_sm": "Hoàn tất\n{0} tệp tìm thấy trên máy chủ,\n{1} tệp KHÔNG tìm thấy",
+
+	"rc_opn": "mở", //m
+	"rc_ply": "phát", //m
+	"rc_pla": "phát dưới dạng âm thanh", //m
+	"rc_txt": "mở trong trình xem tệp", //m
+	"rc_md": "mở trong trình soạn thảo văn bản", //m
+	"rc_dl": "tải xuống", //m
+	"rc_zip": "tải xuống dưới dạng gói nén", //m
+	"rc_del": "xóa", //m
+	"rc_cut": "cắt", //m
+	"rc_cpy": "sao chép", //m
+	"rc_pst": "dán", //m
+	"rc_nfo": "thư mục mới", //m
+	"rc_nfi": "tệp mới", //m
+	"rc_sal": "chọn tất cả", //m
+	"rc_sin": "đảo ngược lựa chọn", //m
 
 	"lang_set": "tải lại trang để áp dụng thay đổi ngôn ngữ",
 

@@ -184,7 +184,7 @@ Ls.hmn = {
 	"ul_par": "parallel uploads:",
 	"ut_rand": "randomize filenames",
 	"ut_u2ts": "copy the last-modified timestamp$Nfrom your filesystem to the server\">📅",
-	"ut_ow": "overwrite existing files on the server?$N🛡️: never (will generate a new filename instead)$N🕒: overwrite if server-file is older than yours$N♻️: always overwrite if the files are different",
+	"ut_ow": "overwrite existing files on the server?$N🛡️: never (will generate a new filename instead)$N🕒: overwrite if server-file is older than yours$N♻️: always overwrite if the files are different$N⏭️: unconditionally skip all existing files",
 	"ut_mt": "continue hashing other files while uploading$N$Nmaybe disable if your CPU or HDD is a bottleneck",
 	"ut_ask": 'ask for confirmation before upload starts">💭',
 	"ut_pot": "improve upload speed on slow devices$Nby making the UI less complex",
@@ -249,6 +249,7 @@ Ls.hmn = {
 	"cl_reset": "reset",
 	"cl_hpick": "tap on column headers to hide in the table below",
 	"cl_hcancel": "column hiding aborted",
+	"cl_rcm": "right-click menu",
 
 	"ct_grid": '田 the grid',
 	"ct_ttips": '◔ ◡ ◔">ℹ️ tooltips',
@@ -291,6 +292,7 @@ Ls.hmn = {
 	"cdt_lim": "max number of files to show in a folder",
 	"cdt_ask": "when scrolling to the bottom,$Ninstead of loading more files,$Nask what to do",
 	"cdt_hsort": "how many sorting rules (&lt;code&gt;,sorthref&lt;/code&gt;) to include in media-URLs. Setting this to 0 will also ignore sorting-rules included in media links when clicking them",
+	"cdt_ren": "enable custom right-click menu, you can still access the regular menu by pressing the shift key and right-clicking",
 
 	"tt_entree": "show navpane (directory tree sidebar)$NHotkey: B",
 	"tt_detree": "show breadcrumbs$NHotkey: B",
@@ -666,6 +668,22 @@ Ls.hmn = {
 	"ur_asn": "The {0} files were NOT found on server",
 	"ur_um": "Finished;\n{0} uploads OK,\n{1} uploads failed, sorry",
 	"ur_sm": "Finished;\n{0} files found on server,\n{1} files NOT found on server",
+
+	"rc_opn": "Open",
+	"rc_ply": "Play",
+	"rc_pla": "Play as audio",
+	"rc_txt": "Open in file viewer",
+	"rc_md": "Open in markdown editor",
+	"rc_dl": "Download",
+	"rc_zip": "Download as archive",
+	"rc_del": "Delete",
+	"rc_cut": "Cut",
+	"rc_cpy": "Copy",
+	"rc_pst": "Paste",
+	"rc_nfo": "New folder",
+	"rc_nfi": "New file",
+	"rc_sal": "Select all",
+	"rc_sin": "Invert selection",
 
 	"lang_set": "refresh to make the change take effect?",
 

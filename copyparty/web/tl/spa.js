@@ -155,7 +155,7 @@ Ls.spa = {
 	"ul_par": "subidas paralelas:",
 	"ut_rand": "aleatorizar nombres de archivo",
 	"ut_u2ts": 'copiar la fecha de última modificación$Nde tu sistema de archivos al servidor">📅',
-	"ut_ow": "sobrescribir archivos existentes en el servidor?$N🛡️: nunca (generará un nuevo nombre de archivo en su lugar)$N🕒: sobrescribir si el archivo del servidor es más antiguo que el tuyo$N♻️: siempre sobrescribir si los archivos son diferentes",
+	"ut_ow": "sobrescribir archivos existentes en el servidor?$N🛡️: nunca (generará un nuevo nombre de archivo en su lugar)$N🕒: sobrescribir si el archivo del servidor es más antiguo que el tuyo$N♻️: siempre sobrescribir si los archivos son diferentes$N⏭️: omitir incondicionalmente todos los archivos existentes", //m
 	"ut_mt": "continuar generando hashes de otros archivos mientras se sube$N$Nquizás desactivar si tu CPU o HDD es un cuello de botella",
 	"ut_ask": 'pedir confirmación antes de iniciar la subida">💭',
 	"ut_pot": "mejorar la velocidad de subida en dispositivos lentos$Nsimplificando la interfaz de usuario",
@@ -219,6 +219,7 @@ Ls.spa = {
 	"cl_reset": "restablecer",
 	"cl_hpick": "toca en las cabeceras de columna para ocultarlas en la tabla de abajo",
 	"cl_hcancel": "ocultación de columna cancelada",
+	"cl_rcm": "menú contextual", //m
 
 	"ct_grid": '田 cuadrícula',
 	"ct_ttips": '◔ ◡ ◔">ℹ️ tooltips',
@@ -261,6 +262,7 @@ Ls.spa = {
 	"cdt_lim": "número máximo de archivos a mostrar en una carpeta",
 	"cdt_ask": "al llegar al final,$Nen lugar de cargar más archivos,$Npreguntar qué hacer",
 	"cdt_hsort": "cuántas reglas de ordenación (&lt;code&gt;,sorthref&lt;/code&gt;) incluir en las URLs de medios. Ponerlo a 0 también ignorará las reglas de ordenación incluidas en los enlaces de medios al hacer clic en ellos",
+	"cdt_ren": "habilitar menú contextual personalizado, el menú normal sigue siendo accesible con shift + clic derecho", //m
 
 	"tt_entree": "mostrar panel de navegación (barra lateral con árbol de directorios)$NAtajo: B",
 	"tt_detree": "mostrar breadcrumbs$NAtajo: B",
@@ -636,6 +638,22 @@ Ls.spa = {
 	"ur_asn": "Los {0} archivos NO se encontraron en el servidor",
 	"ur_um": "Finalizado;\n{0} subidas OK,\n{1} subidas fallidas, lo siento",
 	"ur_sm": "Finalizado;\n{0} archivos encontrados en el servidor,\n{1} archivos NO encontrados en el servidor",
+
+	"rc_opn": "abrir", //m
+	"rc_ply": "reproducir", //m
+	"rc_pla": "reproducir como audio", //m
+	"rc_txt": "abrir en el visor de archivos", //m
+	"rc_md": "abrir en el editor de texto", //m
+	"rc_dl": "descargar", //m
+	"rc_zip": "descargar como archivo", //m
+	"rc_del": "eliminar", //m
+	"rc_cut": "cortar", //m
+	"rc_cpy": "copiar", //m
+	"rc_pst": "pegar", //m
+	"rc_nfo": "nueva carpeta", //m
+	"rc_nfi": "nuevo archivo", //m
+	"rc_sal": "seleccionar todo", //m
+	"rc_sin": "invertir selección", //m
 
 	"lang_set": "¿refrescar para que el cambio surta efecto?",
 

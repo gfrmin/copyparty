@@ -155,7 +155,7 @@ Ls.fin = {
 	"ul_par": "rinnakkaislatausten lkm:",
 	"ut_rand": "satunnaisgeneroidut tiedostonimet",
 	"ut_u2ts": "kopioi viimeksi muokattu aikaleima$Ntiedostojärjestelmästäsi palvelimelle\">📅",
-	"ut_ow": "korvaa olemassa olevat tiedostot palvelimella?$N🛡️: ei koskaan (luo sen sijaan uuden tiedostonimen)$N🕒: korvaa jos palvelintiedosto on vanhempi kuin omasi$N♻️: korvaa aina jos tiedostot ovat erilaisia",
+	"ut_ow": "korvaa olemassa olevat tiedostot palvelimella?$N🛡️: ei koskaan (luo sen sijaan uuden tiedostonimen)$N🕒: korvaa jos palvelintiedosto on vanhempi kuin omasi$N♻️: korvaa aina jos tiedostot ovat erilaisia$N⏭️: ohita kaikki olemassa olevat tiedostot ehdottomasti", //m
 	"ut_mt": "jatka muiden tiedostojen tiivisteiden laskemista latauksen aikana$N$Nkannattanee poistaa käytöstä, mikäli prosessori tai kovalevy on vanhempaa mallia",
 	"ut_ask": 'kysy vahvistusta ennen latauksen aloittamista">💭',
 	"ut_pot": "paranna latausnopeutta hitailla laitteilla$Nvähentämällä käyttöliittymän monimutkaisuutta",
@@ -220,6 +220,7 @@ Ls.fin = {
 	"cl_reset": "palauta",
 	"cl_hpick": "napauta sarakeotsikoita piilottaaksesi alla olevassa taulukossa",
 	"cl_hcancel": "sarakkeiden piilotus peruttu",
+	"cl_rcm": "hiiren oikean painikkeen valikko", //m
 
 	"ct_grid": '田 kuvanäkymä',
 	"ct_ttips": '◔ ◡ ◔">ℹ️ vihjelaatikot',
@@ -262,6 +263,7 @@ Ls.fin = {
 	"cdt_lim": "tiedostojen enimmäismäärä näytettäväksi hakemistossa",
 	"cdt_ask": "sivun lopussa, sen sijaan että lataa $Nautomaattisesti lisää tiedostoja, kysy mitä tehdä",
 	"cdt_hsort": "kuinka monta lajittelusääntöä (&lt;code&gt;,sorthref&lt;/code&gt;) sisällyttää media-URL:eihin. Tämän asettaminen nollaan jättää myös huomioimatta media-linkeissä sisällytetyt lajittelusäännöt kun napsautat niitä",
+	"cdt_ren": "ota käyttöön mukautettu valikko, tavallinen valikko on käytettävissä painamalla shift ja napsauttamalla oikealla", //m
 
 	"tt_entree": "näytä navigointipaneeli$NPikanäppäin: B",
 	"tt_detree": "näytä linkkipolku$NPikanäppäin: B",
@@ -637,6 +639,22 @@ Ls.fin = {
 	"ur_asn": "{0} tiedostoa EI löytynyt palvelimelta",
 	"ur_um": "Valmis;\n{0} latausta OK,\n{1} latausta epäonnistui, pahoittelen",
 	"ur_sm": "Valmis;\n{0} tiedostoa löytyi palvelimelta,\n{1} tiedostoa EI löytynyt palvelimelta",
+
+	"rc_opn": "avaa", //m
+	"rc_ply": "toista", //m
+	"rc_pla": "toista äänenä", //m
+	"rc_txt": "avaa tiedostoselaimessa", //m
+	"rc_md": "avaa tekstieditorissa", //m
+	"rc_dl": "Lataa", //m
+	"rc_zip": "Lataa arkistona", //m
+	"rc_del": "poista", //m
+	"rc_cut": "Leikkaa", //m
+	"rc_cpy": "kopioi", //m
+	"rc_pst": "Liitä", //m
+	"rc_nfo": "uusi kansio", //m
+	"rc_nfi": "uusi tiedosto", //m
+	"rc_sal": "valitse kaikki", //m
+	"rc_sin": "käännä valinta", //m
 
 	"lang_set": "ladataanko sivu uudestaan kielen vaihtamiseksi?",
 

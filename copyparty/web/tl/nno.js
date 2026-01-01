@@ -152,7 +152,7 @@ Ls.nno = {
 	"ul_par": "samtidige handl.:",
 	"ut_rand": "finn opp nye tilfeldige filnamn",
 	"ut_u2ts": "gje fila på serveren same$Ntidsstempel som lokalt hos deg\">📅",
-	"ut_ow": "overskrive eksisterande filer på serveren?$N🛡️: aldri (finn på eit nytt filnamn i staden for)$N🕒: overskriv viss fila åt serveren er eldre$N♻️: alltid, gitt at innholdet er annleis",
+	"ut_ow": "overskrive eksisterande filer på serveren?$N🛡️: aldri (finn på eit nytt filnamn i staden for)$N🕒: overskriv viss fila åt serveren er eldre$N♻️: alltid, gitt at innhaldet er annleis$N⏭️: hopp over alle eksisterande filer",
 	"ut_mt": "fortsett å synfare køa mens opplasting føregår$N$Nskru denne av dersom du har ein$Ntreig prosessor eller harddisk",
 	"ut_ask": 'bekreft filutvalg før opplasting startar">💭',
 	"ut_pot": "forbetre ytinga på treige einheiter ved å$Nforenkle brukergrensesnittet",
@@ -217,6 +217,7 @@ Ls.nno = {
 	"cl_reset": "nullstill",
 	"cl_hpick": "klikk på overskrifta åt kolonnene du ønskjer å skjule i tabellen nedanfor",
 	"cl_hcancel": "kolonne-skjuling avbrote",
+	"cl_rcm": "høgreklikkmeny",
 
 	"ct_grid": '田 ikon',
 	"ct_ttips": 'vis hjelpetekst ved å holde musa over ting">ℹ️ tips',
@@ -259,6 +260,7 @@ Ls.nno = {
 	"cdt_lim": "maks mengd filer å vise per mappe",
 	"cdt_ask": "vis knappar for å laste fleire filer nederst på sida i staden for å gradvis laste meir av mappea når man scroller ned",
 	"cdt_hsort": "antall sorteringsreglar (&lt;code&gt;,sorthref&lt;/code&gt;) som skal inkluderast når media-URL'ar genererast. Dersom denne er 0 så vil sorteringsreglar i URL'ar korkje bli generert eller lest",
+	"cdt_ren": "slå på tilpassa høgreklikkmeny (den vanlege menyen er tilgjengeleg med shift + høgreklikk)",
 
 	"tt_entree": "bytt åt mappehierarki$NSnarvei: B",
 	"tt_detree": "bytt åt tradisjonell stivising$NSnarvei: B",
@@ -634,6 +636,22 @@ Ls.nno = {
 	"ur_asn": "Fann INGEN av dei {0} filene på serveren",
 	"ur_um": "Ferdig;\n{0} opplastingar gjekk bra,\n{1} opplastingar gjekk feil",
 	"ur_sm": "Ferdig;\n{0} filer blei funne,\n{1} filer finnast IKKJE på serveren",
+
+	"rc_opn": "opne",
+	"rc_ply": "spel av",
+	"rc_pla": "spel av som lyd",
+	"rc_txt": "opne i filvisar",
+	"rc_md": "opne i tekstredigerar",
+	"rc_dl": "Last ned",
+	"rc_zip": "Last ned som arkiv",
+	"rc_del": "slett",
+	"rc_cut": "klipp ut",
+	"rc_cpy": "kopier",
+	"rc_pst": "Lim inn",
+	"rc_nfo": "ny mappe",
+	"rc_nfi": "ny fil",
+	"rc_sal": "vel alle",
+	"rc_sin": "inverter val",
 
 	"lang_set": "passar det å laste sida på nytt?",
 

@@ -155,7 +155,7 @@ Ls.ita = {
 	"ul_par": "caricamenti paralleli:",
 	"ut_rand": "randomizza nomi file",
 	"ut_u2ts": "copia il timestamp di ultima modifica$Ndal tuo filesystem al server\">📅",
-	"ut_ow": "sovrascrivere file esistenti sul server?$N🛡️: mai (genererà un nuovo nome file)$N🕒: sovrascrivi se il file del server è più vecchio del tuo$N♻️: sovrascrivi sempre se i file sono diversi",
+	"ut_ow": "sovrascrivere file esistenti sul server?$N🛡️: mai (genererà un nuovo nome file)$N🕒: sovrascrivi se il file del server è più vecchio del tuo$N♻️: sovrascrivi sempre se i file sono diversi$N⏭️: ignora sempre tutti i file esistenti", //m
 	"ut_mt": "continua l'hashing di altri file durante il caricamento$N$NProva a disabilitare se la tua CPU o HDD è un collo di bottiglia",
 	"ut_ask": 'chiedi conferma prima che inizi il caricamento">💭',
 	"ut_pot": "migliora la velocità di caricamento su dispositivi lenti$Nrendendo l'interfaccia meno complessa",
@@ -220,6 +220,7 @@ Ls.ita = {
 	"cl_reset": "reset",
 	"cl_hpick": "tocca le intestazioni delle colonne per nascondere nella tabella sottostante",
 	"cl_hcancel": "nascondere colonne annullato",
+	"cl_rcm": "menu contestuale", //m
 
 	"ct_grid": '田 griglia',
 	"ct_ttips": '◔ ◡ ◔">ℹ️ tooltip',
@@ -262,6 +263,7 @@ Ls.ita = {
 	"cdt_lim": "numero massimo di file da mostrare in una cartella",
 	"cdt_ask": "quando scorri verso il fondo,$Ninvece di caricare più file,$Nchiedi cosa fare",
 	"cdt_hsort": "quante regole di ordinamento (&lt;code&gt;,sorthref&lt;/code&gt;) includere negli URL multimediali. Impostandolo a 0 ignorerà anche le regole di ordinamento incluse nei link multimediali quando li clicchi",
+	"cdt_ren": "abilita il menu contestuale personalizzato, il menu normale è accessibile con shift + clic destro", //m
 
 	"tt_entree": "mostra pannello nav (barra laterale albero directory)$NTasto rapido: B",
 	"tt_detree": "mostra breadcrumb$NTasto rapido: B",
@@ -637,6 +639,22 @@ Ls.ita = {
 	"ur_asn": "I {0} file NON sono stati trovati sul server",
 	"ur_um": "Finito;\n{0} caricamenti OK,\n{1} caricamenti falliti, scusa",
 	"ur_sm": "Finito;\n{0} file trovati sul server,\n{1} file NON trovati sul server",
+
+	"rc_opn": "apri", //m
+	"rc_ply": "riproduci", //m
+	"rc_pla": "riproduci come audio", //m
+	"rc_txt": "apri nel visualizzatore di file", //m
+	"rc_md": "apri nell’editor di testo", //m
+	"rc_dl": "scarica", //m
+	"rc_zip": "scarica come archivio", //m
+	"rc_del": "elimina", //m
+	"rc_cut": "taglia", //m
+	"rc_cpy": "copia", //m
+	"rc_pst": "incolla", //m
+	"rc_nfo": "nuova cartella", //m
+	"rc_nfi": "nuovo file", //m
+	"rc_sal": "seleziona tutto", //m
+	"rc_sin": "inverti selezione", //m
 
 	"lang_set": "aggiornare per rendere effettivo il cambiamento?",
 

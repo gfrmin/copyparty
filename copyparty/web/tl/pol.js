@@ -158,7 +158,7 @@ Ls.pol = {
 	"ul_par": "przesyłane równolegle:",
 	"ut_rand": "losuj nazwy plików",
 	"ut_u2ts": "kopiuj znacznik ostatniej modyfikacji$Nz twojego systemu plików na serwer\">📅",
-	"ut_ow": "nadpisywać istniejące pliki na serwerzę?$N🛡️: nigdy (wygeneruje nową nazwę)$N🕒: nadpisz jeśli pliki na serwerze są starsze niż przesyłane$N♻️: zawsze nadpisuj jeśli zawartość plików się różni",
+	"ut_ow": "nadpisywać istniejące pliki na serwerzę?$N🛡️: nigdy (wygeneruje nową nazwę)$N🕒: nadpisz jeśli pliki na serwerze są starsze niż przesyłane$N♻️: zawsze nadpisuj jeśli zawartość plików się różni$N⏭️: bezwarunkowo pomiń wszystkie istniejące pliki", //m
 	"ut_mt": "hashuj inne pliki podczas przesyłania$N$Nmożna wyłączyć w przypadku wystąpienia wąskiego gardła na CPU lub HDD",
 	"ut_ask": 'pytaj o potwierdzenie rozpoczęcia przesyłania">💭',
 	"ut_pot": "przyspiesz przesyłanie na słabszych urządzeniach,$Nupraszczając interfejs",
@@ -223,6 +223,7 @@ Ls.pol = {
 	"cl_reset": "zresetuj",
 	"cl_hpick": "kliknij nagłówki kolumn, aby ukryć je w tabeli niżej",
 	"cl_hcancel": "ukrywanie kolumn przerwane",
+	"cl_rcm": "menu kontekstowe", //m
 
 	"ct_grid": '田 siatka',
 	"ct_ttips": '◔ ◡ ◔">ℹ️ podpowiedzi',
@@ -265,6 +266,7 @@ Ls.pol = {
 	"cdt_lim": "maksymalna liczba plików do pokazania na raz w folderze",
 	"cdt_ask": "przy przewijaniu w dół,$Nzapytaj co robić,$Nzamiast wczytywać kolejne pliki",
 	"cdt_hsort": "ile zasad sortowania (&lt;code&gt;,sorthref&lt;/code&gt;) zawierać w generowanych linkach multimediów. Wartość 0 sprawi, że zasady sortowania zawarte w linkach multimediów przy otwarciu również będą ignorowane",
+	"cdt_ren": "włącz niestandardowe menu kontekstowe, standardowe menu jest dostępne po wciśnięciu shift i kliknięciu prawym przyciskiem", //m
 
 	"tt_entree": "pokaż panel nawigacyjny (panel boczny z drzewem folderów)$NSkrót: B",
 	"tt_detree": "pokaż ślad nawigacyjny$NSkrót: B",
@@ -640,6 +642,22 @@ Ls.pol = {
 	"ur_asn": "NIE znaleziono {0} plików na serwerze",
 	"ur_um": "Zakończono;\n{0} przesłań OK,\n{1} przesłań nie powiodło się",
 	"ur_sm": "Zakończono;\nznaleziono {0} pliki(ów),\nnie znaleziono {1} pliki(ów) na serwerze",
+
+	"rc_opn": "otwórz", //m
+	"rc_ply": "odtwórz", //m
+	"rc_pla": "odtwórz jako dźwięk", //m
+	"rc_txt": "otwórz w przeglądarce plików", //m
+	"rc_md": "otwórz w edytorze tekstu", //m
+	"rc_dl": "pobierz", //m
+	"rc_zip": "pobierz jako archiwum", //m
+	"rc_del": "usuń", //m
+	"rc_cut": "wytnij", //m
+	"rc_cpy": "kopiuj", //m
+	"rc_pst": "wklej", //m
+	"rc_nfo": "nowy folder", //m
+	"rc_nfi": "nowy plik", //m
+	"rc_sal": "zaznacz wszystko", //m
+	"rc_sin": "odwróć zaznaczenie", //m
 
 	"lang_set": "odśwież stronę (F5), aby zastosować zmianę.",
 

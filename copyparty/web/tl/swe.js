@@ -155,7 +155,7 @@ Ls.swe = {
 	"ul_par": "samtidiga uppladdningar:",
 	"ut_rand": "slumpa filnamn",
 	"ut_u2ts": "bevara tidsstämpeln för senaste ändring$Nfrån ditt filsystem till servern\">📅",
-	"ut_ow": "skriv över existerande filer på servern?$N🛡️: aldrig (skapar ett nytt filnamn istället)$N🕒: skriv över om serverns fil är äldre än din$N♻️: skriv alltid över om filerna skiljer sig",
+	"ut_ow": "skriv över existerande filer på servern?$N🛡️: aldrig (skapar ett nytt filnamn istället)$N🕒: skriv över om serverns fil är äldre än din$N♻️: skriv alltid över om filerna skiljer sig$N⏭️: hoppa ovillkorligen över alla befintliga filer", //m
 	"ut_mt": "fortsätt hasha filer under uppladdningens gång$N$Nstäng av om din CPU eller disk är en flaskhals",
 	"ut_ask": 'bekräfta innan uppladdningar påbörjas">💭',
 	"ut_pot": "förbättra uppladdningshastigheten på långsamma enheter$Ngenom att förenkla användargränssnittet",
@@ -220,6 +220,7 @@ Ls.swe = {
 	"cl_reset": "återställ",
 	"cl_hpick": "tryck på en kolumntitel för att dölja den i filvyn",
 	"cl_hcancel": "kolumndöljning avbruten",
+	"cl_rcm": "högerklicksmeny", //m
 
 	"ct_grid": '田 rutnätet',
 	"ct_ttips": '◔ ◡ ◔">ℹ️ tips',
@@ -262,6 +263,7 @@ Ls.swe = {
 	"cdt_lim": "högsta antal filer att visa in en mapp",
 	"cdt_ask": "när du når botten av vyn,$Nbe om en åtgärd istället för att ladda fler filer",
 	"cdt_hsort": "hur många sorteringsregler (&lt;code&gt;,sorthref&lt;/code&gt;) att inkludera i media-URL:er. Sätts detta till 0 kommer regler i klickade medialänkar även att ignoreras",
+	"cdt_ren": "aktivera anpassad högerklicksmeny, den vanliga menyn är tillgänglig med shift + högerklick", //m
 
 	"tt_entree": "visa trädvy$NSnabbtangent: B",
 	"tt_detree": "visa brödsmulor$NSnabbtangent: B",
@@ -637,6 +639,22 @@ Ls.swe = {
 	"ur_asn": "De {0} filerna hittades INTE på servern",
 	"ur_um": "Klar;\n{0} uppladdningar gick okej,\n{1} uppladdningar misslyckades, ledsen",
 	"ur_sm": "Klar;\n{0} filer hittades på servern,\n{1} filer hittades INTE på servern",
+
+	"rc_opn": "öppna", //m
+	"rc_ply": "spela upp", //m
+	"rc_pla": "spela upp som ljud", //m
+	"rc_txt": "öppna i filvisare", //m
+	"rc_md": "öppna i textredigerare", //m
+	"rc_dl": "Ladda ner", //m
+	"rc_zip": "Ladda ner som arkiv", //m
+	"rc_del": "radera", //m
+	"rc_cut": "klipp ut", //m
+	"rc_cpy": "kopiera", //m
+	"rc_pst": "klistra in", //m
+	"rc_nfo": "ny mapp", //m
+	"rc_nfi": "ny fil", //m
+	"rc_sal": "markera alla", //m
+	"rc_sin": "invertera markering", //m
 
 	"lang_set": "uppdatera för att ändringen ska ta effekt?",
 

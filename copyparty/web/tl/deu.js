@@ -155,7 +155,7 @@ Ls.deu = {
 	"ul_par": "Parallele Uploads:",
 	"ut_rand": "Zufällige Dateinamen",
 	"ut_u2ts": "Zuletzt geändert-Zeitstempel von$Ndeinem Dateisystem auf den Server übertragen\">📅",
-	"ut_ow": "Existierende Dateien auf dem Server überschreiben?$N🛡️: Nie (generiert einen neuen Dateinamen)$N🕒: Überschreiben, wenn Server-Datei älter ist als meine$N♻️: Überschreiben, wenn der Dateiinhalt anders ist$N⏭️: Nur hochladen, wenn keine Datei mit dem gleichen Namen existiert",
+	"ut_ow": "Existierende Dateien auf dem Server überschreiben?$N🛡️: Nie (generiert einen neuen Dateinamen)$N🕒: Überschreiben, wenn Server-Datei älter ist als meine$N♻️: Überschreiben, wenn der Dateiinhalt anders ist$N⏭️: Alle vorhandenen Dateien bedingungslos überspringen", //m
 	"ut_mt": "Andere Dateien während des Uploads hashen$N$Nsolltest du deaktivieren, falls deine CPU oder Festplatte zum Flaschenhals werden könnte",
 	"ut_ask": 'Vor dem Upload nach Bestätigung fragen">💭',
 	"ut_pot": "Verbessert Upload-Geschwindigkeit$Nindem das UI weniger komplex gemacht wird",
@@ -220,6 +220,7 @@ Ls.deu = {
 	"cl_reset": "zurücksetzen",
 	"cl_hpick": "zum Verstecken, tippe auf Spaltenüberschriften in der Tabelle unten",
 	"cl_hcancel": "Spaltenbearbeitung abgebrochen",
+	"cl_rcm": "Rechtsklick-Menü", //m
 
 	"ct_grid": '田 Das Raster&trade;',
 	"ct_ttips": '◔ ◡ ◔">ℹ️ Tooltips',
@@ -262,6 +263,7 @@ Ls.deu = {
 	"cdt_lim": "max. Anz. Dateien, die in einem Ordner gezeigt werden sollen",
 	"cdt_ask": "beim Runterscrollen nach $NAktion fragen statt mehr,$NDateien zu laden",
 	"cdt_hsort": "Menge an Sortierregeln (&lt;code&gt;,sorthref&lt;/code&gt;) in Media-URLs enthalten sein sollen. Ein Wert von 0 sorgt dafür, dass Sortierregeln in Media-URLs ignoriert werden",
+	"cdt_ren": "Benutzerdefiniertes Rechtsklick-Menü aktivieren, das normale Menü ist weiterhin mit Shift + Rechtsklick erreichbar", //m
 
 	"tt_entree": "Navpane anzeigen (Ordnerbaum Sidebar)$NHotkey: B",
 	"tt_detree": "Breadcrumbs anzeigen$NHotkey: B",
@@ -637,6 +639,22 @@ Ls.deu = {
 	"ur_asn": "Die {0} Dateien wurden NICHT auf dem Server gefunden",
 	"ur_um": "Fertig;\n{0} Uploads OK,\n{1} Uploads fehlgeschlagen, sorry",
 	"ur_sm": "Fertig;\n{0} Uploads gefunden auf dem Server,\n{1} Dateien NICHT gefunden auf dem Server",
+
+	"rc_opn": "Öffnen", //m
+	"rc_ply": "Abspielen", //m
+	"rc_pla": "Als Audio abspielen", //m
+	"rc_txt": "Im Dateibetrachter öffnen", //m
+	"rc_md": "Im Texteditor öffnen", //m
+	"rc_dl": "Herunterladen", //m
+	"rc_zip": "Als Archiv herunterladen", //m
+	"rc_del": "Löschen", //m
+	"rc_cut": "Ausschneiden", //m
+	"rc_cpy": "Kopieren", //m
+	"rc_pst": "Einfügen", //m
+	"rc_nfo": "Neuer Ordner", //m
+	"rc_nfi": "Neue Datei", //m
+	"rc_sal": "Alles auswählen", //m
+	"rc_sin": "Auswahl umkehren", //m
 
 	"lang_set": "Neuladen um Änderungen anzuwenden?",
 

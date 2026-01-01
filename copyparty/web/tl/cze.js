@@ -159,7 +159,7 @@ Ls.cze = {
 	"ul_par": "paralelní nahrávání:",
 	"ut_rand": "náhodné názvy souborů",
 	"ut_u2ts": "kopírovat časovou značku poslední změny$Nz vašeho souborového systému na server\">📅",
-	"ut_ow": "přepsat existující soubory na serveru?$N🛡️: nikdy (místo toho vytvoří nový název souboru)$N🕒: přepsat pokud je soubor na serveru starší než váš$N♻️: vždy přepsat pokud se soubory liší",
+	"ut_ow": "přepsat existující soubory na serveru?$N🛡️: nikdy (místo toho vytvoří nový název souboru)$N🕒: přepsat pokud je soubor na serveru starší než váš$N♻️: vždy přepsat pokud se soubory liší$N⏭️: bezpodmínečně přeskočit všechny existující soubory", //m
 	"ut_mt": "pokračovat v hashování ostatních souborů během nahrávání$N$Nmožná zakázat pokud je vaše CPU nebo HDD bottleneckem",
 	"ut_ask": 'požádat o potvrzení před zahájením nahrávání">💭',
 	"ut_pot": "zlepšit rychlost nahrávání na pomalých zařízeních$Nzjednodušením UI",
@@ -224,6 +224,7 @@ Ls.cze = {
 	"cl_reset": "resetovat",
 	"cl_hpick": "klepněte na záhlaví sloupců pro skrytí v tabulce níže",
 	"cl_hcancel": "skrývání sloupců zrušeno",
+	"cl_rcm": "kontextová nabídka", //m
 
 	"ct_grid": '田 mřížka',
 	"ct_ttips": '◔ ◡ ◔">ℹ️ nápovědy',
@@ -266,6 +267,7 @@ Ls.cze = {
 	"cdt_lim": "maximální počet souborů k zobrazení ve složce",
 	"cdt_ask": "při posunování na konec,$Nmísto načítání více souborů,$N se zeptat co dělat",
 	"cdt_hsort": "kolik pravidel řazení (&lt;code&gt;,sorthref&lt;/code&gt;) zahrnout do media-URL. Nastavení na 0 bude také ignorovat pravidla řazení zahrnutá v media odkazech při kliknutí na ně",
+	"cdt_ren": "povolit vlastní kontextovou nabídku, běžnou nabídku lze otevřít podržením klávesy shift a kliknutím pravým tlačítkem", //m
 
 	"tt_entree": "zobrazit navigační panel (postranní strom adresářů)$NKlávesová zkratka: B",
 	"tt_detree": "zobrazit drobečkovou navigaci$NKlávesová zkratka: B",
@@ -641,6 +643,22 @@ Ls.cze = {
 	"ur_asn": "{0} souborů NEBYLO nalezeno na serveru",
 	"ur_um": "Dokončeno;\n{0} nahrání OK,\n{1} nahrání selhalo, omlouváme se",
 	"ur_sm": "Dokončeno;\n{0} souborů nalezeno na serveru,\n{1} souborů NENALEZENO na serveru",
+
+	"rc_opn": "otevřít", //m
+	"rc_ply": "přehrát", //m
+	"rc_pla": "přehrát jako zvuk", //m
+	"rc_txt": "otevřít v prohlížeči souborů", //m
+	"rc_md": "otevřít v textovém editoru", //m
+	"rc_dl": "stáhnout", //m
+	"rc_zip": "stáhnout jako archiv", //m
+	"rc_del": "smazat", //m
+	"rc_cut": "vyjmout", //m
+	"rc_cpy": "kopírovat", //m
+	"rc_pst": "vložit", //m
+	"rc_nfo": "nová složka", //m
+	"rc_nfi": "nový soubor", //m
+	"rc_sal": "vybrat vše", //m
+	"rc_sin": "invertovat výběr", //m
 
 	"lang_set": "obnovit stránku, aby se změna projevila?",
 

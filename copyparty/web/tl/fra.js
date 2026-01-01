@@ -155,7 +155,7 @@ Ls.fra = {
 	"ul_par": "téléversements parallèles:",
 	"ut_rand": "attribution de noms de fichiers aléatoires",
 	"ut_u2ts": "copier l'horodatage de dernière modification$Nde votre système de fichiers vers le serveur\">📅",
-	"ut_ow": "écraser les fichiers existants sur le serveur?$N🛡️: jamais (générera un nouveau nom de fichier à la place)$N🕒: écraser si le fichier sur le serveur est plus ancien que le vôtre$N♻️: toujours écraser si les fichiers sont différents",
+	"ut_ow": "écraser les fichiers existants sur le serveur?$N🛡️: jamais (générera un nouveau nom de fichier à la place)$N🕒: écraser si le fichier sur le serveur est plus ancien que le vôtre$N♻️: toujours écraser si les fichiers sont différents$N⏭️: ignorer systématiquement tous les fichiers existants", //m
 	"ut_mt": "continuer à calculer la somme de contrôle d'autres fichiers pendant le téléversement$N$Npeut-être désactiver si votre CPU ou HDD est la cause de perte de performances",
 	"ut_ask": 'demander confirmation avant le début du téléversement">💭',
 	"ut_pot": "améliorer la vitesse de téléversement sur les appareils lents$Nen simplifiant l'interface utilisateur",
@@ -220,6 +220,7 @@ Ls.fra = {
 	"cl_reset": "réinitialiser",
 	"cl_hpick": "cliquez sur les en-têtes de colonnes pour les masquer dans le tableau ci-dessous",
 	"cl_hcancel": "masquage des colonnes annulé",
+	"cl_rcm": "menu contextuel", //m
 
 	"ct_grid": '田 grille',
 	"ct_ttips": '◔ ◡ ◔">ℹ️ infobulles',
@@ -262,6 +263,7 @@ Ls.fra = {
 	"cdt_lim": "nombre maximum de fichiers à afficher dans un dossier",
 	"cdt_ask": "lorsque vous faites défiler vers le bas,$Nau lieu de charger plus de fichiers,$Ndemander quoi faire",
 	"cdt_hsort": "combien de règles de tri (&lt;code&gt;,sorthref&lt;/code&gt;) à inclure dans les media-URLs. Définir cette valeur à 0 ignorera également les règles de tri incluses dans les liens média lorsque vous cliquez dessus.",
+	"cdt_ren": "activer le menu contextuel personnalisé, le menu normal reste accessible avec shift + clic droit", //m
 
 	"tt_entree": "afficher le panneau de navigation (arborescence des dossiers)$NHotkey: B",
 	"tt_detree": "afficher le fil d’Ariane$NHotkey: B",
@@ -637,6 +639,22 @@ Ls.fra = {
 	"ur_asn": "Les {0} fichiers n'ont PAS ÉTÉ trouvés sur le serveur",
 	"ur_um": "Terminé;\n{0} téléversements OK,\n{1} téléversements échoués, désolé",
 	"ur_sm": "Terminé;\n{0} fichiers trouvés sur le serveur,\n{1} fichiers NON trouvés sur le serveur",
+
+	"rc_opn": "ouvrir", //m
+	"rc_ply": "Lire", //m
+	"rc_pla": "Lire comme audio", //m
+	"rc_txt": "ouvrir dans le visionneur de fichiers", //m
+	"rc_md": "ouvrir dans l’éditeur de texte", //m
+	"rc_dl": "télécharger", //m
+	"rc_zip": "télécharger comme archive", //m
+	"rc_del": "supprimer", //m
+	"rc_cut": "couper", //m
+	"rc_cpy": "copier", //m
+	"rc_pst": "coller", //m
+	"rc_nfo": "nouveau dossier", //m
+	"rc_nfi": "nouveau fichier", //m
+	"rc_sal": "tout sélectionner", //m
+	"rc_sin": "inverser la sélection", //m
 
 	"lang_set": "rafraîchir pour que les changements prennent effet ?",
 

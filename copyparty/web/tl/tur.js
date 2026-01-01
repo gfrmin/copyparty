@@ -155,7 +155,7 @@ Ls.tur = {
 	"ul_par": "paralel yüklemeler:",
 	"ut_rand": "dosya adlarını rastgeleleştir",
 	"ut_u2ts": "kendi dosyalarınızdan sunucuya$Nzaman damgasını kopyala\">📅",
-	"ut_ow": "sunucudaki mevcut dosyaları üzerine yazmak mı?$N🛡️: asla (yerine yeni bir dosya adı oluşturur)$N🕒: sunucu dosyası sizinkinden daha eskiyse üzerine yaz$N♻️: dosyalar farklıysa her zaman üzerine yaz",
+	"ut_ow": "sunucudaki mevcut dosyaları üzerine yazmak mı?$N🛡️: asla (yerine yeni bir dosya adı oluşturur)$N🕒: sunucu dosyası sizinkinden daha eskiyse üzerine yaz$N♻️: dosyalar farklıysa her zaman üzerine yaz$N⏭️: mevcut tüm dosyaları koşulsuz atla", //m
 	"ut_mt": "yükleme yaparken diğer dosyaların hash'lenmesini durdur$N$kötü bir CPU veya HDD'ye sahipseniz kullanabilirsiniz.",
 	"ut_ask": 'yüklemeye başlamadan önce doğrulama mesajı göster">💭',
 	"ut_pot": "arayüzü daha az karmaşık hale getirerek$Nyükleme hızını yavaş cihazlarda artır",
@@ -220,6 +220,7 @@ Ls.tur = {
 	"cl_reset": "sıfırla",
 	"cl_hpick": "aşağıdaki tabloda gizlemek için sütun başlıklarına dokunun",
 	"cl_hcancel": "sütun gizleme iptal edildi",
+	"cl_rcm": "sağ tık menüsü", //m
 
 	"ct_grid": '田 ızgara',
 	"ct_ttips": '◔ ◡ ◔">ℹ️ ipuçları',
@@ -262,6 +263,7 @@ Ls.tur = {
 	"cdt_lim": "bir klasörde gösterilecek maksimum dosya sayısı",
 	"cdt_ask": "aşağı kaydırırken,$Ndaha fazla dosya yüklemek yerine,$Nne yapılacağını sor",
 	"cdt_hsort": "medya-URL'lerinde dahil edilecek sıralama kurallarının sayısı (&lt;code&gt;,sorthref&lt;/code&gt;). Bunu 0 olarak ayarlamak, tıklanırken medya bağlantılarına dahil edilen sıralama kurallarını da yok sayacaktır",
+	"cdt_ren": "özel sağ tık menüsünü etkinleştir, normal menü shift + sağ tık ile erişilebilir", //m
 
 	"tt_entree": "navigasyon panosunu göster (yan dizin panosu)$NHotkey: B",
 	"tt_detree": "içerik haritasını göster$Kısayol: B",
@@ -637,6 +639,22 @@ Ls.tur = {
 	"ur_asn": "{0} dosyas sunucuda bulunamadı",
 	"ur_um": "Tamamlandı;\n{0} yükleme başarılı,\n{1} yükleme başarısız oldu, üzgünüm",
 	"ur_sm": "Tamamlandı;\n{0} dosya sunucuda bulundu,\n{1} dosya sunucuda bulunamadı",
+
+	"rc_opn": "aç", //m
+	"rc_ply": "oynat", //m
+	"rc_pla": "ses olarak oynat", //m
+	"rc_txt": "dosya görüntüleyicide aç", //m
+	"rc_md": "metin düzenleyicide aç", //m
+	"rc_dl": "i̇ndir", //m
+	"rc_zip": "arşiv olarak indir", //m
+	"rc_del": "sil", //m
+	"rc_cut": "kes", //m
+	"rc_cpy": "kopyala", //m
+	"rc_pst": "yapıştır", //m
+	"rc_nfo": "yeni klasör", //m
+	"rc_nfi": "yeni dosya", //m
+	"rc_sal": "tümünü seç", //m
+	"rc_sin": "seçimi tersine çevir", //m
 
 	"lang_set": "Değişikliklerin etki göstermesi için sayfa yenilensin mi?",
 
