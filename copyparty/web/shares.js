@@ -1,3 +1,7 @@
+"use strict";
+
+var J_SHR = 1;
+
 var t = QSA('a[k]');
 for (var a = 0; a < t.length; a++)
     t[a].onclick = rm;
@@ -81,3 +85,5 @@ function showqr(href) {
     for (var a = 0; a < aa; a++)
         btns[a].onclick = bump;
 })();
+
+J_SHR = 2;

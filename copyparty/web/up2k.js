@@ -1,5 +1,6 @@
 "use strict";
 
+var J_U2K = 1;
 
 (function () {
     var x = sread('nosubtle');
@@ -3464,3 +3465,5 @@ if (ls0)
         }
         catch (ex) { }
 })();
+
+J_U2K = 2;

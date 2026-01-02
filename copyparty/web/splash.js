@@ -1,3 +1,7 @@
+"use strict";
+
+var J_SPL = 1;
+
 Ls.eng = {
 	"splash": {
 		"d2": "shows the state of all active threads",
@@ -121,3 +125,5 @@ if (ebi('lp'))
 		ebi('lm').innerHTML = this.value.length <= 64 ?
 			'' : 'ERROR: Password too long (max=64)';
 	};
+
+J_SPL = 2;

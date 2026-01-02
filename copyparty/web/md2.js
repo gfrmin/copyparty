@@ -1,6 +1,7 @@
 "use strict";
 
 
+var J_MD2 = 1;
 var sloc0 = '' + location,
     dbg_kbd = /[?&]dbgkbd\b/.exec(sloc0);
 
@@ -1230,3 +1231,5 @@ action_stack = (function () {
         _ref: ref
     }
 })();
+
+J_MD2 = 2;

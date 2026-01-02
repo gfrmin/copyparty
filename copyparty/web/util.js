@@ -1,5 +1,7 @@
 "use strict";
 
+var J_UTL = 1;
+
 if (!window.console || !console.log)
     window.console = {
         "log": function (msg) { }
@@ -2349,3 +2351,5 @@ function xhrchk(xhr, prefix, e404, lvl, tag) {
 
     return fun(0, prefix + xhr.status + ": " + errtxt, tag);
 }
+
+J_UTL = 2;

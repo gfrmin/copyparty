@@ -1,5 +1,7 @@
 "use strict";
 
+var J_BRW = 1;
+
 var XHR = XMLHttpRequest,
 	img_re = /\.(a?png|avif|bmp|gif|heif|jpe?g|jfif|svg|webp|webm|mkv|mp4|m4v|mov)(\?|$)/i;
 
@@ -9710,3 +9712,5 @@ function reload_browser() {
 	msel.render();
 }
 treectl.hydrate();
+
+J_BRW = 2;

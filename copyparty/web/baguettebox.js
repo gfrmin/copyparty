@@ -1,9 +1,13 @@
+"use strict";
+
 /*!
  * baguetteBox.js
  * @author  feimosi
  * @version 1.11.1-mod
  * @url https://github.com/feimosi/baguetteBox.js
  */
+
+var J_BBX = 1;
 
 window.baguetteBox = (function () {
     'use strict';
@@ -1359,3 +1363,5 @@ window.baguetteBox = (function () {
         destroy: destroyPlugin
     };
 })();
+
+J_BBX = 2;

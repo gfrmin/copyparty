@@ -1,5 +1,6 @@
 "use strict";
 
+var J_MD = 1;
 var dom_toc = ebi('toc'),
     dom_wrap = ebi('mw'),
     dom_hbar = ebi('mh'),
@@ -524,3 +525,5 @@ if (sread('hidenav') == 1)
 
 if (window.tt && tt.init)
     tt.init();
+
+J_MD = 2;
