@@ -14,7 +14,13 @@ import paramiko
 import paramiko.common
 import paramiko.sftp_attr
 from paramiko.common import AUTH_FAILED, AUTH_SUCCESSFUL
-from paramiko.sftp import SFTP_FAILURE, SFTP_OK, SFTP_PERMISSION_DENIED
+from paramiko.sftp import (
+    SFTP_FAILURE,
+    SFTP_NO_SUCH_FILE,
+    SFTP_OK,
+    SFTP_OP_UNSUPPORTED,
+    SFTP_PERMISSION_DENIED,
+)
 
 from .__init__ import ANYWIN, TYPE_CHECKING
 from .authsrv import LEELOO_DALLAS, VFS, AuthSrv
@@ -41,8 +47,7 @@ if TYPE_CHECKING:
     from .svchub import SvcHub
 
 if True:  # pylint: disable=using-constant-test
-    import typing
-    from typing import Any, Optional, Union
+    from typing import Any, BinaryIO, Optional, Union
 
 SATTR = paramiko.sftp_attr.SFTPAttributes
 
@@ -247,11 +252,17 @@ class SSH_Srv(paramiko.ServerInterface):
 
 
 class SFTP_FH(paramiko.SFTPHandle):
+    def __init__(self, flags: int = 0) -> None:
+        self.filename = ""
+        self.readfile: Optional[BinaryIO] = None
+        self.writefile: Optional[BinaryIO] = None
+        super(SFTP_FH, self).__init__(flags)
+
     def stat(self):
         try:
-            return SATTR.from_stat(os.fstat(self.readfile.fileno()))
+            f = self.readfile or self.writefile
+            return SATTR.from_stat(os.fstat(f.fileno()))
         except OSError as ex:
-            print("a", repr(ex))
             return paramiko.SFTPServer.convert_errno(ex.errno)
 
     def chattr(self, attr):
@@ -332,16 +343,21 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
     def list_folder(self, path: str) -> list[SATTR] | int:
         try:
             return self._list_folder(path)
+        except Pebkac as ex:
+            if ex.code == 404:
+                self.log("folder 404: %s" % (path,))
+                return SFTP_NO_SUCH_FILE
+            return SFTP_PERMISSION_DENIED
         except:
             self.log("unhandled exception: %s" % (min_ex(),), 1)
             return SFTP_FAILURE
 
     def _list_folder(self, path: str) -> list[SATTR] | int:
         try:
-            ap, vn, rem = self.v2a(path, True, False, False, False)
+            ap, vn, rem = self.v2a(path, r=True)
         except Pebkac:
             try:
-                self.v2a(path, False, True, False, False)
+                self.v2a(path, w=True)
                 return []  # display write-only folders as empty
             except:
                 pass
@@ -396,12 +412,12 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
 
     def _stat(self, vp: str) -> SATTR | int:
         try:
-            ap = self.v2a(vp, True, False, False, False)[0]
+            ap = self.v2a(vp, r=True)[0]
             st = bos.stat(ap)
         except:
             if vp.strip("/") or self.asrv.vfs.realpath:
                 try:
-                    self.v2a(vp, False, True, False, False)[0]
+                    self.v2a(vp, w=True)[0]
                 except:
                     return SFTP_PERMISSION_DENIED
             zi = int(time.time())
@@ -634,7 +650,7 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
             return paramiko.SFTPServer.convert_errno(ex.errno)
 
     def symlink(self, target_path: str, path: str) -> int:
-        return paramiko.SFTPServer.SFTP_OP_UNSUPPORTED
+        return SFTP_OP_UNSUPPORTED
 
     def readlink(self, path: str) -> str | int:
         return path

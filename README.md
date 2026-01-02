@@ -1408,7 +1408,7 @@ goes roughly 700 MiB/s (slower than webdav and ftp)
 
 the sftp-server requires the optional dependency [paramiko](https://pypi.org/project/paramiko/);
 * if you are **not** using docker, then install paramiko somehow
-* if you **are** using docker, then use one of the following image variants: `ac` / `iv` / `dj`
+* if you **are** using docker, then use one of the following image variants: `ac` / `im` / `iv` / `dj`
 
 enable sftpd with `--sftp 3922` to listen on port 3922;
 * use global-option `sftp-key` to associate an ssh-key with a user;
