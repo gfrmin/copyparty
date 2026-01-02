@@ -2284,9 +2284,8 @@ def sanitize_to(fn: str, tl: dict[int, int]) -> str:
 
 
 def sanitize_vpath(vp: str) -> str:
-    if not FNTL_OS:
+    if not APTL_OS:
         return vp
-    assert APTL_OS  # type: ignore  # !rm
     parts = vp.replace(os.sep, "/").split("/")
     ret = [sanitize_to(x, APTL_OS) for x in parts]
     return "/".join(ret)

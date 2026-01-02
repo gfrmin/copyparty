@@ -5394,7 +5394,7 @@ class HttpCli(object):
                 "dbwt": None,
             }
 
-        assert vstate and vstate.items and vs  # type: ignore  # !rm
+        assert vstate is not None and vstate.items and vs  # type: ignore  # !rm
 
         dls = dl_list = []
         if self.conn.hsrv.tdls:
@@ -5945,7 +5945,7 @@ class HttpCli(object):
         if shr_dbv:
             # translate vpaths from share-target to share-url
             # to satisfy access checks
-            assert shr_vrem and shr_vrem.split  # type: ignore  # !rm
+            assert shr_vrem is not None and shr_vrem.split  # type: ignore  # !rm
             vp_shr, vp_vfs = vroots(self.vpath, vjoin(shr_dbv.vpath, shr_vrem))
             for v in ret:
                 vp = v["vp"]
@@ -7377,7 +7377,7 @@ class HttpCli(object):
                     ogh["og:site_name"] = zs
 
                 try:
-                    assert file  # type: ignore  # !rm
+                    assert file is not None  # type: ignore  # !rm
                     zs1, zs2 = file["tags"]["res"].split("x")
                     file["tags"][".resw"] = zs1
                     file["tags"][".resh"] = zs2
@@ -7417,7 +7417,7 @@ class HttpCli(object):
                     }
 
                 try:
-                    assert file  # type: ignore  # !rm
+                    assert file is not None  # type: ignore  # !rm
                     for k, v in file["tags"].items():
                         zs = "{{ %s }}" % (k,)
                         title = title.replace(zs, str(v))
@@ -7434,7 +7434,7 @@ class HttpCli(object):
 
                 for tag, hname in tagmap.items():
                     try:
-                        assert file  # type: ignore  # !rm
+                        assert file is not None  # type: ignore  # !rm
                         v = file["tags"][tag]
                         if not v:
                             continue
