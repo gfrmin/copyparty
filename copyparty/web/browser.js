@@ -8686,13 +8686,17 @@ var msel = (function () {
 		tb = QS('#op_new_md input[name="name"]');
 
 	form.onsubmit = function (e) {
+		if (!has(perms, "delete") && !/\.md$/.test(tb.value)) {
+			ev(e);
+			toast.err(10, L.nmd_i2);
+			return false;
+		}
 		if (tb.value) {
 			if (toast.tag == L.mk_noname)
 				toast.hide();
 
 			return true;
 		}
-
 		ev(e);
 		toast.err(10, L.mk_noname, L.mk_noname);
 		return false;
