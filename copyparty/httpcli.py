@@ -6321,6 +6321,7 @@ class HttpCli(object):
 
         fn = quotep(fns[0]) if len(fns) == 1 else ""
 
+        # NOTE: several clients (frontend, party-up) expect url at response[15:]
         surl = "created share: %s://%s%s%s%s/%s" % (
             "https" if self.is_https else "http",
             self.host,

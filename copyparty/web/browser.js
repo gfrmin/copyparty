@@ -648,7 +648,7 @@ if (1)
 		"rc_opn": "open",
 		"rc_ply": "play",
 		"rc_pla": "play as audio",
-		"rc_txt": "open in text file viewer",
+		"rc_txt": "open in textfile viewer",
 		"rc_md": "open in text editor",
 		"rc_dl": "download",
 		"rc_zip": "download as archive",

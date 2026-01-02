@@ -1,4 +1,32 @@
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
+# 2025-1217-0014  `v1.19.23`  bad apple x2
+
+## 🧪 new features
+
+* #1080 new translation: Vietnamese (thx @thatfrozenfrog and @khoidauminh!) b60eb3f0 d4a9787c
+* #1110 add option `xf-proto-fb` to support reverseproxies which do not provide an `x-forwarded-proto` header 9c64788d
+  * and improve the rproxy config guidance message in the serverlog c8f3b4ef
+  * and show a warning in the controlpanel if misconfiguration is detected c8f3b4ef
+* #1109 add option `--ipar`, reverseproxy-aware alternative to `--ipa` 33684219
+  * its purpose is rejecting connections from unexpected/unwanted IPs/subnets
+* option `idp-chsub` can be used to replace spaces in IdP usernames/groupnames 5e1d9a58 
+* #1029 indicate password max-length in ui 8d46cf18
+  * thx to @grantbacon for the initial take!
+
+## 🩹 bugfixes
+
+* #1111 apple gave us coal for xmas this year 0b6d2d24
+  * workaround for a new bug in safari (iOS and Macos) where it would randomly show a login-popup
+* #1113 the `@acct` group was unavailable in groupless IdP setups b6c2ec15
+
+## 🌠 fun facts
+
+* speaking of current events, @stackxp made copyparty [bad-apple-certified](https://copyparty.eu/bad-apple.mp4) a little while back :grin:
+  * the plugin is [available here](https://github.com/stackxp/copyparty-badapple)
+
+
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
 # 2025-1214-2304  `v1.19.22`  merikuri
 
 ## 🧪 new features

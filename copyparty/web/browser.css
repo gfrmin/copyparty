@@ -4129,6 +4129,7 @@ html.e #detree {
 #rcm {
 	position: absolute;
 	display: none;
+	background: #fff;
 	background: var(--bg);
 	border: 1px solid var(--bg-u3);
 	outline: none;

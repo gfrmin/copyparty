@@ -69,6 +69,7 @@ built in Norway 🇳🇴 with contributions from [not-norway](https://github.com
         * [ssdp](#ssdp) - windows-explorer announcer
     * [qr-code](#qr-code) - print a qr-code [(screenshot)](https://user-images.githubusercontent.com/241032/194728533-6f00849b-c6ac-43c6-9359-83e454d11e00.png) for quick access
     * [ftp server](#ftp-server) - an FTP server can be started using `--ftp 3921`
+    * [sftp server](#sftp-server) - goes roughly 700 MiB/s (slower than webdav and ftp)
     * [webdav server](#webdav-server) - with read-write support
         * [connecting to webdav from windows](#connecting-to-webdav-from-windows) - using the GUI
     * [tftp server](#tftp-server) - a TFTP server (read/write) can be started using `--tftp 3969`
@@ -126,7 +127,7 @@ built in Norway 🇳🇴 with contributions from [not-norway](https://github.com
 * [iOS shortcuts](#iOS-shortcuts) - there is no iPhone app, but
 * [performance](#performance) - defaults are usually fine - expect `8 GiB/s` download, `1 GiB/s` upload
     * [client-side](#client-side) - when uploading files
-* [security](#security) - there is a [discord server](https://discord.gg/25J8CdTT6G)
+* [security](#security) - there is a [discord server](https://discord.gg/25J8CdTT6G) with announcements
     * [gotchas](#gotchas) - behavior that might be unexpected
     * [cors](#cors) - cross-site request config
     * [filekeys](#filekeys) - prevent filename bruteforcing
@@ -138,7 +139,7 @@ built in Norway 🇳🇴 with contributions from [not-norway](https://github.com
         * [firefox wsod](#firefox-wsod) - firefox 87 can crash during uploads
 * [HTTP API](#HTTP-API) - see [devnotes](./docs/devnotes.md#http-api)
 * [dependencies](#dependencies) - mandatory deps
-    * [optional dependencies](#optional-dependencies) - install these to enable bonus features
+    * [optional dependencies](#optional-dependencies) - enable bonus features
         * [dependency chickenbits](#dependency-chickenbits) - prevent loading an optional dependency
         * [dependency unvendoring](#dependency-unvendoring) - force use of system modules
     * [optional gpl stuff](#optional-gpl-stuff)
@@ -236,12 +237,12 @@ you may also want these, especially on servers:
 
 and remember to open the ports you want; here's a complete example including every feature copyparty has to offer:
 ```
-firewall-cmd --permanent --add-port={80,443,3921,3923,3945,3990}/tcp  # --zone=libvirt
+firewall-cmd --permanent --add-port={80,443,3921,3922,3923,3945,3990}/tcp  # --zone=libvirt
 firewall-cmd --permanent --add-port=12000-12099/tcp  # --zone=libvirt
 firewall-cmd --permanent --add-port={69,1900,3969,5353}/udp  # --zone=libvirt
 firewall-cmd --reload
 ```
-(69:tftp, 1900:ssdp, 3921:ftp, 3923:http/https, 3945:smb, 3969:tftp, 3990:ftps, 5353:mdns, 12000:passive-ftp)
+(69:tftp, 1900:ssdp, 3921:ftp, 3922:sftp, 3923:http/https, 3945:smb, 3969:tftp, 3990:ftps, 5353:mdns, 12000:passive-ftp)
 
 
 ## features
@@ -1494,7 +1495,7 @@ unsafe, slow, not recommended for wan,  enable with `--smb` for read-only or `--
 
 click the [connect](http://127.0.0.1:3923/?hc) button in the control-panel to see connection instructions for windows, linux, macos
 
-dependencies: `python3 -m pip install --user -U impacket==0.11.0`
+dependencies: `python3 -m pip install --user -U impacket==0.13.0`
 * newer versions of impacket will hopefully work just fine but there is monkeypatching so maybe not
 
 some **BIG WARNINGS** specific to SMB/CIFS, in decreasing importance:
@@ -2849,7 +2850,7 @@ when uploading files,
 
 # security
 
-there is a [discord server](https://discord.gg/25J8CdTT6G)  with an `@everyone` for all important updates (at the lack of better ideas)
+there is a [discord server](https://discord.gg/25J8CdTT6G) with announcements  ; an `@everyone` for all important updates (at the lack of better ideas)
 
 some notes on hardening
 
@@ -3010,13 +3011,15 @@ mandatory deps:
 
 ## optional dependencies
 
-install these to enable bonus features
+enable bonus features  by installing these python-packages from pypi or so:
 
 enable [hashed passwords](#password-hashing) in config: `argon2-cffi`
 
 enable [ftp-server](#ftp-server):
 * for just plaintext FTP, `pyftpdlib` (is built into the SFX)
 * with TLS encryption, `pyftpdlib pyopenssl`
+
+enable [sftp-server](#sftp-server): `paramiko`
 
 enable [music tags](#metadata-from-audio-files):
 * either `mutagen` (fast, pure-python, skips a few tags, makes copyparty GPL? idk)
@@ -3032,7 +3035,7 @@ enable [thumbnails](#thumbnails) of...
 
 enable sending [zeromq messages](#zeromq) from event-hooks: `pyzmq`
 
-enable [smb](#smb-server) support (**not** recommended): `impacket==0.12.0`
+enable [smb](#smb-server) support (**not** recommended): `impacket==0.13.0`
 
 `pyvips` gives higher quality thumbnails than `Pillow` and is 320% faster, using 270% more ram
 * to install `pyvips` on Linux: `sudo apt install libvips42 && python3 -m pip install --user -U pyvips`
