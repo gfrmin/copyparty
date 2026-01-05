@@ -3030,6 +3030,7 @@ class AuthSrv(object):
                 shn.realpath = s_vfs.canonical(s_rem)
 
                 o_vn, _ = shn._get_share_src("")
+                shn.lim = o_vn.lim
                 shn.flags = o_vn.flags.copy()
                 shn.dbpath = o_vn.dbpath
                 shn.histpath = o_vn.histpath
