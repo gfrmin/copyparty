@@ -292,6 +292,20 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
         if self.uname == LEELOO_DALLAS:
             raise Exception("send her back")
 
+        self.vols = [
+            vp
+            for vp, vn in self.asrv.vfs.all_vols.items()
+            if self.uname in vn.axs.uread
+            or self.uname in vn.axs.uwrite
+            or self.uname in vn.axs.uget
+        ]
+        self.vis = set()
+        for zs in self.vols:
+            self.vis.add(zs)
+            while zs:
+                zs = zs.rsplit("/", 1)[0] if "/" in zs else ""
+                self.vis.add(zs)
+
     def log(self, msg: str, c: Union[int, str] = 0) -> None:
         self.hub.log("sftp:%s" % (self.ip,), msg, c)
 
@@ -357,6 +371,7 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
     def _list_folder(self, path: str) -> list[SATTR] | int:
         if self.v:
             self.log("ls(%s):" % (path,))
+        path = path.strip("/")
         try:
             ap, vn, rem = self.v2a(path, r=True)
         except Pebkac:
@@ -366,23 +381,23 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
                 return []  # display write-only folders as empty
             except:
                 pass
-            if self.asrv.vfs.realpath or path.strip("/"):
+            if path not in self.vis:
                 self.log("ls(%s): EPERM" % (path,))
                 return SFTP_PERMISSION_DENIED
             # list of accessible volumes
             ret = []
             zi = int(time.time())
             vst = os.stat_result((16877, -1, -1, 1, 1000, 1000, 8, zi, zi, zi))
-            for vn in self.asrv.vfs.all_vols.values():
-                if "/" in vn.vpath or not vn.vpath:
-                    continue  # only include toplevel-mounted vols
-                try:
-                    self.hub.asrv.vfs.get(vn.vpath, self.uname, True, False)
-                    ret.append(SATTR.from_stat(vst, filename=vn.vpath))
-                except:
-                    pass
+            prefix = path + "/"
+            for vn in self.asrv.vfs.all_nodes.values():
+                if path and not vn.vpath.startswith(prefix):
+                    continue  # vn is parent
+                vname = vn.vpath[len(prefix) :]
+                if "/" in vname or not vname:
+                    continue  # only include vols at current level
+                ret.append(SATTR.from_stat(vst, filename=vn.vpath))
             ret.sort(key=lambda x: x.filename)
-            self.log("ls(%s): vfs-root; |%d|" % (path, len(ret)))
+            self.log("ls(%s): vfs-vols; |%d|" % (path, len(ret)))
             return ret
 
         _, vfs_ls, vfs_virt = vn.ls(
@@ -419,6 +434,7 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
             return SFTP_FAILURE
 
     def _stat(self, vp: str) -> SATTR | int:
+        vp = vp.strip("/")
         try:
             ap, vn, _ = self.v2a(vp)
             if (
@@ -431,12 +447,12 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
             st = bos.stat(ap)
             self.log("stat(%s): %s" % (vp, st))
         except:
-            if vp.strip("/") or self.asrv.vfs.realpath:
+            if vp not in self.vis:
                 self.log("stat(%s): ENOENT" % (vp,))
                 return SFTP_NO_SUCH_FILE
             zi = int(time.time())
             st = os.stat_result((16877, -1, -1, 1, 1000, 1000, 8, zi, zi, zi))
-            self.log("stat(%s): vfs-root")
+            self.log("stat(%s): vfs-vols")
         return SATTR.from_stat(st)
 
     def open(self, path: str, flags: int, attr: SATTR) -> paramiko.SFTPHandle | int:
