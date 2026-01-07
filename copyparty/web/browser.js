@@ -676,6 +676,7 @@ var LANGN = [
 	["fra", "français"],
 	["grc", "Ελληνικά"],
 	["ita", "Italiano"],
+	["jpn", "日本語"],
 	["kor", "한국어"],
 	["nld", "Nederlands"],
 	["nno", "Nynorsk"],
