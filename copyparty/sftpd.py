@@ -585,6 +585,23 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
         except Pebkac as ex:
             t = "denied delete [%s]: %s"
             self.log(t % (vp, ex))
+            if str(ex).startswith("file not found"):
+                return SFTP_NO_SUCH_FILE
+            try:
+                # write-only client trying to rm before upload?
+                ap, vn, _ = self.v2a(vp)
+                if (
+                    self.uname not in vn.axs.uread
+                    and self.uname not in vn.axs.uwrite
+                    and self.uname not in vn.axs.uget
+                ):
+                    self.log("rm(%s): EPERM" % (vp,))
+                    return SFTP_PERMISSION_DENIED
+                if not bos.path.exists(ap):
+                    self.log(" `- file didn't exist; returning ENOENT")
+                    return SFTP_NO_SUCH_FILE
+            except:
+                pass
             return SFTP_PERMISSION_DENIED
         except OSError as ex:
             self.log("failed: rm(%s): %r" % (vp, ex))
