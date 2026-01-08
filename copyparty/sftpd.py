@@ -557,7 +557,7 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
             chmod = vf.get("chmod_f", 0o644)
             self.log("open(%s, %x): client did not chmod" % (vp, iflag))
         else:
-            self.log("open(%s, %x): client set chmod %s" % (vp, iflag, chmod))
+            self.log("open(%s, %x): client set chmod 0%o" % (vp, iflag, chmod))
 
         try:
             fd = os.open(ap, iflag, chmod)
