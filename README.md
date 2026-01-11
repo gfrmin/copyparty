@@ -1730,7 +1730,7 @@ set upload rules using volflags,  some examples:
     * just to avoid additional complexity in up2k which is enough of a mess already
 * `:c,lifetime=300` delete uploaded files when they become 5 minutes old
 
-you can also set transaction limits which apply per-IP and per-volume, but these assume `-j 1` (default) otherwise the limits will be off, for example `-j 4` would allow anywhere between 1x and 4x the limits you set depending on which processing node the client gets routed to
+you can also set transaction limits which apply per-IP and per-volume, but these assume `-j 1` (default) otherwise the limits will be messed up, for example `-j 4` would allow anywhere between 1x and 4x the limits you set depending on which processing node the client gets routed to
 
 * `:c,maxn=250,3600` allows 250 files over 1 hour from each IP (tracked per-volume)
 * `:c,maxb=1g,300` allows 1 GiB total over 5 minutes from each IP (tracked per-volume)
@@ -2813,12 +2813,12 @@ below are some tweaks roughly ordered by usefulness:
 * `--no-htp --hash-mt=0 --mtag-mt=1 --th-mt=1` minimizes the number of threads; can help in some eccentric environments (like the vscode debugger)
 * when running on AlpineLinux or other musl-based distro, try mimalloc for higher performance (and twice as much RAM usage); `apk add mimalloc2` and run copyparty with env-var `LD_PRELOAD=/usr/lib/libmimalloc-secure.so.2`
   * note that mimalloc requires special care when combined with prisonparty and/or bubbleparty/bubblewrap; you must give it access to `/proc` and `/sys` otherwise you'll encounter issues with FFmpeg (audio transcoding, thumbnails)
-* `-j0` enables multiprocessing (actual multithreading), can reduce latency to `20+80/numCores` percent and generally improve performance in cpu-intensive workloads, for example:
+* `-j0` (usually *not* recommended) enables multiprocessing (actual multithreading), can reduce latency to `20+80/numCores` percent and generally improve performance in cpu-intensive workloads, for example:
   * lots of connections (many users or heavy clients)
   * simultaneous downloads and uploads saturating a 20gbps connection
   * if `-e2d` is enabled, `-j2` gives 4x performance for directory listings; `-j4` gives 16x
   
-  ...however it also increases the server/filesystem/HDD load during uploads, and adds an overhead to internal communication, so it is usually a better idea to don't
+  ...however it will probably *reduce* performance in most cases, since it also increases the server/filesystem/HDD load during uploads, and adds an overhead to internal communication, so keeping the default is generally best
 * using [pypy](https://www.pypy.org/) instead of [cpython](https://www.python.org/) *can* be 70% faster for some workloads, but slower for many others
   * and pypy can sometimes crash on startup with `-j0` (TODO make issue)
 
