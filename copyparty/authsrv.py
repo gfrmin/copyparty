@@ -1829,7 +1829,7 @@ class AuthSrv(object):
         if self.args.ipu and not self.args.have_idp_hdrs:
             # syntax (CIDR=UNAME) is verified in load_ipu
             zsl = [x.split("=", 1)[1] for x in self.args.ipu]
-            zsl = [x for x in zsl if x not in acct]
+            zsl = [x for x in zsl if x and x not in acct]
             if zsl:
                 t = "ERROR: unknown users in ipu: %s" % (zsl,)
                 self.log(t, 1)
