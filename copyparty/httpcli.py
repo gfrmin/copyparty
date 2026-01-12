@@ -5434,8 +5434,8 @@ class HttpCli(object):
 
         if self.args.have_unlistc:
             allvols = self.asrv.vfs.all_nodes
-            rvol = [x for x in rvol if "unlistcr" not in allvols[x[1:-1]].flags]
-            wvol = [x for x in wvol if "unlistcw" not in allvols[x[1:-1]].flags]
+            rvol = [x for x in rvol if "unlistcr" not in allvols[x.strip("/")].flags]
+            wvol = [x for x in wvol if "unlistcw" not in allvols[x.strip("/")].flags]
 
         fmt = self.uparam.get("ls", "")
         if not fmt and self.ua.startswith(("curl/", "fetch")):
