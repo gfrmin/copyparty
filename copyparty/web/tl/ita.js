@@ -354,6 +354,7 @@ Ls.ita = {
 	"f_anota": "solo {0} dei {1} elementi sono stati selezionati;\nper selezionare l'intera cartella, prima scorri fino in fondo",
 
 	"f_dls": 'i link dei file nella cartella corrente sono stati\ncambiati in link di download',
+	"f_dl_nd": 'cartella ignorata (usa invece il download zip/tar):\n', //m
 
 	"f_partial": "Per scaricare in sicurezza un file che è attualmente in fase di caricamento, clicca il file che ha lo stesso nome, ma senza l'estensione <code>.PARTIAL</code>. Premi ANNULLA o Escape per farlo.\n\nPremendo OK / Invio ignorerai questo avviso e continuerai a scaricare il file <code>.PARTIAL</code> scratch, che quasi sicuramente ti darà dati corrotti.",
 

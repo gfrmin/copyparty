@@ -354,6 +354,7 @@ Ls.fra = {
 	"f_anota": "seulement {0} des {1} elements sont selectioné;\npour selectioner le dossier entier, fait défiler jusqu'au fond",
 
 	"f_dls": 'le lien de fichier dans le répertoire actuel\nà été changé en lien de téléchargement',
+	"f_dl_nd": 'dossier ignoré (utilisez le téléchargement zip/tar à la place):\n', //m
 
 	"f_partial": "Pour télécharger de façon sécurisée un fichier qui est entrain de se faire téléverser, cliquez sur le fichier qui a le même nom, mais sans l'extension de fichier <code>.PARTIAL</code>. Choisissez ANNULER ou appuiez sur la touche Échap pour faire cela.\n\nAppuyer sur OK / Entrée ignorera cet avertissement et continuera à télécharger le fichier temporaire <code>.PARTIAL</code> à la place, ce qui donnera presque certainement des données corrompues.",
 

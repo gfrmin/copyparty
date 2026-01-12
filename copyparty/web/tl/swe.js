@@ -354,6 +354,7 @@ Ls.swe = {
 	"f_anota": "endast {0} av {1} objekt valdes;\nför att välja hela mappen, skrolla först till botten av vyn",
 
 	"f_dls": 'fillänkarna i den öppna mappen har\nbytts till nedladdningslänkar',
+	"f_dl_nd": 'hoppar över mapp (använd zip/tar-nedladdning istället):\n', //m
 
 	"f_partial": "För att säkert ladda ner en fil som för tillfället laddas upp, vänligen klicka på filen som har samma filnamn men utan <code>.PARTIAL</code>-filändelsen. Vänligen tryck Avbryt eller Escape för att göra detta.\n\nOm du bortser från denna varning och trycker OK eller Enter kommer den tillfälliga <code>.PARTIAL</code>-filen istället att laddas ner, vilket är nästan garanterat att ge dig korrumperad data.",
 

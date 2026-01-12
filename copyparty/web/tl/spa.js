@@ -353,6 +353,7 @@ Ls.spa = {
 	"f_anota": "solo {0} de los {1} elementos fueron seleccionados;\npara seleccionar la carpeta completa, primero desplázate hasta el final",
 
 	"f_dls": "los enlaces a archivos en la carpeta actual se han\nconvertido en enlaces de descarga",
+	"f_dl_nd": 'omitiendo carpeta (use la descarga zip/tar en su lugar):\n', //m
 
 	"f_partial": "Para descargar de forma segura un archivo que se está subiendo actualmente, por favor haz clic en el archivo con el mismo nombre, pero sin la extensión <code>.PARTIAL</code>. Por favor, pulsa CANCELAR o Escape para hacer esto.\n\nPulsar ACEPTAR o Intro ignorará esta advertencia y continuará descargando el archivo temporal <code>.PARTIAL</code>, lo que casi con toda seguridad te dará datos corruptos.",
 

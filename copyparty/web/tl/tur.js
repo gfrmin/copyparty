@@ -354,6 +354,7 @@ Ls.tur = {
 	"f_anota": "{1} dosyadan sadece {0} tanesi seçildi;\nTüm klasörü seçmek için önce en alta kaydırın.",
 
 	"f_dls": 'bu klasördeki dosya linkleri\nindirme linklerine dönüştürüldü',
+	"f_dl_nd": 'klasör atlanıyor (bunun yerine zip/tar indirmesini kullanın):\n', //m
 
 	"f_partial": "Mevcutta yüklenen bir dosyayı güvenli bir şekilde indirmek için lütfen aynı adlı ama <code>.PARTIAL</code> uzantısına sahip olmayan dosyaya tıklayın. Lütfen bunu yapmak için İPTAL veya Esc tuşuna basın.\n\nTamam / Enter tuşuna basmak, bu uyarıyı yok sayacak ve bunun yerine <code>.PARTIAL</code> geçici dosyasını indirmeye devam edecektir ki bu da elinize bozuk veriler sunacaktır.",
 

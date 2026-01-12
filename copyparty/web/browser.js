@@ -360,6 +360,7 @@ if (1)
 		"f_anota": "only {0} of the {1} items were selected;\nto select the full folder, first scroll to the bottom",
 
 		"f_dls": 'the file links in the current folder have\nbeen changed into download links',
+		"f_dl_nd": 'skipping folder (use zip/tar download instead):\n',
 
 		"f_partial": "To safely download a file which is currently being uploaded, please click the file which has the same filename, but without the <code>.PARTIAL</code> file extension. Please press CANCEL or Escape to do this.\n\nPressing OK / Enter will ignore this warning and continue downloading the <code>.PARTIAL</code> scratchfile instead, which will almost definitely give you corrupted data.",
 
@@ -8503,9 +8504,13 @@ var msel = (function () {
 
 		for (var a = 0, aa = links.length; a < aa; a++) {
 			var qhref = links[a].getAttribute('href'),
-				href = qhref.split('?')[0].replace(/\/$/, ""),
+				href = qhref.split('?')[0],
 				item = {};
 
+			if (href.endsWith('/')) {
+				href = href.slice(0, -1);
+				item.isd = true;
+			}
 			item.id = links[a].getAttribute('id');
 			item.sel = clgot(links[a].closest('tr'), 'sel');
 			item.vp = href.indexOf('/') !== -1 ? href : vbase + href;
@@ -8668,7 +8673,10 @@ var msel = (function () {
 		ev(e);
 		var sel = r.getsel();
 		for (var a = 0; a < sel.length; a++)
-			dl_file(sel[a].vp + sel[a].q);
+			if (sel[a].isd)
+				toast.warn(7, L.f_dl_nd + esc(sel[a].vp));
+			else
+				dl_file(sel[a].vp + sel[a].q);
 	};
 	r.render = function () {
 		var tds = QSA('#files tbody td+td+td'),

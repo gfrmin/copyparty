@@ -354,6 +354,7 @@ Ls.por = {
 	"f_anota": "apenas {0} dos {1} itens foram selecionados;\npara selecionar a pasta inteira, primeiro role para o final",
 
 	"f_dls": 'os links de arquivo na pasta atual foram\nalterados para links de download',
+	"f_dl_nd": 'a ignorar pasta (use o download zip/tar em vez disso):\n', //m
 
 	"f_partial": "Para baixar com segurança um arquivo que está sendo enviado, por favor, clique no arquivo que tem o mesmo nome, mas sem a extensão <code>.PARTIAL</code>. Por favor, pressione CANCELAR ou Escape para fazer isso.\n\nPressionar OK / Enter irá ignorar este aviso e continuar baixando o arquivo temporário <code>.PARTIAL</code>, o que quase certamente lhe dará dados corrompidos.",
 

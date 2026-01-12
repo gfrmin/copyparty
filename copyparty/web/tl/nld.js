@@ -354,6 +354,7 @@ Ls.nld = {
 	"f_anota": "Alleen {0} van de {1} items zijn geselecteerd;\nom de volledige map te selecteren, scrol je eerst naar beneden",
 
 	"f_dls": 'de bestandslinks in de huidige map zijn veranderd in downloadlinks',
+	"f_dl_nd": 'map wordt overgeslagen (gebruik in plaats daarvan zip/tar-download):\n', //m
 
 	"f_partial": "Om een bestand dat momenteel wordt geüpload veilig te downloaden, klikt u op het bestand met dezelfde bestandsnaam, maar zonder de bestandsextensie <code>.PARTIAL</code>. Druk op Annuleren of Escape om dit te doen.\n\nAls u op OK / Enter drukt, wordt deze waarschuwing genegeerd en gaat u verder met het downloaden van het gedeeltelijke <code>.PARTIAL</code> scratchbestand, waardoor u vrijwel zeker beschadigde gegevens krijgt.",
 

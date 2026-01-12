@@ -363,6 +363,7 @@ Ls.vie = {
 	"f_anota": "chỉ {0} trong {1} tệp được chọn;\nđể chọn toàn bộ thư mục, trước tiên hãy kéo xuống cuối",
 
 	"f_dls": 'những đường dẫn đến tệp trong thư mục này\nđã được chuyển thành đường dẫn tải trực tiếp',
+	"f_dl_nd": 'bỏ qua thư mục (hãy dùng tải zip/tar thay thế):\n', //m
 
 	"f_partial": "Để tải an toàn một tệp đang được tải lên, hãy bấm vào tệp có cùng tên nhưng *không* có phần mở rộng <code>.PARTIAL</code>. Hãy nhấn CANCEL hoặc Escape để thực hiện.\n\nNếu nhấn OK / Enter, cảnh báo sẽ bị bỏ qua và bạn sẽ tải tệp tạm <code>.PARTIAL</code> thay vào đó, gần như chắc chắn dẫn đến dữ liệu bị hỏng.",
 

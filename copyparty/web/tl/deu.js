@@ -354,6 +354,7 @@ Ls.deu = {
 	"f_anota": "nur {0} der {1} Elemente wurden ausgewählt;\num den gesamten Ordner auszuwählen, zuerst nach unten scrollen",
 
 	"f_dls": 'die Dateilinks im aktuellen Ordner wurden\nin Downloadlinks geändert',
+	"f_dl_nd": 'ordner wird übersprungen (bitte zip/tar-download verwenden):\n', //m
 
 	"f_partial": "Um eine Datei sicher herunterzuladen, die gerade hochgeladen wird, klicke bitte die Datei mit dem gleichen Namen, aber ohne die <code>.PARTIAL</code>-Endung. Bitte drücke Abbrechen oder Escape, um dies zu tun.\n\nWenn du auf OK / Eingabe drückst, ignorierst du diese Warnung und lädst die <code>.PARTIAL</code>-Datei herunter, die ziemlich sicher beschädigte Daten enthält.",
 

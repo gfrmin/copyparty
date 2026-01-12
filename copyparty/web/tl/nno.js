@@ -351,6 +351,7 @@ Ls.nno = {
 	"f_anota": "kun {0} av totalt {1} element blei markert;\nfor å velje alt må du bla åt bunnen av mappa først",
 
 	"f_dls": 'lenkane i denne mappa er no\nomgjort åt nedlastingsknappar',
+	"f_dl_nd": 'hoppar over mappe (bruk zip/tar-nedlasting i staden):\n',
 
 	"f_partial": "For å laste ned ei fil som enda ikkje er ferdig opplasta, klikk på filen som har same filnamn som denne, men uten <code>.PARTIAL</code> på slutten. Da vil serveren passe på at nedlastinga går bra. Derfor anbefalast det sterkt å trykkje AVBRYT eller Escape-tasten.\n\nViss du verkelig ønskjer å laste ned denne <code>.PARTIAL</code>-filen på ein ukontrollert måte, trykk OK / Enter for å ignorere denne advarselen. Slik vil du høgst sannsynleg motta korrupt data.",
 

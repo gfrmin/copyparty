@@ -358,6 +358,7 @@ Ls.cze = {
 	"f_anota": "pouze {0} z {1} položek bylo vybráno;\npro výběr celé složky nejprve přejděte na konec",
 
 	"f_dls": 'odkazy na soubory v aktuální složce byly\nzměněny na odkazy ke stažení',
+	"f_dl_nd": 'přeskakuje se složka (místo toho použijte stažení zip/tar):\n', //m
 
 	"f_partial": "Pro bezpečné stažení souboru, který se aktuálně nahrává, klikněte prosím na soubor se stejným názvem, ale bez přípony <code>.PARTIAL</code>. Stiskněte prosím Zrušit nebo Escape.\n\nStisknutím OK / Enter ignorujete toto varování a pokračujete ve stahování <code>.PARTIAL</code> dočasného souboru, což téměř jistě vyústí jako poškozená data.",
 

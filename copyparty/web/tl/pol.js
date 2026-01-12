@@ -357,6 +357,7 @@ Ls.pol = {
 	"f_anota": "{0} z {1} elementów zostało wybranych;\naby pokazać cały folder, zjedź na dół",
 
 	"f_dls": 'linki do plików w aktualnym folderze\nzostały zmienione w linki pobierania',
+	"f_dl_nd": 'pomijanie folderu (użyj zamiast tego pobierania zip/tar):\n', //m
 
 	"f_partial": "Aby bezpiecznie pobrać plik, który aktualnie jest przesyłany, wybierz plik o tej samej nazwie, lecz bez rozszerzenia <code>.PARTIAL</code>. Żeby to zrobić, naciśnij ANULUJ lub klawisz ESC.\n\nWciśnięcie OK / Enter zignoruje to ostrzeżenie i pobierze plik tymczasowy <code>.PARTIAL</code>, który prawie z pewnością będzie zepsuty",
 
