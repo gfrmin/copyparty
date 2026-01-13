@@ -2591,6 +2591,19 @@ class AuthSrv(object):
 
             vol.check_landmarks()
 
+            if vol.flags.get("db_xattr"):
+                self.args.have_db_xattr = True
+                zs = str(vol.flags["db_xattr"])
+                neg = zs.startswith("~~")
+                if neg:
+                    zs = zs[2:]
+                zsl = [x.strip() for x in zs.split(",")]
+                zsl = [x for x in zsl if x]
+                if neg:
+                    vol.flags["db_xattr_no"] = set(zsl)
+                else:
+                    vol.flags["db_xattr_yes"] = zsl
+
             # d2d drops all database features for a volume
             for grp, rm in [["d2d", "e2d"], ["d2t", "e2t"], ["d2d", "e2v"]]:
                 if not vol.flags.get(grp, False):

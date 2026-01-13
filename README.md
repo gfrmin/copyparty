@@ -87,6 +87,7 @@ built in Norway 🇳🇴 with contributions from [not-norway](https://github.com
     * [other flags](#other-flags)
     * [database location](#database-location) - in-volume (`.hist/up2k.db`, default) or somewhere else
     * [metadata from audio files](#metadata-from-audio-files) - set `-e2t` to index tags on upload
+        * [metadata from xattrs](#metadata-from-xattrs) - unix extended file attributes
     * [file parser plugins](#file-parser-plugins) - provide custom parsers to index additional tags
     * [event hooks](#event-hooks) - trigger a program on uploads, renames etc ([examples](./bin/hooks/))
         * [zeromq](#zeromq) - event-hooks can send zeromq messages
@@ -1875,6 +1876,20 @@ see the beautiful mess of a dictionary in [mtag.py](https://github.com/9001/copy
 * more importantly runs FFprobe on incoming files which is bad if your FFmpeg has a cve
 
 `--mtag-to` sets the tag-scan timeout; very high default (60 sec) to cater for zfs and other randomly-freezing filesystems. Lower values like 10 are usually safe, allowing for faster processing of tricky files
+
+
+### metadata from xattrs
+
+unix extended file attributes  can be indexed into the db and made searchable;
+
+* `--db-xattr user.foo,user.bar` will index the xattrs `user.foo` and `user.bar`,
+* `--db-xattr user.foo=foo,user.bar=bar` will index them with the names `foo` and `bar`,
+* `--db-xattr ~~user.foo,user.bar` will index everything *except* `user.foo` and `user.bar`,
+* `--db-xattr ~~` will index everything
+
+however note that the tags must also be enabled with `-mte` so here are some complete examples:
+* `-e2ts --db-xattr user.foo,user.bar -mte +user.foo,user.bar`
+* `-e2ts --db-xattr user.foo=foo,user.bar=bar -mte +foo,bar`
 
 
 ## file parser plugins

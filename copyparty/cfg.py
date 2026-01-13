@@ -101,6 +101,7 @@ def vf_vmap() -> dict[str, str]:
         "chmod_d",
         "chmod_f",
         "dbd",
+        "db_xattr",
         "du_who",
         "epilogues",
         "ufavico",
@@ -286,6 +287,7 @@ flagcats = {
         "dotsrch": "show dotfiles in search results",
         "nodotsrch": "hide dotfiles in search results (default)",
         "srch_excl": "exclude search results with URL matching this regex",
+        "db_xattr=user.foo,user.bar": "index file xattrs as media-tags",
     },
     'database, audio tags\n"mte", "mth", "mtp", "mtm" all work the same as -mte, -mth, ...': {
         "mte=artist,title": "media-tags to index/display",

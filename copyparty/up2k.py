@@ -130,6 +130,7 @@ class Mpqe(object):
         self,
         mtp: dict[str, MParser],
         entags: set[str],
+        vf: dict[str, Any],
         w: str,
         abspath: str,
         oth_tags: dict[str, Any],
@@ -137,6 +138,7 @@ class Mpqe(object):
         # mtp empty = mtag
         self.mtp = mtp
         self.entags = entags
+        self.vf = vf
         self.w = w
         self.abspath = abspath
         self.oth_tags = oth_tags
@@ -2199,7 +2201,7 @@ class Up2k(object):
             abspath = djoin(ptop, rd, fn)
             self.pp.msg = "c%d %s" % (nq, abspath)
             if not mpool:
-                n_tags = self._tagscan_file(cur, entags, w, abspath, ip, at, un)
+                n_tags = self._tagscan_file(cur, entags, flags, w, abspath, ip, at, un)
             else:
                 oth_tags = {}
                 if ip:
@@ -2209,7 +2211,7 @@ class Up2k(object):
                 if un:
                     oth_tags["up_by"] = un
 
-                mpool.put(Mpqe({}, entags, w, abspath, oth_tags))
+                mpool.put(Mpqe({}, entags, flags, w, abspath, oth_tags))
                 with self.mutex:
                     n_tags = len(self._flush_mpool(cur))
 
@@ -2316,9 +2318,10 @@ class Up2k(object):
             return
 
         entags = self.entags[ptop]
+        vf = self.flags[ptop]
 
         parsers = {}
-        for parser in self.flags[ptop]["mtp"]:
+        for parser in vf["mtp"]:
             try:
                 parser = MParser(parser)
             except:
@@ -2393,7 +2396,7 @@ class Up2k(object):
                     if un:
                         oth_tags["up_by"] = un
 
-                    jobs.append(Mpqe(parsers, set(), w, abspath, oth_tags))
+                    jobs.append(Mpqe(parsers, set(), vf, w, abspath, oth_tags))
                     in_progress[w] = True
 
             with self.mutex:
@@ -2524,7 +2527,7 @@ class Up2k(object):
             return
 
         for _ in range(mpool.maxsize):
-            mpool.put(Mpqe({}, set(), "", "", {}))
+            mpool.put(Mpqe({}, set(), {}, "", "", {}))
 
         mpool.join()
 
@@ -2543,7 +2546,7 @@ class Up2k(object):
                         t = "tag-thr: {}({})"
                         self.log(t.format(self.mtag.backend, qe.abspath), "90")
 
-                    tags = self.mtag.get(qe.abspath) if st.st_size else {}
+                    tags = self.mtag.get(qe.abspath, qe.vf) if st.st_size else {}
                 else:
                     if self.args.mtag_vv:
                         t = "tag-thr: {}({})"
@@ -2576,6 +2579,7 @@ class Up2k(object):
         self,
         write_cur: "sqlite3.Cursor",
         entags: set[str],
+        vf: dict[str, Any],
         wark: str,
         abspath: str,
         ip: str,
@@ -2594,7 +2598,7 @@ class Up2k(object):
             return 0
 
         try:
-            tags = self.mtag.get(abspath) if st.st_size else {}
+            tags = self.mtag.get(abspath, vf) if st.st_size else {}
         except Exception as ex:
             self._log_tag_err("", abspath, ex)
             return 0
@@ -5404,7 +5408,7 @@ class Up2k(object):
             # self.log("\n  " + repr([ptop, rd, fn]))
             abspath = djoin(ptop, rd, fn)
             try:
-                tags = self.mtag.get(abspath) if sz else {}
+                tags = self.mtag.get(abspath, self.flags[ptop]) if sz else {}
                 ntags1 = len(tags)
                 parsers = self._get_parsers(ptop, tags, abspath)
                 if self.args.mtag_vv:
