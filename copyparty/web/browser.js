@@ -9500,9 +9500,10 @@ var rcm = (function () {
 		elem: null,
 		type: null,
 		path: null,
+		dpath: null,
 		url: null,
 		id: null,
-		relpath: null,
+		fname: null,
 		no_dsel: false
 	};
 	var selFile = jcp(nsFile);
@@ -9564,9 +9565,9 @@ var rcm = (function () {
 					a.target = selFile.type == "dir" ? '' : '_blank';
 					a.click();
 					break;
-				case 'ply': selFile.type == 'gf' ? thegrid.imshow(selFile.relpath) : play('f-' + selFile.id); break;
+				case 'ply': selFile.type == 'gf' ? thegrid.imshow(selFile.name) : play('f-' + selFile.id); break;
 				case 'pla': play('f-' + selFile.id); break;
-				case 'txt': location = '?doc=' + selFile.relpath; break;
+				case 'txt': location = selFile.dpath + '?doc=' + selFile.name; break;
 				case 'md': location = selFile.path + (has(selFile.path, '?') ? '&v' : '?v'); break;
 				case 'cpl': cliptxt(selFile.url, function() {toast.ok(2, L.clipped)}); break;
 				case 'dl': ebi('seldl').click(); break;
@@ -9599,20 +9600,27 @@ var rcm = (function () {
 				var ref = ebi(target.getAttribute('ref'));
 				file = ref && ref.closest('#files tbody tr');
 			}
-			if (file) {
+			var fa = file && file.children[1].querySelector('a[id]');
+			if (fa) {
 				selFile.no_dsel = clgot(file, "sel");
 				clmod(file, "sel", true);
 				selFile.elem = file;
-
-				selFile.url = file.children[1].firstChild.href;
+				selFile.url = fa.href;
 				selFile.path = basenames(selFile.url).replace(/(&|\?)v/, '');
-				selFile.relpath = selFile.path.split('/').slice(-1)[0].split("?")[0];
-				if (noq_href(file.children[1].firstChild).endsWith("/"))
+				var url = selFile.url.split("?")[0],
+					vsp = vsplit(url);
+				selFile.dpath = vsp[0];
+				selFile.name = vsp[1];
+				if (url.endsWith("/"))
 					selFile.type = "dir";
 				else {
 					var lead = file.firstChild.firstChild;
-					selFile.id = lead.id.split('-')[1];
-					selFile.type = lead.innerHTML[0] == '(' ? 'gf' : lead.id.split('-')[0];
+					if (lead.id === undefined)
+						selFile.type = "tf";
+					else {
+						selFile.id = lead.id.split('-')[1];
+						selFile.type = lead.innerHTML[0] == '(' ? 'gf' : lead.id.split('-')[0];
+					}
 				}
 			}
 		}
@@ -9627,7 +9635,7 @@ var rcm = (function () {
 		clmod(ebi('rpla'), 'hide', selFile.type != 'gf');
 		clmod(ebi('rtxt'), 'hide', !selFile.id);
 		clmod(ebi('rs1'), 'hide', !selFile.path);
-		clmod(ebi('rmd'), 'hide', !selFile.id || selFile.relpath.slice(-3) != ".md");
+		clmod(ebi('rmd'), 'hide', selFile.name.slice(-3) != ".md");
 		clmod(ebi('rcpl'), 'hide', !selFile.path);
 		clmod(ebi('rdl'), 'hide', !has_sel);
 		clmod(ebi('rzip'), 'hide', !has_sel);
