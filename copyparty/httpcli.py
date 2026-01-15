@@ -161,6 +161,7 @@ H_CONN_CLOSE = "Connection: Close"
 
 RSS_SORT = {"m": "mt", "u": "at", "n": "fn", "s": "sz"}
 ACODE2_FMT = set(["opus", "owa", "caf", "mp3", "flac", "wav"])
+IDX_HTML = set(["index.htm", "index.html"])
 
 A_FILE = os.stat_result(
     (0o644, -1, -1, 1, 1000, 1000, 8, 0x39230101, 0x39230101, 0x39230101)
@@ -6723,7 +6724,7 @@ class HttpCli(object):
                     vrem = vjoin(vrem, fn)
                     abspath = ap2
                     break
-            elif self.vpath.rsplit("/", 1)[-1] in ("index.htm", "index.html"):
+            elif self.vpath.rsplit("/", 1)[-1] in IDX_HTML:
                 fk_pass = True
 
         if not is_dir and (self.can_read or self.can_get):
@@ -7093,13 +7094,16 @@ class HttpCli(object):
             and "v" not in self.uparam
             and not is_opds
         ):
-            idx_html = set(["index.htm", "index.html"])
             for item in files:
-                if item["name"] in idx_html:
+                if item["name"] in IDX_HTML:
                     # do full resolve in case of shadowed file
                     vp = vjoin(self.vpath.split("?")[0], item["name"])
                     vn, rem = self.asrv.vfs.get(vp, self.uname, True, False)
                     ap = vn.canonical(rem)
+                    if not self.trailing_slash and bos.path.isfile(ap):
+                        return self.redirect(
+                            self.vpath + "/", flavor="redirecting to", use302=True
+                        )
                     return self.tx_file(ap)  # is no-cache
 
         if icur:
