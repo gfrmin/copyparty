@@ -2722,7 +2722,7 @@ class AuthSrv(object):
             for zs in zs.split():
                 vol.flags.pop(zs, None)
 
-        for vol in vfs.all_nodes.values():
+        for vol in vfs.all_vols.values():
             if not vol.realpath or vol.flags.get("is_file"):
                 continue
             ccs = vol.flags["casechk"][:1].lower()
