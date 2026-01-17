@@ -1173,6 +1173,7 @@ def add_general(ap, nc, srvname):
     ap2.add_argument("--name", metavar="TXT", type=u, default=srvname, help="server name (displayed topleft in browser and in mDNS)")
     ap2.add_argument("--name-url", metavar="TXT", type=u, help="URL for server name hyperlink (displayed topleft in browser)")
     ap2.add_argument("--name-html", type=u, help=argparse.SUPPRESS)
+    ap2.add_argument("--site", metavar="URL", type=u, default="", help="public URL to assume when creating links; example: [\033[32mhttps://example.com/\033[0m]")
     ap2.add_argument("--mime", metavar="EXT=MIME", type=u, action="append", help="\033[34mREPEATABLE:\033[0m map file \033[33mEXT\033[0mension to \033[33mMIME\033[0mtype, for example [\033[32mjpg=image/jpeg\033[0m]")
     ap2.add_argument("--mimes", action="store_true", help="list default mimetype mapping and exit")
     ap2.add_argument("--rmagic", action="store_true", help="do expensive analysis to improve accuracy of returned mimetypes; will make file-downloads, rss, and webdav slower (volflag=rmagic)")
@@ -1220,6 +1221,7 @@ def add_share(ap):
     ap2.add_argument("--shr-who", metavar="TXT", type=u, default="auth", help="who can create a share? [\033[32mno\033[0m]=nobody, [\033[32ma\033[0m]=admin-permission, [\033[32mauth\033[0m]=authenticated (volflag=shr_who)")
     ap2.add_argument("--shr-adm", metavar="U,U", type=u, default="", help="comma-separated list of users allowed to view/delete any share")
     ap2.add_argument("--shr-rt", metavar="MIN", type=int, default=1440, help="shares can be revived by their owner if they expired less than MIN minutes ago; [\033[32m60\033[0m]=hour, [\033[32m1440\033[0m]=day, [\033[32m10080\033[0m]=week")
+    ap2.add_argument("--shr-site", metavar="URL", type=u, default="--site", help="public URL to assume when creating share-links; example: [\033[32mhttps://example.com/\033[0m]")
     ap2.add_argument("--shr-v", action="store_true", help="debug")
 
 

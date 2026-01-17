@@ -3181,6 +3181,11 @@ class AuthSrv(object):
             for zs in zs.split():
                 if getattr(self.args, zs, False):
                     js_htm[zs] = 1
+            zs = "up_site"
+            for zs in zs.split():
+                zs2 = getattr(self.args, zs, "")
+                if zs2:
+                    js_htm[zs] = zs2
             vn.js_htm = json_hesc(json.dumps(js_htm))
 
         vols = list(vfs.all_nodes.values())

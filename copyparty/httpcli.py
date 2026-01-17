@@ -6170,8 +6170,20 @@ class HttpCli(object):
                 zsl = [html_escape(zst[0]) for zst in zstl]
                 r[4] = "<br />".join(zsl)
 
+        if self.args.shr_site:
+            site = self.args.shr_site[:-1]
+        elif self.is_vproxied:
+            site = self.args.SR
+        else:
+            site = ""
+
         html = self.j2s(
-            "shares", this=self, shr=self.args.shr, rows=rows, now=int(time.time())
+            "shares",
+            this=self,
+            shr=self.args.shr,
+            site=site,
+            rows=rows,
+            now=int(time.time()),
         )
         self.reply(html.encode("utf-8"), status=200)
         return True
@@ -6326,14 +6338,22 @@ class HttpCli(object):
         fn = quotep(fns[0]) if len(fns) == 1 else ""
 
         # NOTE: several clients (frontend, party-up) expect url at response[15:]
-        surl = "created share: %s://%s%s%s%s/%s" % (
-            "https" if self.is_https else "http",
-            self.host,
-            self.args.SR,
-            self.args.shr,
-            skey,
-            fn,
-        )
+        if self.args.shr_site:
+            surl = "created share: %s%s%s/%s" % (
+                self.args.shr_site,
+                self.args.shr[1:],
+                skey,
+                fn,
+            )
+        else:
+            surl = "created share: %s://%s%s%s%s/%s" % (
+                "https" if self.is_https else "http",
+                self.host,
+                self.args.SR,
+                self.args.shr,
+                skey,
+                fn,
+            )
         self.loud_reply(surl, status=201)
         return True
 

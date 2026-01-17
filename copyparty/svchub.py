@@ -315,6 +315,10 @@ class SvcHub(object):
         args.doctitle = args.doctitle.replace("--name", args.vname)
         args.bname = args.bname.replace("--name", args.vname) or args.vname
 
+        for zs in ("shr_site",):
+            if getattr(args, zs) == "--site":
+                setattr(args, zs, args.site)
+
         if args.log_fk:
             args.log_fk = re.compile(args.log_fk)
 
