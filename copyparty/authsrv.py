@@ -22,6 +22,7 @@ from .util import (
     DEF_MTH,
     EXTS,
     FAVICON_MIMES,
+    FN_EMB,
     HAVE_SQLITE3,
     IMPLICATIONS,
     META_NOBOTS,
