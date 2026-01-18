@@ -9775,7 +9775,7 @@ function reload_browser() {
 	var ttimer = null;
 
 	var lpdelay = 250; 
-	var mvthresh = 10;
+	var mvthresh = 44;
 
 	function unbox() {
 		qsr('.selbox');
