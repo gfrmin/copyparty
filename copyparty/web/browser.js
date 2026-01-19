@@ -997,7 +997,7 @@ ebi('op_cfg').innerHTML = (
 	'	</div>\n' +
 	'</div>\n' +
 	'<div><h3>' + L.cl_keytype + '</h3><div><select id="key_notation"></select></div></div>\n' +
-	(!MOBILE ? '<div><h3>' + L.cl_rcm + '</h3><div><a id="ren" class="tgl btn" href="#" tt="' + L.cdt_ren + '">enable</a><a id="rdb" class="tgl btn" href="#" tt="' + L.cdt_rdb + '">double</a></div></div>' : '') +
+	(!MOBILE ? '<div><h3>' + L.cl_rcm + '</h3><div><a id="rcm_en" class="tgl btn" href="#" tt="' + L.cdt_ren + '">enable</a><a id="rcm_db" class="tgl btn" href="#" tt="' + L.cdt_rdb + '">double</a></div></div>' : '') +
 	'<div><h3>' + L.cl_hiddenc + ' &nbsp;' + (MOBILE ? '<a href="#" id="hcolsh">' + L.cl_hidec + '</a> / ' : '') + '<a href="#" id="hcolsr">' + L.cl_reset + '</a></h3><div id="hcols"></div></div>'
 );
 
@@ -9494,12 +9494,9 @@ var rcm = (function () {
 	if (MOBILE)
 		return {enabled: false}
 
-	var r = {
-		enabled: true,
-		double: false
-	};
-	bcfg_bind(r, 'enabled', 'ren', true);
-	bcfg_bind(r, 'double', 'rdb', false);
+	var r = {};
+	bcfg_bind(r, 'enabled', 'rcm_en', drcm.charAt(0)=='y');
+	bcfg_bind(r, 'double', 'rcm_db', drcm.charAt(1)=='y');
 
 	var menu = ebi('rcm');
 	var nsFile = {

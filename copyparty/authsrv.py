@@ -3201,6 +3201,7 @@ class AuthSrv(object):
                 "dsort": vf["sort"],
                 "dcrop": vf["crop"],
                 "dth3x": vf["th3x"],
+                "drcm": self.args.rcm,
                 "dvol": self.args.au_vol,
                 "idxh": int(self.args.ih),
                 "dutc": not self.args.localtime,
