@@ -262,6 +262,7 @@ Ls.nor = {
 	"cdt_ask": "vis knapper for å laste flere filer nederst på siden istedenfor å gradvis laste mer av mappen når man scroller ned",
 	"cdt_hsort": "antall sorterings-regler (&lt;code&gt;,sorthref&lt;/code&gt;) som skal inkluderes når media-URL'er genereres. Hvis denne er 0 så vil sorterings-regler i URL'er hverken bli generert eller lest",
 	"cdt_ren": "bruk egendefinert høyreklikkmeny (den vanlige menyen er tilgjengelig med shift + høyreklikk)",
+	"cdt_rdb": "høyreklikk to ganger for å vise den vanlige høyreklikkmenyen",
 
 	"tt_entree": "bytt til mappehierarki$NSnarvei: B",
 	"tt_detree": "bytt til tradisjonell sti-visning$NSnarvei: B",
@@ -652,10 +653,13 @@ Ls.nor = {
 	"rc_cut": "klipp ut",
 	"rc_cpy": "kopier",
 	"rc_pst": "Lim inn",
+	"rc_rnm": "gi nytt navn",
 	"rc_nfo": "ny mappe",
 	"rc_nfi": "ny fil",
 	"rc_sal": "velg alle",
 	"rc_sin": "inverter utvalg",
+	"rc_shf": "del denne mappen",
+	"rc_shs": "del markering",
 
 	"lang_set": "passer det å laste siden på nytt?",
 

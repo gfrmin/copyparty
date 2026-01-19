@@ -226,6 +226,7 @@ Ls.swe = {
 	"ct_ttips": '◔ ◡ ◔">ℹ️ tips',
 	"ct_thumb": 'växla mellan miniatyrer och ikoner i rutnätsvyn$NSnabbtangent: T">🖼️ miniatyrer',
 	"ct_csel": 'använd CTRL och SKIFT för urval av filer i rutnätsvyn">val',
+	"ct_dsel": 'använd dra-urval i rutnätsvyn">dra', //m
 	"ct_dl": 'tvinga nedladdning (visa inte inline) när en fil klickas">dl', //m
 	"ct_ihop": 'skrolla till den senast visade filen när bildvisaren stängs">g⮯',
 	"ct_dots": 'visa dolda filer (om servern tillåter detta)">dolda',
@@ -264,6 +265,7 @@ Ls.swe = {
 	"cdt_ask": "när du når botten av vyn,$Nbe om en åtgärd istället för att ladda fler filer",
 	"cdt_hsort": "hur många sorteringsregler (&lt;code&gt;,sorthref&lt;/code&gt;) att inkludera i media-URL:er. Sätts detta till 0 kommer regler i klickade medialänkar även att ignoreras",
 	"cdt_ren": "aktivera anpassad högerklicksmeny, den vanliga menyn är tillgänglig med shift + högerklick", //m
+	"cdt_rdb": "visa den vanliga högerklicksmenyn när den anpassade redan är öppen och man högerklickar igen", //m
 
 	"tt_entree": "visa trädvy$NSnabbtangent: B",
 	"tt_detree": "visa brödsmulor$NSnabbtangent: B",
@@ -654,10 +656,13 @@ Ls.swe = {
 	"rc_cut": "klipp ut", //m
 	"rc_cpy": "kopiera", //m
 	"rc_pst": "klistra in", //m
+	"rc_rnm": "byt namn", //m
 	"rc_nfo": "ny mapp", //m
 	"rc_nfi": "ny fil", //m
 	"rc_sal": "markera alla", //m
 	"rc_sin": "invertera markering", //m
+	"rc_shf": "dela denna mapp", //m
+	"rc_shs": "dela urval", //m
 
 	"lang_set": "uppdatera för att ändringen ska ta effekt?",
 

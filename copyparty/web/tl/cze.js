@@ -230,6 +230,7 @@ Ls.cze = {
 	"ct_ttips": '◔ ◡ ◔">ℹ️ nápovědy',
 	"ct_thumb": 'v zobrazení mřížky přepnout ikony nebo náhledy$NKlávesová zkratka: T">🖼️ náhledy',
 	"ct_csel": 'použít CTRL a SHIFT pro výběr souborů v zobrazení mřížky">výběr',
+	"ct_dsel": 'použít tažený výběr v zobrazení mřížky">tažení', //m
 	"ct_dl": 'vynutit stažení (nezobrazovat inline) při kliknutí na soubor">dl', //m
 	"ct_ihop": 'když se zavře prohlížeč obrázků, posunout dolů k naposledy zobrazenému souboru">g⮯',
 	"ct_dots": 'zobrazit skryté soubory (pokud to server povoluje)">dotfiles',
@@ -268,6 +269,7 @@ Ls.cze = {
 	"cdt_ask": "při posunování na konec,$Nmísto načítání více souborů,$N se zeptat co dělat",
 	"cdt_hsort": "kolik pravidel řazení (&lt;code&gt;,sorthref&lt;/code&gt;) zahrnout do media-URL. Nastavení na 0 bude také ignorovat pravidla řazení zahrnutá v media odkazech při kliknutí na ně",
 	"cdt_ren": "povolit vlastní kontextovou nabídku, běžnou nabídku lze otevřít podržením klávesy shift a kliknutím pravým tlačítkem", //m
+	"cdt_rdb": "zobrazit běžné menu pravého tlačítka, když je vlastní již otevřené a znovu se klikne pravým", //m
 
 	"tt_entree": "zobrazit navigační panel (postranní strom adresářů)$NKlávesová zkratka: B",
 	"tt_detree": "zobrazit drobečkovou navigaci$NKlávesová zkratka: B",
@@ -658,10 +660,13 @@ Ls.cze = {
 	"rc_cut": "vyjmout", //m
 	"rc_cpy": "kopírovat", //m
 	"rc_pst": "vložit", //m
+	"rc_rnm": "přejmenovat", //m
 	"rc_nfo": "nová složka", //m
 	"rc_nfi": "nový soubor", //m
 	"rc_sal": "vybrat vše", //m
 	"rc_sin": "invertovat výběr", //m
+	"rc_shf": "sdílet tuto složku", //m
+	"rc_shs": "sdílet výběr", //m
 
 	"lang_set": "obnovit stránku, aby se změna projevila?",
 

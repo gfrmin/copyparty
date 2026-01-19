@@ -227,6 +227,7 @@ Ls.vie = {
 	"ct_ttips": '༼ ◕_◕ ༽">ℹ️ tooltips',
 	"ct_thumb": 'ở chế độ lưới, chuyển biểu tượng hoặc hình thu nhỏ$NPhím tắt: T">🖼️ ảnh thu nhỏ',
 	"ct_csel": 'dùng CTRL và SHIFT để chọn tệp trong chế độ lưới">sel',
+	"ct_dsel": 'dùng chọn bằng cách kéo trong chế độ lưới">kéo', //m
 	"ct_dl": 'cưỡng chế tải xuống (không hiện thị trong dòng) khi nhấp vào tệp">dl',
 	"ct_ihop": 'khi đóng trình xem ảnh, cuộn xuống tệp đã xem gần nhất">g⮯',
 	"ct_dots": 'hiển thị tệp ẩn (nếu máy chủ cho phép)">dotfiles',
@@ -268,6 +269,7 @@ Ls.vie = {
 	"cdt_ask": "khi cuộn xuống cuối,$Nthay vì tải thêm tệp,$Nhỏi người dùng muốn làm gì",
 	"cdt_hsort": "số lượng luật sắp xếp(&lt;code&gt;,sorthref&lt;/code&gt;) được đưa vào URL media. Đặt bằng 0 cũng sẽ bỏ qua các quy tắc sắp xếp trong liên kết media khi nhấp vào chúng",
 	"cdt_ren": "bật menu chuột phải tùy chỉnh, menu mặc định vẫn truy cập được bằng shift + chuột phải", //m
+	"cdt_rdb": "hiển thị menu chuột phải thông thường khi menu tùy chỉnh đã mở và nhấp chuột phải lần nữa", //m
 
 	"tt_entree": "hiển thị thanh điều hướng (cây thư mục)$NPhím tắt: B",
 	"tt_detree": "hiển thị đường dẫn$NPhím tắt: B",
@@ -687,10 +689,13 @@ Ls.vie = {
 	"rc_cut": "cắt", //m
 	"rc_cpy": "sao chép", //m
 	"rc_pst": "dán", //m
+	"rc_rnm": "đổi tên", //m
 	"rc_nfo": "thư mục mới", //m
 	"rc_nfi": "tệp mới", //m
 	"rc_sal": "chọn tất cả", //m
 	"rc_sin": "đảo ngược lựa chọn", //m
+	"rc_shf": "chia sẻ thư mục này", //m
+	"rc_shs": "chia sẻ lựa chọn", //m
 
 	"lang_set": "tải lại trang để áp dụng thay đổi ngôn ngữ",
 

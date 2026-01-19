@@ -229,6 +229,7 @@ Ls.pol = {
 	"ct_ttips": '◔ ◡ ◔">ℹ️ podpowiedzi',
 	"ct_thumb": 'w widoku siatki, przełącz ikony i miniaturki$NSkrót: T">🖼️ miniaturki',
 	"ct_csel": 'użyj CTRL i SHIFT do wybierania plików w widoku siatki">wybierz',
+	"ct_dsel": 'użyj zaznaczania przez przeciąganie w widoku siatki">przeciągnij', //m
 	"ct_dl": 'wymuś pobieranie (nie wyświetlaj inline) po kliknięciu pliku">dl', //m
 	"ct_ihop": 'przejdź do ostatniego pliku po zamknięciu przeglądarki obrazów">g⮯',
 	"ct_dots": 'pokaż ukryte pliki (jeśli pozwala serwer)">ukryte',
@@ -267,6 +268,7 @@ Ls.pol = {
 	"cdt_ask": "przy przewijaniu w dół,$Nzapytaj co robić,$Nzamiast wczytywać kolejne pliki",
 	"cdt_hsort": "ile zasad sortowania (&lt;code&gt;,sorthref&lt;/code&gt;) zawierać w generowanych linkach multimediów. Wartość 0 sprawi, że zasady sortowania zawarte w linkach multimediów przy otwarciu również będą ignorowane",
 	"cdt_ren": "włącz niestandardowe menu kontekstowe, standardowe menu jest dostępne po wciśnięciu shift i kliknięciu prawym przyciskiem", //m
+	"cdt_rdb": "pokaż standardowe menu prawego przycisku, gdy niestandardowe jest już otwarte i nastąpi ponowne kliknięcie", //m
 
 	"tt_entree": "pokaż panel nawigacyjny (panel boczny z drzewem folderów)$NSkrót: B",
 	"tt_detree": "pokaż ślad nawigacyjny$NSkrót: B",
@@ -657,10 +659,13 @@ Ls.pol = {
 	"rc_cut": "wytnij", //m
 	"rc_cpy": "kopiuj", //m
 	"rc_pst": "wklej", //m
+	"rc_rnm": "zmień nazwę", //m
 	"rc_nfo": "nowy folder", //m
 	"rc_nfi": "nowy plik", //m
 	"rc_sal": "zaznacz wszystko", //m
 	"rc_sin": "odwróć zaznaczenie", //m
+	"rc_shf": "udostępnij ten folder", //m
+	"rc_shs": "udostępnij zaznaczenie", //m
 
 	"lang_set": "odśwież stronę (F5), aby zastosować zmianę.",
 

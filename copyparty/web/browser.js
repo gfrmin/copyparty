@@ -666,7 +666,6 @@ if (1)
 		"rc_nfi": "new file",
 		"rc_sal": "select all",
 		"rc_sin": "invert selection",
-		"rc_rnm": "rename",
 		"rc_shf": "share this folder",
 		"rc_shs": "share selection",
 

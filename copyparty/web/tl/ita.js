@@ -226,6 +226,7 @@ Ls.ita = {
 	"ct_ttips": '◔ ◡ ◔">ℹ️ tooltip',
 	"ct_thumb": 'nella vista griglia, alterna icone o miniature$NTasto rapido: T">🖼️ miniature',
 	"ct_csel": 'usa CTRL e SHIFT per la selezione file nella vista griglia">sel',
+	"ct_dsel": 'usa la selezione tramite trascinamento nella vista griglia">trascina', //m
 	"ct_dl": 'forza il download (non visualizzare inline) quando si clicca su un file">dl', //m
 	"ct_ihop": 'quando il visualizzatore immagini è chiuso, scorri fino all\'ultimo file visualizzato">g⮯',
 	"ct_dots": 'mostra file nascosti (se il server lo permette)">dotfile',
@@ -264,6 +265,7 @@ Ls.ita = {
 	"cdt_ask": "quando scorri verso il fondo,$Ninvece di caricare più file,$Nchiedi cosa fare",
 	"cdt_hsort": "quante regole di ordinamento (&lt;code&gt;,sorthref&lt;/code&gt;) includere negli URL multimediali. Impostandolo a 0 ignorerà anche le regole di ordinamento incluse nei link multimediali quando li clicchi",
 	"cdt_ren": "abilita il menu contestuale personalizzato, il menu normale è accessibile con shift + clic destro", //m
+	"cdt_rdb": "mostra il menu normale con il tasto destro quando quello personalizzato è già aperto e si clicca di nuovo", //m
 
 	"tt_entree": "mostra pannello nav (barra laterale albero directory)$NTasto rapido: B",
 	"tt_detree": "mostra breadcrumb$NTasto rapido: B",
@@ -654,10 +656,13 @@ Ls.ita = {
 	"rc_cut": "taglia", //m
 	"rc_cpy": "copia", //m
 	"rc_pst": "incolla", //m
+	"rc_rnm": "rinomina", //m
 	"rc_nfo": "nuova cartella", //m
 	"rc_nfi": "nuovo file", //m
 	"rc_sal": "seleziona tutto", //m
 	"rc_sin": "inverti selezione", //m
+	"rc_shf": "condividi questa cartella", //m
+	"rc_shs": "condividi selezione", //m
 
 	"lang_set": "aggiornare per rendere effettivo il cambiamento?",
 

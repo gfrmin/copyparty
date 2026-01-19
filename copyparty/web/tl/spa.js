@@ -225,6 +225,7 @@ Ls.spa = {
 	"ct_ttips": '◔ ◡ ◔">ℹ️ tooltips',
 	"ct_thumb": 'en vista de cuadrícula, alternar iconos o miniaturas$NAtajo: T">🖼️ miniaturas',
 	"ct_csel": 'usa CTRL y SHIFT para seleccionar archivos en la vista de cuadrícula">sel',
+	"ct_dsel": 'usa la selección por arrastre en la vista de cuadrícula">arrastrar', //m
 	"ct_dl": 'forzar descarga (no mostrar en línea) al hacer clic en un archivo">dl', //m
 	"ct_ihop": 'al cerrar el visor de imágenes, desplazarse hasta el último archivo visto">g⮯',
 	"ct_dots": 'mostrar archivos ocultos (si el servidor lo permite)">archivos ocultos',
@@ -263,6 +264,7 @@ Ls.spa = {
 	"cdt_ask": "al llegar al final,$Nen lugar de cargar más archivos,$Npreguntar qué hacer",
 	"cdt_hsort": "cuántas reglas de ordenación (&lt;code&gt;,sorthref&lt;/code&gt;) incluir en las URLs de medios. Ponerlo a 0 también ignorará las reglas de ordenación incluidas en los enlaces de medios al hacer clic en ellos",
 	"cdt_ren": "habilitar menú contextual personalizado, el menú normal sigue siendo accesible con shift + clic derecho", //m
+	"cdt_rdb": "mostrar el menú normal de clic derecho cuando el personalizado ya está abierto y se vuelve a hacer clic", //m
 
 	"tt_entree": "mostrar panel de navegación (barra lateral con árbol de directorios)$NAtajo: B",
 	"tt_detree": "mostrar breadcrumbs$NAtajo: B",
@@ -653,10 +655,13 @@ Ls.spa = {
 	"rc_cut": "cortar", //m
 	"rc_cpy": "copiar", //m
 	"rc_pst": "pegar", //m
+	"rc_rnm": "renombrar", //m
 	"rc_nfo": "nueva carpeta", //m
 	"rc_nfi": "nuevo archivo", //m
 	"rc_sal": "seleccionar todo", //m
 	"rc_sin": "invertir selección", //m
+	"rc_shf": "compartir esta carpeta", //m
+	"rc_shs": "compartir selección", //m
 
 	"lang_set": "¿refrescar para que el cambio surta efecto?",
 

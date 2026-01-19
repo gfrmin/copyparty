@@ -690,6 +690,8 @@ Ls.hmn = {
 	"rc_nfi": "new file",
 	"rc_sal": "select all",
 	"rc_sin": "invert selection",
+	"rc_shf": "share this folder",
+	"rc_shs": "share selection",
 
 	"lang_set": "refresh to make the change take effect?",
 

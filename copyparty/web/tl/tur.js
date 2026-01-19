@@ -226,6 +226,7 @@ Ls.tur = {
 	"ct_ttips": '◔ ◡ ◔">ℹ️ ipuçları',
 	"ct_thumb": 'ızgara görünümünde, simgeler ve küçük resimler arasında geçiş yapın$NKısayol: T">🖼️ küçük resimler',
 	"ct_csel": 'ızgara görünümünde dosya seçimi için CTRL ve SHIFT tuşlarını kullanın">seç',
+	"ct_dsel": 'ızgara görünümünde sürükleyerek seçimi kullanın">sürükle', //m
 	"ct_dl": 'dosyaya tıklandığında indirmeyi zorla (satır içinde görüntüleme)">dl', //m
 	"ct_ihop": 'resim görüntüleyici kapatıldığında, en son görüntülenen dosyaya kaydırın">g⮯',
 	"ct_dots": 'gizli dosyaları göster (sunucu izin veriyorsa)">nokta dosyaları',
@@ -264,6 +265,7 @@ Ls.tur = {
 	"cdt_ask": "aşağı kaydırırken,$Ndaha fazla dosya yüklemek yerine,$Nne yapılacağını sor",
 	"cdt_hsort": "medya-URL'lerinde dahil edilecek sıralama kurallarının sayısı (&lt;code&gt;,sorthref&lt;/code&gt;). Bunu 0 olarak ayarlamak, tıklanırken medya bağlantılarına dahil edilen sıralama kurallarını da yok sayacaktır",
 	"cdt_ren": "özel sağ tık menüsünü etkinleştir, normal menü shift + sağ tık ile erişilebilir", //m
+	"cdt_rdb": "özel menü zaten açıkken tekrar sağ tıklanınca normal sağ tık menüsünü göster", //m
 
 	"tt_entree": "navigasyon panosunu göster (yan dizin panosu)$NHotkey: B",
 	"tt_detree": "içerik haritasını göster$Kısayol: B",
@@ -654,10 +656,13 @@ Ls.tur = {
 	"rc_cut": "kes", //m
 	"rc_cpy": "kopyala", //m
 	"rc_pst": "yapıştır", //m
+	"rc_rnm": "yeniden adlandır", //m
 	"rc_nfo": "yeni klasör", //m
 	"rc_nfi": "yeni dosya", //m
 	"rc_sal": "tümünü seç", //m
 	"rc_sin": "seçimi tersine çevir", //m
+	"rc_shf": "bu klasörü paylaş", //m
+	"rc_shs": "seçimi paylaş", //m
 
 	"lang_set": "Değişikliklerin etki göstermesi için sayfa yenilensin mi?",
 

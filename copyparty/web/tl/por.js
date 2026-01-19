@@ -226,6 +226,7 @@ Ls.por = {
 	"ct_ttips": '◔ ◡ ◔">ℹ️ dicas de ferramentas',
 	"ct_thumb": 'na visualização de grade, alternar entre ícones ou miniaturas$NHotkey: T">🖼️ miniaturas',
 	"ct_csel": 'usar CTRL e SHIFT para seleção de arquivo na visualização de grade">sel',
+	"ct_dsel": 'usar seleção por arrasto na visualização de grade">arrastar', //m
 	"ct_dl": 'forçar download (não exibir inline) ao clicar em um arquivo">dl', //m
 	"ct_ihop": 'quando o visualizador de imagens for fechado, rolar para o último arquivo visualizado">g⮯',
 	"ct_dots": 'mostrar arquivos ocultos (se o servidor permitir)">dotfiles',
@@ -264,6 +265,7 @@ Ls.por = {
 	"cdt_ask": "ao rolar para o final,$nem vez de carregar mais arquivos,$nperguntar o que fazer",
 	"cdt_hsort": "quantas regras de ordenação (&lt;code&gt;,sorthref&lt;/code&gt;) incluir em URLs de mídia. Definir isso para 0 também ignorará as regras de ordenação incluídas em links de mídia quando você clicar neles",
 	"cdt_ren": "ativar menu de clique direito personalizado, o menu normal permanece acessível com shift + clique direito", //m
+	"cdt_rdb": "mostrar o menu padrão do botão direito quando o personalizado já estiver aberto e houver novo clique", //m
 
 	"tt_entree": "mostrar painel de navegação (árvore de diretórios)$NHotkey: B",
 	"tt_detree": "mostrar breadcrumbs$NHotkey: B",
@@ -654,10 +656,13 @@ Ls.por = {
 	"rc_cut": "recortar", //m
 	"rc_cpy": "copiar", //m
 	"rc_pst": "colar", //m
+	"rc_rnm": "renomear", //m
 	"rc_nfo": "nova pasta", //m
 	"rc_nfi": "novo arquivo", //m
 	"rc_sal": "selecionar tudo", //m
 	"rc_sin": "inverter seleção", //m
+	"rc_shf": "compartilhar esta pasta", //m
+	"rc_shs": "compartilhar seleção", //m
 
 	"lang_set": "atualizar para a mudança ter efeito?",
 

@@ -265,6 +265,7 @@ Ls.fin = {
 	"cdt_ask": "sivun lopussa, sen sijaan että lataa $Nautomaattisesti lisää tiedostoja, kysy mitä tehdä",
 	"cdt_hsort": "kuinka monta lajittelusääntöä (&lt;code&gt;,sorthref&lt;/code&gt;) sisällyttää media-URL:eihin. Tämän asettaminen nollaan jättää myös huomioimatta media-linkeissä sisällytetyt lajittelusäännöt kun napsautat niitä",
 	"cdt_ren": "ota käyttöön mukautettu valikko, tavallinen valikko on käytettävissä painamalla shift ja napsauttamalla oikealla", //m
+	"cdt_rdb": "näytä tavallinen oikean painikkeen valikko, kun mukautettu on jo auki ja oikeaa painiketta painetaan uudelleen", //m
 
 	"tt_entree": "näytä navigointipaneeli$NPikanäppäin: B",
 	"tt_detree": "näytä linkkipolku$NPikanäppäin: B",
@@ -655,10 +656,13 @@ Ls.fin = {
 	"rc_cut": "Leikkaa", //m
 	"rc_cpy": "kopioi", //m
 	"rc_pst": "Liitä", //m
+	"rc_rnm": "nimeä uudelleen", //m
 	"rc_nfo": "uusi kansio", //m
 	"rc_nfi": "uusi tiedosto", //m
 	"rc_sal": "valitse kaikki", //m
 	"rc_sin": "käännä valinta", //m
+	"rc_shf": "jaa tämä kansio", //m
+	"rc_shs": "jaa valinta", //m
 
 	"lang_set": "ladataanko sivu uudestaan kielen vaihtamiseksi?",
 

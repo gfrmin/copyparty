@@ -226,6 +226,7 @@ Ls.deu = {
 	"ct_ttips": '◔ ◡ ◔">ℹ️ Tooltips',
 	"ct_thumb": 'In Raster-Ansicht, zwischen Icons und Vorschau wechseln$NHotkey: T">🖼️ Vorschaubilder',
 	"ct_csel": 'Benutze STRG und UMSCHALT für Dateiauswahl in Raster-Ansicht">sel',
+	"ct_dsel": 'Ziehauswahl in Raster-Ansicht verwenden">ziehen', //m
 	"ct_dl": 'Beim Klick auf Dateien sie immer herunterladen (nicht einbetten)">dl',
 	"ct_ihop": 'Wenn die Bildanzeige geschlossen ist, scrolle runter zu den zuletzt angesehenen Dateien">g⮯',
 	"ct_dots": 'Verstecke Dateien anzeigen (wenn durch den Server erlaubt)">dotfiles',
@@ -264,6 +265,7 @@ Ls.deu = {
 	"cdt_ask": "beim Runterscrollen nach $NAktion fragen statt mehr,$NDateien zu laden",
 	"cdt_hsort": "Menge an Sortierregeln (&lt;code&gt;,sorthref&lt;/code&gt;) in Media-URLs enthalten sein sollen. Ein Wert von 0 sorgt dafür, dass Sortierregeln in Media-URLs ignoriert werden",
 	"cdt_ren": "spezielles Rechtsklick-Menü aktivieren, das Browser-Menü ist weiterhin mit Shift + Rechtsklick erreichbar",
+	"cdt_rdb": "normales Rechtsklick-Menü anzeigen, wenn das benutzerdefinierte bereits offen ist und erneut rechts geklickt wird", //m
 
 	"tt_entree": "Navpane anzeigen (Ordnerbaum Sidebar)$NHotkey: B",
 	"tt_detree": "Breadcrumbs anzeigen$NHotkey: B",
@@ -654,10 +656,13 @@ Ls.deu = {
 	"rc_cut": "ausschneiden",
 	"rc_cpy": "kopieren",
 	"rc_pst": "einfügen",
+	"rc_rnm": "umbenennen", //m
 	"rc_nfo": "neuer Ordner",
 	"rc_nfi": "neue Datei",
 	"rc_sal": "alles auswählen",
 	"rc_sin": "auswahl umkehren",
+	"rc_shf": "diesen ordner teilen", //m
+	"rc_shs": "auswahl teilen", //m
 
 	"lang_set": "Neuladen um Änderungen anzuwenden?",
 

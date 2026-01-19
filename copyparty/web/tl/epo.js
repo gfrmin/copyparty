@@ -226,6 +226,7 @@ Ls.epo = {
 	"ct_ttips": '◔ ◡ ◔">ℹ️ ŝpruchelpiloj',
 	"ct_thumb": 'dum krado-vido, baskuli montradon de simboloj aŭ bildetoj$NFulmoklavo: T">🖼️ bildetoj',
 	"ct_csel": 'uzi STIR kaj MAJ por elekti dosierojn en krado-vido">elekto',
+	"ct_dsel": 'uzi tren-elekton en krado-vido">treni', //m
 	"ct_dl": 'devigi elŝuton (ne montri enkadre) kiam dosiero estas alklakita">dl', //m
 	"ct_ihop": 'montri la lastan viditan bildo-dosieron post fermado de bildo-vidilo">g⮯',
 	"ct_dots": 'montri kaŝitajn dosierojn (se servilo permesas)">kaŝitaj',
@@ -264,6 +265,7 @@ Ls.epo = {
 	"cdt_ask": "je malsupro de paĝo, peti por ago$Nanstataŭ ŝarĝi pli da dosieroj",
 	"cdt_hsort": "kiom da ordigo-reguloj (&lt;code&gt;,sorthref&lt;/code&gt;) inkludi en adreso de la paĝo. Se agordita kiel 0, reguloj, inkluditaj en la adreso, estos ignoritaj",
 	"cdt_ren": "ebligi propran dekstra-klakan menuon, la normala menuo restas alirebla per shift + dekstra klako", //m
+	"cdt_rdb": "montri la normalan dekstraklakan menuon kiam la propra jam estas malfermita kaj oni denove dekstre klakas", //m
 
 	"tt_entree": "montri arbovidan navig-panelon$NFulmoklavo: B",
 	"tt_detree": "montri paĝnivelan navig-panelon$NFulmoklavo: B",
@@ -654,10 +656,13 @@ Ls.epo = {
 	"rc_cut": "eltondi", //m
 	"rc_cpy": "kopii", //m
 	"rc_pst": "alglui", //m
+	"rc_rnm": "alinomi", //m
 	"rc_nfo": "nova dosierujo", //m
 	"rc_nfi": "nova dosiero", //m
 	"rc_sal": "elekti ĉion", //m
 	"rc_sin": "inversigi elekton", //m
+	"rc_shf": "kunhavigi ĉi tiun dosierujon", //m
+	"rc_shs": "kunhavigi elekton", //m
 
 	"lang_set": "ĉu reŝargi paĝon por efektivigi lingvo-ŝanĝon?",
 
