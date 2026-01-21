@@ -6490,7 +6490,7 @@ class HttpCli(object):
             zs = "%s/" % (self.vpath,)
             vols = [(x[len(zs) :], y) for x, y in vols if x.startswith(zs)]
         vols = [(x.split("/", 1)[0], y) for x, y in vols]
-        vols = [x for x in vols if x[0]]
+        vols = list(({x: y for x, y in vols if x}).items())
         if not vols and self.vpath:
             return self.tx_404(True)
         dirs = [
