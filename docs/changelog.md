@@ -1,4 +1,25 @@
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
+# 2026-0121-0505  `v1.20.3`  dillo approves
+
+## 🧪 new features
+
+* send-message-to-serverlog now also available as url-parameter `?smsg=foo` 6dcb1efb
+  * option `smsg` configures which HTTP-methods to allow; can be set to `GET,POST` but default is only `POST` because `GET` is dangerous (CSRF)
+
+## 🩹 bugfixes
+
+* #1227 [dillo](https://dillo-browser.github.io/) was not able to login because dillo is more standards-compliant than every other browser (nice) b4df8fa2
+* a web-scraper which got banned for making malicious requests could remain banned for one request longer than intended (wait why did I fix this) ba67b279
+* `?ls` was still a bit jank 0a3a8072
+
+## 🌠 fun facts
+
+* this 6AM release was [powered by void/mournfinale](https://www.youtube.com/watch?v=lFEEXloqk9Q&list=PLlEk36g9RI8Ppjr3HhaO3wjjmA6HnSo2U)
+* was going to name the release "dilla på dillo" but somehow google-translate thinks that means "fuck on fuck" which would have been inappropriate
+
+
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
 # 2026-0119-0126  `v1.20.2`  xattrs + range-select
 
 ## 🧪 new features
