@@ -9514,11 +9514,20 @@ var rcm = (function () {
 	var selFile = jcp(nsFile);
 
 	function mktemp(is_dir) {
-		var row = mknod('tr', 'temp',
-			'<td>-new-</td>' +
-			'<td colspan="' + (QSA("#files thead th").length - 1) + '"><input id="tempname" class="i" type="text" placeholder="' + (is_dir ? 'Folder' : "File") + ' Name"></td>'
-		);
-		QS("#files tbody").appendChild(row);
+		qsr('#rcm_tmp');
+		if (!thegrid.en) {
+			var row = mknod('tr', 'rcm_tmp',
+				'<td>-new-</td><td colspan="' + (QSA("#files thead th").length - 1) + '"><input id="tempname" class="i" type="text" placeholder="' + (is_dir ? 'Folder' : 'File') + ' Name"></td>');
+			QS("#files tbody").appendChild(row);
+	    }
+		else {
+			var row = mknod('a', 'rcm_tmp',
+				'<span class="dir" style="align-self:end"><input id="tempname" class="dir" type="text" placeholder="' + (is_dir ? 'Folder' : 'File') + ' Name"></span>');
+			if (is_dir)
+				row.className = 'dir';
+			row.style.display = 'flex';
+			QS("#ggrid").appendChild(row);
+		}
 
 		function sendit(name) {
 			name = ('' + name).trim();
