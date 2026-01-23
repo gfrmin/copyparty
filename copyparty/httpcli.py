@@ -397,9 +397,9 @@ class HttpCli(object):
         trusted_xff = False
         n = self.args.rproxy
         if n:
-            self.keepalive = False
             zso = self.headers.get(self.args.xff_hdr)
             if zso:
+                self.keepalive = False
                 if n > 0:
                     n -= 1
 
