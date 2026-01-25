@@ -4858,7 +4858,7 @@ var showfile = (function () {
 		'nrend': 0,
 	};
 	r.map = {
-		'.ahk': 'autohotkey',
+		'.asm': 'nasm',
 		'.bas': 'basic',
 		'.bat': 'batch',
 		'.cxx': 'cpp',
@@ -4881,6 +4881,8 @@ var showfile = (function () {
 		'.rs': 'rust',
 		'.sh': 'bash',
 		'.service': 'systemd',
+		'.socket': 'systemd',
+		'.timer': 'systemd',
 		'.txt': 'ans',
 		'.vb': 'vbnet',
 		'.v': 'verilog',
@@ -4889,10 +4891,9 @@ var showfile = (function () {
 		'.yml': 'yaml'
 	};
 	r.nmap = {
-		'cmakelists.txt': 'cmake',
 		'dockerfile': 'docker'
 	};
-	var x = txt_ext + ' ans c cfg conf cpp cs css diff glsl go html ini java js json jsx kt kts latex less lisp lua makefile md nim py r rss rb ruby sass scss sql svg swift tex toml ts vhdl xml yaml zig';
+	var x = txt_ext + ' ans c cfg conf cpp cs css diff glsl go html ini java js json jsx kt kts latex less lisp lua makefile md nasm nim nix py r rss rb ruby sass scss sql svg swift tex toml ts vhdl xml yaml zig';
 	x = x.split(/ +/g);
 	for (var a = 0; a < x.length; a++)
 		if (!r.map["." + x[a]])

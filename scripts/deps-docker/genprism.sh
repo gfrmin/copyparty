@@ -32,7 +32,7 @@ langs=(
     # aspnet
     # asm6502
     # asmatmel
-    autohotkey
+    # autohotkey
     # autoit
     # avisynth
     # avro-idl
@@ -60,7 +60,7 @@ langs=(
     # cilkc
     # cilkcpp
     # clojure
-    cmake
+    # cmake
     # cobol
     # coffeescript
     # concurnas
@@ -183,7 +183,7 @@ langs=(
     # n4js
     # nand2tetris-hdl
     # naniscript
-    # nasm
+    nasm
     # neon
     # nevod
     # nginx
