@@ -16,7 +16,7 @@ function rm() {
 }
 
 function bump() {
-    var k = this.closest('tr').getElementsByTagName('a')[2].getAttribute('k'),
+    var k = this.closest('tr').querySelector('a[k]').getAttribute('k'),
         u = SR + '/?skey=' + uricom_enc(k) + '&eshare=' + this.value,
         xhr = new XHR();
 
