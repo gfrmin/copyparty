@@ -7560,9 +7560,10 @@ var treectl = (function () {
 		qsr('#bbsw');
 		srvinf = ebi('srv_info').innerHTML.slice(6, -7);
 		if (ls0 === null) {
-			setck('js=y');
 			r.ls_cb = showfile.addlinks;
-			return r.reqls(get_evpath(), false, undefined, true);
+			return setck('js=y', function () {
+				r.reqls(get_evpath(), false, undefined, true);
+			});
 		}
 		ls0.unlist = unlist0;
 		ls0.u2ts = u2ts;

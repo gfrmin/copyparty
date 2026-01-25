@@ -1326,9 +1326,10 @@ function scfg_bind(obj, oname, cname, defval, cb) {
     return v;
 }
 
-function setck(v) {
+function setck(v, cb) {
     var xhr = new XHR();
     xhr.open('GET', SR + '/?setck=' + v, true);
+    xhr.onload = cb;
     xhr.send();
 }
 

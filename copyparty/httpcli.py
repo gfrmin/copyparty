@@ -6978,6 +6978,14 @@ class HttpCli(object):
             if "zip" in self.uparam or "tar" in self.uparam:
                 raise Pebkac(403)
 
+            zsl = j2a["files"] = []
+            if is_js:
+                j2a["ls0"] = cgv["ls0"] = {
+                    "dirs": zsl,
+                    "files": zsl,
+                    "taglist": zsl,
+                }
+
             html = self.j2s(tpl, **j2a)
             self.reply(html.encode("utf-8", "replace"))
             return True
