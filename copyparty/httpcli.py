@@ -1833,7 +1833,9 @@ class HttpCli(object):
 
         zi = (
             vn.flags["du_iwho"]
-            if vn.realpath and "quota-available-bytes" in props
+            if vn.realpath
+            and "quota-available-bytes" in props
+            and "quotaused" not in props  # macos finder; ingnore it
             else 0
         )
         if zi and (
@@ -1864,10 +1866,6 @@ class HttpCli(object):
                     "quota-available-bytes": str(bfree),
                     "quota-used-bytes": str(btot - bfree),
                 }
-                if "quotaused" in props:  # macos finder crazytalk
-                    df["quotaused"] = df["quota-used-bytes"]
-                    if "quota" in props:
-                        df["quota"] = df["quota-available-bytes"]  # idk, makes it happy
             else:
                 df = {}
         else:
