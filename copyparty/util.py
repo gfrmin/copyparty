@@ -971,6 +971,7 @@ class _Unrecv(object):
         self.log = log
         self.buf: bytes = b""
         self.nb = 0
+        self.te = 0
 
     def recv(self, nbytes: int, spins: int = 1) -> bytes:
         if self.buf:
@@ -3008,6 +3009,7 @@ def read_socket_chunked(
         if chunklen == 0:
             x = sr.recv_ex(2, False)
             if x == b"\r\n":
+                sr.te = 2
                 return
 
             t = "protocol error after final chunk: want b'\\r\\n', got {!r}"

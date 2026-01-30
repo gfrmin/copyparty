@@ -374,6 +374,7 @@ class HttpCli(object):
 
             return False
 
+        self.sr.nb = 0
         self.conn.hsrv.nreq += 1
 
         self.ua = self.headers.get("user-agent", "")
@@ -383,6 +384,19 @@ class HttpCli(object):
         self.keepalive = "close" not in zs and (
             self.http_ver != "HTTP/1.0" or zs == "keep-alive"
         )
+
+        if (
+            "transfer-encoding" in self.headers
+            and self.headers["transfer-encoding"].lower() != "identity"
+        ):
+            self.sr.te = 1
+            if "content-length" in self.headers:
+                # rfc9112:6.2: ignore CL if TE
+                self.keepalive = False
+                self.headers.pop("content-length")
+                t = "suspicious request (has both TE and CL); ignoring CL and disabling keepalive"
+                self.log(t, 3)
+
         self.host = self.headers.get("host") or ""
         if not self.host:
             if self.s.family == socket.AF_UNIX:
@@ -396,7 +410,6 @@ class HttpCli(object):
         if n:
             zso = self.headers.get(self.args.xff_hdr)
             if zso:
-                self.keepalive = False
                 if n > 0:
                     n -= 1
 
@@ -881,7 +894,11 @@ class HttpCli(object):
                     self.terse_reply(b"", 500)
                     return False
 
-                post = self.mode in ("POST", "PUT") or "content-length" in self.headers
+                post = (
+                    self.mode in ("POST", "PUT")
+                    or "content-length" in self.headers
+                    or self.sr.te
+                )
                 if pex.code >= (300 if post else 400):
                     self.keepalive = False
 
@@ -3200,7 +3217,7 @@ class HttpCli(object):
                         t = "your chunk got corrupted somehow (received {} bytes); expected vs received hash:\n{}\n{}"
                         raise Pebkac(400, t.format(post_sz, chash, sha_b64))
 
-                    remains -= chunksize
+                    remains -= post_sz
 
                     if len(cstart) > 1 and path != os.devnull:
                         t = " & ".join(unicode(x) for x in cstart[1:])
@@ -3278,6 +3295,12 @@ class HttpCli(object):
 
         spd = self._spd(postsize)
         self.log("%70s thank %r" % (spd, cinf))
+
+        if remains:
+            t = "incorrect content-length from client"
+            self.log("%s; header=%d, remains=%d" % (t, postsize, remains), 3)
+            raise Pebkac(400, t)
+
         self.reply(b"thank")
         return True
 

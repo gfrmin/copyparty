@@ -222,6 +222,21 @@ class HttpConn(object):
             if not self.cli.run():
                 return
 
+            if self.sr.te == 1:
+                self.log("closing socket (leftover TE)", "90")
+                return
+
+            if (
+                "content-length" in self.cli.headers
+                and int(self.cli.headers["content-length"]) != self.sr.nb
+            ):
+                self.log("closing socket (CL mismatch)", "90")
+                return
+
+            # note: proxies reject PUT sans Content-Length; illegal for HTTP/1.1
+
+            self.sr.nb = self.sr.te = 0
+
             if self.u2idx:
                 self.hsrv.put_u2idx(str(self.addr), self.u2idx)
                 self.u2idx = None
