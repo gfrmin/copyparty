@@ -1,4 +1,22 @@
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
+# 2026-0123-0055  `v1.20.4`  a fresh pair of sock(et)s
+
+## 🩹 bugfixes
+
+* #1235 rightclick-menu: fix creating new files/folders in gridview (thx @SpaceXCheeseWheel!) ffca67f2
+* #1231 fix http desync if the [`urlform`](https://copyparty.eu/cli/#urlform-help-page) global-option was changed to `get`
+  * this initial fix only applies when reverse-proxied, in which case copyparty will now always `connection:close` (don't reuse tcp/uds connections), as giving each client a fresh socket helps avoid all such issues e1eff216 b4fddbc3
+  * the expected performance impact from this change is near-zero for real use, even if benchmarks show a 40% reduction in requests/sec in the absolute-worst-case (burst of cheap requests)
+  * a future version will also fix this issue for non-proxied clients
+
+## 🔧 other changes
+
+* #1229 updated the Esperanto translation (thx @slashdevslashurandom!) 1142ac25
+* #1232 shares: if an external domain is configured, then show both the LAN and external link for each share 81e5eb7b
+
+
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
 # 2026-0121-0505  `v1.20.3`  dillo approves
 
 ## 🧪 new features
