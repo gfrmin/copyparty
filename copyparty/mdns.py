@@ -16,7 +16,7 @@ from .multicast import MC_Sck, MCast
 from .util import IP6_LL, CachedSet, Daemon, Netdev, list_ips, min_ex
 
 try:
-    if os.getenv("PRTY_SYS_ALL") or os.getenv("PRTY_SYS_DNSLIB"):
+    if os.environ.get("PRTY_SYS_ALL") or os.environ.get("PRTY_SYS_DNSLIB"):
         raise ImportError()
     from .stolen.dnslib import (
         AAAA,
@@ -66,7 +66,7 @@ if TYPE_CHECKING:
 if True:  # pylint: disable=using-constant-test
     from typing import Any, Optional, Union
 
-if os.getenv("PRTY_MODSPEC"):
+if os.environ.get("PRTY_MODSPEC"):
     from inspect import getsourcefile
 
     print("PRTY_MODSPEC: dnslib:", getsourcefile(A))

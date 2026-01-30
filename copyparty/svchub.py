@@ -1033,7 +1033,11 @@ class SvcHub(object):
                     t = "WARNING:\nDisabling WebDAV support because dxml selftest failed. Please report this bug;\n%s\n...and include the following information in the bug-report:\n%s | expat %s\n"
                     self.log("root", t % (URL_BUG, VERSIONS, expat_ver()), 1)
 
-        if not E.scfg and not al.unsafe_state and not os.getenv("PRTY_UNSAFE_STATE"):
+        if (
+            not E.scfg
+            and not al.unsafe_state
+            and not os.environ.get("PRTY_UNSAFE_STATE")
+        ):
             t = "because runtime config is currently being stored in an untrusted emergency-fallback location. Please fix your environment so either XDG_CONFIG_HOME or ~/.config can be used instead, or disable this safeguard with --unsafe-state or env-var PRTY_UNSAFE_STATE=1."
             if not al.no_ses:
                 al.no_ses = True
@@ -1741,7 +1745,7 @@ class SvcHub(object):
 
     def sd_notify(self) -> None:
         try:
-            zb = os.getenv("NOTIFY_SOCKET")
+            zb = os.environ.get("NOTIFY_SOCKET")
             if not zb:
                 return
 

@@ -150,7 +150,7 @@ try:
     if os.environ.get("PRTY_NO_IFADDR"):
         raise Exception()
     try:
-        if os.getenv("PRTY_SYS_ALL") or os.getenv("PRTY_SYS_IFADDR"):
+        if os.environ.get("PRTY_SYS_ALL") or os.environ.get("PRTY_SYS_IFADDR"):
             raise ImportError()
 
         from .stolen.ifaddr import get_adapters
@@ -202,7 +202,7 @@ try:
 except:
     pass
 
-if os.getenv("PRTY_MODSPEC"):
+if os.environ.get("PRTY_MODSPEC"):
     from inspect import getsourcefile
 
     print("PRTY_MODSPEC: ifaddr:", getsourcefile(get_adapters))

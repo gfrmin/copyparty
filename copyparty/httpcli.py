@@ -572,13 +572,12 @@ class HttpCli(object):
             ptn_cc = RE_CC
             k_safe = UPARAM_CC_OK
             for k in arglist.split("&"):
+                sv = ""
                 if "=" in k:
                     k, zs = k.split("=", 1)
                     # x-www-form-urlencoded (url query part) uses
                     # either + or %20 for 0x20 so handle both
                     sv = unquotep(zs.strip().replace("+", " "))
-                else:
-                    sv = ""
 
                 m = re_k.search(k)
                 if m:
@@ -1550,6 +1549,7 @@ class HttpCli(object):
 
         hits = idx.run_query(self.uname, [self.vn], uq, uv, False, False, nmax)[0]
 
+        q_pw = a_pw = ""
         pwk = self.args.pw_urlp
         if pwk in self.ouparam and "nopw" not in self.ouparam:
             zs = self.ouparam[pwk]
@@ -1557,8 +1557,6 @@ class HttpCli(object):
             a_pw = "&%s=%s" % (pwk, quotep(zs))
             for i in hits:
                 i["rp"] += a_pw if "?" in i["rp"] else q_pw
-        else:
-            q_pw = a_pw = ""
 
         title = self.uparam.get("title") or self.vpath.split("/")[-1]
         etitle = html_escape(title, True, True)
@@ -1929,7 +1927,6 @@ class HttpCli(object):
                 pvs["getcontentlength"] = str(st.st_size)
             elif df:
                 pvs.update(df)
-                df = {}
 
             for k, v in pvs.items():
                 if k not in props:
@@ -4554,14 +4551,13 @@ class HttpCli(object):
                 if stat.S_ISDIR(st.st_mode):
                     continue
 
+                sz = st.st_size
                 if stat.S_ISBLK(st.st_mode):
                     fd = bos.open(fs_path, os.O_RDONLY)
                     try:
                         sz = os.lseek(fd, 0, os.SEEK_END)
                     finally:
                         os.close(fd)
-                else:
-                    sz = st.st_size
 
                 file_ts = max(file_ts, st.st_mtime)
                 editions[ext or "plain"] = (fs_path, sz)

@@ -4,7 +4,7 @@ from __future__ import print_function, unicode_literals
 import os
 
 try:
-    if os.getenv("PRTY_SYS_ALL") or os.getenv("PRTY_SYS_QRCG"):
+    if os.environ.get("PRTY_SYS_ALL") or os.environ.get("PRTY_SYS_QRCG"):
         raise ImportError()
     from .stolen.qrcodegen import QrCode
 
@@ -14,7 +14,7 @@ except ImportError:
     VENDORED = False
     from qrcodegen import QrCode
 
-if os.getenv("PRTY_MODSPEC"):
+if os.environ.get("PRTY_MODSPEC"):
     from inspect import getsourcefile
 
     print("PRTY_MODSPEC: qrcode:", getsourcefile(QrCode))
