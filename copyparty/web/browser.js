@@ -4557,6 +4557,11 @@ var fileman = (function () {
 		r.clip = vps.slice(2);
 
 		try {
+			cliptxt(location.origin + r.clip.join('\n' + location.origin));
+		}
+		catch (ex) {}
+
+		try {
 			vps = JSON.stringify(vps);
 			if (vps.length > 1024 * 1024)
 				throw 'a';
