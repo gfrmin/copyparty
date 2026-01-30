@@ -44,6 +44,8 @@ ANYWIN = WINDOWS or sys.platform in ["msys", "cygwin"]
 
 MACOS = platform.system() == "Darwin"
 
+GRAAL = platform.python_implementation() == "GraalVM"
+
 EXE = bool(getattr(sys, "frozen", False))
 
 try:
