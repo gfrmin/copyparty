@@ -172,6 +172,7 @@ RE_HSAFE = re.compile(r"[\x00-\x1f<>\"'&]")  # search always much faster
 RE_HOST = re.compile(r"[^][0-9a-zA-Z.:_-]")  # search faster <=17ch
 RE_MHOST = re.compile(r"^[][0-9a-zA-Z.:_-]+$")  # match faster >=18ch
 RE_K = re.compile(r"[^0-9a-zA-Z_-]")  # search faster <=17ch
+RE_HTTP1 = re.compile(r"(GET|HEAD|POST|PUT) [^ ]+ HTTP/1.1$")
 RE_HR = re.compile(r"[<>\"'&]")
 RE_MDV = re.compile(r"(.*)\.([0-9]+\.[0-9]{3})(\.[Mm][Dd])$")
 RE_RSS_KW = re.compile(r"(\{[^} ]+\})")
@@ -350,7 +351,7 @@ class HttpCli(object):
                 for header_line in headerlines[1:]:
                     k, zs = header_line.split(":", 1)
                     self.headers[k.lower()] = zs.strip()
-                    if zs.endswith(" HTTP/1.1"):
+                    if zs.endswith(" HTTP/1.1") and RE_HTTP1.search(zs):
                         raise Exception()
             except:
                 headerlines = [repr(x) for x in headerlines]
