@@ -1,4 +1,43 @@
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
+# 2026-0130-2145  `v1.20.5`  fast again
+
+<img src="https://github.com/9001/copyparty/raw/hovudstraum/docs/logo.svg" width="250" align="right"/>
+
+* read-only demo server at https://a.ocv.me/pub/demo/
+* [docker image](https://github.com/9001/copyparty/tree/hovudstraum/scripts/docker) ╱ [similar software](https://github.com/9001/copyparty/blob/hovudstraum/docs/versus.md) ╱ [client testbed](https://cd.ocv.me/b/)
+
+there is a [discord server](https://discord.gg/25J8CdTT6G) with an `@everyone` in case of future important updates, such as [vulnerabilities](https://github.com/9001/copyparty/security) (most recently 2025-09-07)
+
+## 🧪 new features
+
+* #1240 webdav clients can now set fractional last-modified timestamps (thx @jcwillox!) 296362fc
+* #1260 add support for running the server with GraalPy (thx @vgskye!) 73d06eaf
+* #1182 pressing CTRL-C will copy links of selected files to clipboard 9c14972d
+
+## 🩹 bugfixes
+
+* #1248 shares: fix the buttons for extending expiration time b6bf6d5f
+* #1242 webdav: fix «MacOS Finder» taking forever to connect (thx @freddyheppell!) 8e046fb6
+* ie11 would spinlock in write-only folders 5c4ba376
+
+## 🔧 other changes
+
+* fast again! ed6a8d5a
+  * replaced the `connection:close` band-aid added in [v1.20.4](https://github.com/9001/copyparty/releases/tag/v1.20.4) with a proper fix that doesn't make things slower behind reverseproxies
+  * I've tried everything I can think of (with nginx as reverseproxy) and can't notice any difference in behavior, but please let me know if this breaks anything for you 🙏
+* #1245 updated Portuguese translation (thx @000yesnt!) 69fa1d10
+* #1259 OpenRC: add command to test config (thx @lotsospaghetti!) 79273a7d
+* #1257 removed the `nth` global-option because it was never implemented (thx @stackxp!) 22cdc0f8
+* syntax highlighter: added languages `nasm` + `nix`, removed `autohotkey` + `cmake` b20d3259
+
+## 🌠 fun facts
+
+* http/1.1 still tends to be faster than http/2 and http/3 for large transfers which is the main reason copyparty hasn't made the change
+  * eh, not really a *fun* fact I suppose ┐( ´ w `)┌
+
+
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
 # 2026-0123-0055  `v1.20.4`  a fresh pair of sock(et)s
 
 ## 🩹 bugfixes
