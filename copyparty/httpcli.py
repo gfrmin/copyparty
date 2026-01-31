@@ -6354,13 +6354,14 @@ class HttpCli(object):
         # ensure user has requested perms
         s_rd = "read" in req["perms"]
         s_wr = "write" in req["perms"]
-        s_mv = "move" in req["perms"]
-        s_del = "delete" in req["perms"]
         s_get = "get" in req["perms"]
-        s_axs = [s_rd, s_wr, s_mv, s_del, s_get]
+        s_axs = [s_rd, s_wr, False, False, s_get]
+
+        if s_axs == [False] * 5:
+            raise Pebkac(400, "select at least one permission")
 
         try:
-            vfs, rem = self.asrv.vfs.get(vp, self.uname, s_rd, s_wr, s_mv, s_del, s_get)
+            vfs, rem = self.asrv.vfs.get(vp, self.uname, *s_axs)
         except:
             raise Pebkac(400, "you dont have all the perms you tried to grant")
 
