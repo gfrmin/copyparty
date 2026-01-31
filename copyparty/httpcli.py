@@ -6355,8 +6355,11 @@ class HttpCli(object):
         s_wr = "write" in req["perms"]
         s_mv = "move" in req["perms"]
         s_del = "delete" in req["perms"]
+        s_get = "get" in req["perms"]
+        s_axs = [s_rd, s_wr, s_mv, s_del, s_get]
+
         try:
-            vfs, rem = self.asrv.vfs.get(vp, self.uname, s_rd, s_wr, s_mv, s_del)
+            vfs, rem = self.asrv.vfs.get(vp, self.uname, s_rd, s_wr, s_mv, s_del, s_get)
         except:
             raise Pebkac(400, "you dont have all the perms you tried to grant")
 
@@ -6368,9 +6371,7 @@ class HttpCli(object):
         else:
             raise Pebkac(400, "you dont have perms to create shares from this volume")
 
-        ap, reals, _ = vfs.ls(
-            rem, self.uname, not self.args.no_scandir, [[s_rd, s_wr, s_mv, s_del]]
-        )
+        ap, reals, _ = vfs.ls(rem, self.uname, not self.args.no_scandir, [s_axs])
         rfns = set([x[0] for x in reals])
         for fn in fns:
             if fn not in rfns:
@@ -6382,7 +6383,7 @@ class HttpCli(object):
         sexp = req["exp"]
         exp = int(sexp) if sexp else 0
         exp = now + exp * 60 if exp else 0
-        pr = "".join(zc for zc, zb in zip("rwmd", (s_rd, s_wr, s_mv, s_del)) if zb)
+        pr = "".join(zc for zc, zb in zip("rwmdg", s_axs) if zb)
 
         q = "insert into sh values (?,?,?,?,?,?,?,?)"
         cur.execute(q, (skey, pw, vp, pr, len(fns), self.uname, now, exp))
@@ -6808,9 +6809,14 @@ class HttpCli(object):
                 fk_pass = True
 
         if not is_dir and (self.can_read or self.can_get):
-            if not self.can_read and not fk_pass and "fk" in vn.flags:
-                if not use_filekey:
-                    return self.tx_404(True)
+            if (
+                not self.can_read
+                and not fk_pass
+                and "fk" in vn.flags
+                and not use_filekey
+                and not self.vpath.startswith(self.args.shr1 or "\n")
+            ):
+                return self.tx_404(True)
 
             is_md = abspath.lower().endswith(".md")
             if add_og and not is_md:

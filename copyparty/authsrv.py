@@ -1965,6 +1965,7 @@ class AuthSrv(object):
                     [sun] if "w" in s_pr else [],
                     [sun] if "m" in s_pr else [],
                     [sun] if "d" in s_pr else [],
+                    [sun] if "g" in s_pr else [],
                 )
 
                 # don't know the abspath yet + wanna ensure the user
