@@ -477,6 +477,21 @@ def expand_cfg(argv) -> list[str]:
     return argv
 
 
+def quotecheck(al):
+    for zs1, zco in vars(al).items():
+        zsl = [u(x) for x in zco] if isinstance(zco, list) else [u(zco)]
+        for zs2 in zsl:
+            zs2 = zs2.strip()
+            zs3 = zs2.strip("\"'")
+            if zs2 == zs3 or len(zs2) - len(zs3) < 2:
+                continue
+            if al.c:
+                t = "found the following global-config:   %s: %s\n values should not be quoted; did you mean:   %s: %s"
+            else:
+                t = 'found the following config-option:  "--%s=%s"\n values should not be quoted; did you mean:  "--%s=%s"'
+            warn(t % (zs1, zs2, zs1, zs3))
+
+
 def sighandler(sig: Optional[int] = None, frame: Optional[FrameType] = None) -> None:
     msg = [""] * 5
     for th in threading.enumerate():
@@ -2137,6 +2152,8 @@ def main(argv: Optional[list[str]] = None) -> None:
         al.E = E  # __init__ is not shared when oxidized
     except:
         sys.exit(1)
+
+    quotecheck(al)
 
     if al.chdir:
         os.chdir(al.chdir)

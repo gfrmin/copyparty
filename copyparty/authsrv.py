@@ -1442,7 +1442,7 @@ class AuthSrv(object):
                     if "=" in zs:
                         t = "WARNING: found an option named [%s] in your [global] config; did you mean to say [%s: %s] instead?"
                         zs1, zs2 = zs.split("=", 1)
-                        self.log(t % (zs, zs1, zs2), 3)
+                        self.log(t % (zs, zs1, zs2), 1)
                     if za is True:
                         self._e("└─argument [{}]".format(zs))
                     else:
@@ -1917,7 +1917,7 @@ class AuthSrv(object):
             vol.all_vps.sort(key=lambda x: len(x[0]), reverse=True)
             vol.root = vfs
 
-        zs = "du_iwho ls_q_m neversymlink"
+        zs = "du_iwho emb_all ls_q_m neversymlink"
         k_ign = set(zs.split())
         for vol in vfs.all_vols.values():
             unknown_flags = set()
