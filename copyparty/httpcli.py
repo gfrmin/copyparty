@@ -152,7 +152,7 @@ ALL_COOKIES = "k304 no304 js idxh dots cppwd cppws".split()
 
 BADXFF = " due to dangerous misconfiguration (the http-header specified by --xff-hdr was received from an untrusted reverse-proxy)"
 BADXFF2 = ". Some copyparty features are now disabled as a safety measure.\n\n\n"
-BADXFP = ', or change the copyparty global-option "xf-proto" to another header-name to read this value from. Alternatively, if your reverseproxy is not able to provide a header similar to "X-Forwarded-Proto", then you must tell copyparty which protocol to assume by setting global-option --xf-proto-fb to either http or https'
+BADXFP = ', or change the copyparty global-option "xf-proto" to another header-name to read this value from. Alternatively, if your reverseproxy is not able to provide a header similar to "X-Forwarded-Proto", then you must tell copyparty which protocol to assume; either "--xf-proto-fb=http" or "--xf-proto-fb=https"'
 BADXFFB = "<b>NOTE: serverlog has a message regarding your reverse-proxy config</b>"
 
 H_CONN_KEEPALIVE = "Connection: Keep-Alive"
@@ -196,6 +196,10 @@ def _build_zip_xcode() -> Sequence[str]:
 
 ZIP_XCODE_L = _build_zip_xcode()
 ZIP_XCODE_S = set(ZIP_XCODE_L)
+
+
+def _arg2cfg(txt: str) -> str:
+    return re.sub(r' "--([^=]{3,12})=', r' global-option "\1: ', txt)
 
 
 class HttpCli(object):
@@ -448,6 +452,8 @@ class HttpCli(object):
                             t += t2 % (zs or "NOT-PROVIDED")
                             if zs:
                                 t += ". If that is the address that visitors are supposed to use to access your server -- or, in other words, it is not some internal address you wish to keep secret -- then the current choice of using the [Host] header is fine (usually the case)"
+                        if self.args.c:
+                            t = _arg2cfg(t)
                         self.log(t + "\n\n\n", 3)
 
                 pip = self.conn.addr[0]
@@ -466,7 +472,10 @@ class HttpCli(object):
                         zs = IPv6Network(pip + "/64", False).compressed
 
                     zs2 = ' or "--xff-src=lan"' if self.conn.xff_lan.map(pip) else ""
-                    self.log(t % (self.args.xff_hdr, pip, cli_ip, zso, zs, zs2), 3)
+                    t = t % (self.args.xff_hdr, pip, cli_ip, zso, zs, zs2)
+                    if self.args.c:
+                        t = _arg2cfg(t)
+                    self.log(t, 3)
                     self.bad_xff = True
                 else:
                     self.ip = cli_ip
@@ -481,7 +490,10 @@ class HttpCli(object):
                             self.bad_xff = True
                             self.host = "example.com"
                             t = 'got proxied request without header "%s" (global-option "xf-proto"). This header must contain either "http" or "https". Either fix your reverse-proxy config to include this header%s%s'
-                            self.log(t % (self.args.xf_proto, BADXFP, BADXFF2), 3)
+                            t = t % (self.args.xf_proto, BADXFP, BADXFF2)
+                            if self.args.c:
+                                t = _arg2cfg(t)
+                            self.log(t, 3)
 
                     # the semantics of trusted_xff and bad_xff are different;
                     # trusted_xff is whether the connection came from a trusted reverseproxy,
