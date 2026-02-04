@@ -41,6 +41,10 @@ API_ROUTES_V1 = [
     ("POST", r"^auth/login$", "copyparty.api.auth_api", "post_login"),
     ("POST", r"^auth/logout$", "copyparty.api.auth_api", "post_logout"),
     ("POST", r"^auth/chpw$", "copyparty.api.auth_api", "post_chpw"),
+    ("POST", r"^upload/init$", "copyparty.api.upload_api", "post_upload_init"),
+    ("POST", r"^upload/finalize$", "copyparty.api.upload_api", "post_upload_finalize"),
+    ("POST", r"^search$", "copyparty.api.search_api", "post_search"),
+    ("GET", r"^tags$", "copyparty.api.search_api", "get_tags_endpoint"),
 ]
 
 
