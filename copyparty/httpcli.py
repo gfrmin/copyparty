@@ -188,7 +188,7 @@ PERMS_rwh = [
 
 def _build_zip_xcode() -> Sequence[str]:
     ret = "opus mp3 flac wav p".split()
-    for codec in ("w", "j"):
+    for codec in ("j", "w", "x"):
         for suf in ("", "f", "f3", "3"):
             ret.append("%s%s" % (codec, suf))
     return ret
