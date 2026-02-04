@@ -7,7 +7,7 @@ description = """
 readme = "README.md"
 authors = [{ name = "ed", email = "copyparty@ocv.me" }]
 license = { text = "MIT" }
-requires-python = ">=3.3"
+requires-python = ">=3.9"
 dependencies = ["Jinja2"]
 dynamic = ["version"]
 classifiers = [
@@ -15,19 +15,12 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.3",
-    "Programming Language :: Python :: 3.4",
-    "Programming Language :: Python :: 3.5",
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
-    "Programming Language :: Python :: Implementation :: Jython",
     "Programming Language :: Python :: Implementation :: PyPy",
     "Operating System :: OS Independent",
     "Environment :: Console",
@@ -107,8 +100,7 @@ copyparty = [
 # =====================================================================
 
 [tool.black]
-required-version = '21.12b0'
-target-version = ['py27']
+target-version = ['py39']
 
 [tool.isort]
 profile = "black"
@@ -141,7 +133,6 @@ disable = [
     "invalid-name",
     "line-too-long",
     "too-many-lines",
-    "consider-using-f-string",
     "pointless-string-statement",
 ]
 

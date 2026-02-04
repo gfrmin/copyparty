@@ -1,11 +1,8 @@
 # CLAUDE.md — copyparty
 
-## IMPORTANT: AI/LLM Policy
+## AI/LLM Policy
 
-**The CONTRIBUTING.md explicitly states: "do not use AI / LLM when writing code."**
-copyparty is "100% organic, free-range, human-written software." Any code contributions must be entirely human-written. The only exception is translations, and only if verified by a fluent speaker.
-
-Keep this in mind: do not generate code intended for contribution upstream.
+This is a fork. AI-assisted code contributions are welcome.
 
 ---
 
@@ -32,12 +29,11 @@ pip install -e .
 ## Test Commands
 
 ```bash
-# Run all tests (unit tests + smoketest, both Python 2 and 3)
+# Run all tests (unit tests + smoketest)
 ./scripts/run-tests.sh
 
 # Run only with a specific Python version
 ./scripts/run-tests.sh python3
-./scripts/run-tests.sh python2
 
 # Run unit tests directly
 python3 -m unittest discover -s tests
@@ -52,7 +48,7 @@ Tests use Python's built-in `unittest` framework (not pytest). Test files are in
 
 ```bash
 ruff check copyparty/          # linter (line-length=120)
-black copyparty/                # formatter (target: py27, requires black==21.12b0)
+black copyparty/                # formatter (target: py39)
 isort copyparty/                # import sorting (black profile)
 pylint copyparty/               # static analysis
 mypy copyparty/                 # type checking (strict mode)
@@ -64,22 +60,22 @@ Key lint config (from `pyproject.toml`):
 - Line length: **120**
 - Line endings: **LF**
 - Ruff ignores: E402 (import order), E722 (bare except)
-- Black target: py27 (Python 2.7 compatible formatting)
+- Black target: py39
 
 ## Dev Environment Setup
 
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
-pip install jinja2 strip_hints                                       # mandatory
+pip install jinja2                                                   # mandatory
 pip install argon2-cffi pyzmq mutagen paramiko pyftpdlib partftpy    # optional features
 pip install Pillow pillow-heif pyvips                                # thumbnails
-pip install black==21.12b0 click==8.0.2 bandit pylint flake8 isort mypy  # dev tools
+pip install black bandit pylint flake8 isort mypy                        # dev tools
 ```
 
 ## Architecture Overview
 
-copyparty is a portable file server supporting HTTP(S), WebDAV, SFTP, FTP(S), TFTP, and SMB/CIFS. It requires only Python (2.7 or 3.3+); all other dependencies are optional.
+copyparty is a portable file server supporting HTTP(S), WebDAV, SFTP, FTP(S), TFTP, and SMB/CIFS. It requires only Python 3.9+; all other dependencies are optional.
 
 ### Directory Structure
 
@@ -130,7 +126,7 @@ docs/                Documentation
 
 ## Code Conventions
 
-- Python 2.7 + 3.3+ compatibility: type hints exist in source but are stripped for PyPI releases (via `strip_hints`) to support older Python.
+- Python 3.9+ required. Type hints are used throughout.
 - Large files are common; several core modules exceed 100 KB. The codebase is "organic" — features were added incrementally.
 - Frontend is vanilla JavaScript with no transpilation/bundling. Web assets are gzip-compressed (via `pigz`/`zopfli`) but have no webpack/babel/node.js build step.
 - Only required runtime dependency is `jinja2`; everything else is optional.

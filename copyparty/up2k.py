@@ -90,6 +90,7 @@ if True:  # pylint: disable=using-constant-test
     from typing import Any, Optional, Pattern, Union
 
 if TYPE_CHECKING:
+    from .db.file_repo import FileRepository
     from .svchub import SvcHub
 
 USE_FICLONE = HAVE_FICLONE and sys.version_info < (3, 14)
@@ -208,6 +209,7 @@ class Up2k(object):
         self.fx_backlog: list[tuple[str, dict[str, str], str]] = []
 
         self.cur: dict[str, "sqlite3.Cursor"] = {}
+        self.repos: dict[str, "FileRepository"] = {}
         self.mem_cur = None
         self.sqlite_ver = None
         self.no_expr_idx = False
@@ -1325,6 +1327,13 @@ class Up2k(object):
             self._verify_db_cache(cur, vpath)
 
             self.cur[ptop] = cur
+
+            from .db.file_repo import FileRepository
+
+            repo = FileRepository(db_path, self.timeout, self.no_expr_idx)
+            repo.wrap_cursor(cur)
+            self.repos[ptop] = repo
+
             self.volsize[cur] = 0
             self.volnfiles[cur] = 0
 
@@ -5619,7 +5628,7 @@ class Up2k(object):
         for x in list(self.spools):
             self._unspool(x)
 
-        for cur in self.cur.values():
+        for ptop, cur in self.cur.items():
             db = cur.connection
             try:
                 db.interrupt()
@@ -5628,6 +5637,8 @@ class Up2k(object):
 
             cur.close()
             db.close()
+
+        self.repos.clear()
 
         if self.mem_cur:
             db = self.mem_cur.connection

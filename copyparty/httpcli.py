@@ -32,6 +32,7 @@ except:
 
 from .__init__ import ANYWIN, RES, RESM, TYPE_CHECKING, EnvParams, unicode
 from .__version__ import S_VERSION
+from .api import dispatch_api
 from .authsrv import LEELOO_DALLAS, VFS  # typechk
 from .bos import bos
 from .qrkode import QrCode, qr2svg, qrgen
@@ -680,36 +681,10 @@ class HttpCli(object):
             self.cbonk(self.conn.hsrv.gmal, self.req, "bad_vp", "invalid relpaths")
             return self.tx_404() and False
 
-        zso = self.headers.get("authorization")
-        bauth = ""
-        if (
-            zso
-            and not self.args.no_bauth
-            and (not cookie_pw or not self.args.bauth_last)
-        ):
-            try:
-                zb = zso.split(" ")[1].encode("ascii")
-                zs = b64dec(zb).decode("utf-8")
-                # try "pwd", "x:pwd", "pwd:x"
-                for bauth in [zs] + zs.split(":", 1)[::-1]:
-                    if bauth in self.asrv.sesa:
-                        break
-                    hpw = self.asrv.ah.hash(bauth)
-                    if self.asrv.iacct.get(hpw):
-                        break
-            except:
-                pass
+        from .authctx import resolve_credentials, resolve_ip_user, resolve_permissions
 
-        self.pw = (
-            uparam.get(self.args.pw_urlp)
-            or self.headers.get(self.args.pw_hdr)
-            or bauth
-            or cookie_pw
-        )
-        self.uname = (
-            self.asrv.sesa.get(self.pw)
-            or self.asrv.iacct.get(self.asrv.ah.hash(self.pw))
-            or "*"
+        self.pw, self.uname = resolve_credentials(
+            self.headers, uparam, cookie_pw, self.args, self.asrv
         )
 
         if self.args.have_idp_hdrs and (
@@ -791,14 +766,7 @@ class HttpCli(object):
                 else:
                     self.log("unknown username: %r" % (idp_usr,), 1)
 
-        if self.args.have_ipu_or_ipr:
-            if self.args.ipu and (self.uname == "*" or self.args.ao_ipu_wins):
-                self.uname = self.conn.ipu_iu[self.conn.ipu_nm.map(self.ip)]
-            ipr = self.conn.hsrv.ipr
-            if ipr and self.uname in ipr:
-                if not ipr[self.uname].map(self.ip):
-                    self.log("username [%s] rejected by --ipr" % (self.uname,), 3)
-                    self.uname = "*"
+        self.uname = resolve_ip_user(self.uname, self.ip, self.args, self.conn, self.log)
 
         self.rvol = self.asrv.vfs.aread[self.uname]
         self.wvol = self.asrv.vfs.awrite[self.uname]
@@ -819,43 +787,34 @@ class HttpCli(object):
             uparam["b"] = ""
             cookies["b"] = ""
 
-        vn, rem = self.asrv.vfs.get(self.vpath, self.uname, False, False)
-        if vn.realpath and ("xdev" in vn.flags or "xvol" in vn.flags):
-            ap = vn.canonical(rem)
-            avn = vn.chk_ap(ap)
-        else:
-            avn = vn
+        self.vn, self.avn, self.rem, perms = resolve_permissions(
+            self.uname, self.vpath, self.asrv
+        )
+        (
+            self.can_read,
+            self.can_write,
+            self.can_move,
+            self.can_delete,
+            self.can_get,
+            self.can_upget,
+            self.can_html,
+            self.can_admin,
+            self.can_dot,
+        ) = perms
 
-        if "bcasechk" in vn.flags and not vn.casechk(rem, True):
+        if "bcasechk" in self.vn.flags and not self.vn.casechk(self.rem, True):
             return self.tx_404() and False
-
-        try:
-            assert avn  # type: ignore  # !rm
-            (
-                self.can_read,
-                self.can_write,
-                self.can_move,
-                self.can_delete,
-                self.can_get,
-                self.can_upget,
-                self.can_html,
-                self.can_admin,
-                self.can_dot,
-            ) = avn.uaxs[self.uname]
-        except:
-            pass  # default is all-false
-
-        self.avn = avn
-        self.vn = vn  # note: do not dbv due to walk/zipgen
-        self.rem = rem
 
         self.s.settimeout(self.args.s_tbody or None)
 
-        if "norobots" in vn.flags:
+        if "norobots" in self.vn.flags:
             self.out_headers["X-Robots-Tag"] = "noindex, nofollow"
 
-        if "html_head_s" in vn.flags:
-            self.html_head += vn.flags["html_head_s"]
+        if "html_head_s" in self.vn.flags:
+            self.html_head += self.vn.flags["html_head_s"]
+
+        if self.vpath.startswith(".cpr/api/"):
+            return dispatch_api(self) and self.keepalive
 
         try:
             cors_k = self._cors()
@@ -7581,3 +7540,28 @@ class HttpCli(object):
         html = self.j2s(tpl, **j2a)
         self.reply(html.encode("utf-8", "replace"))
         return True
+
+    # --- API endpoint handlers (called by api.dispatch_api) ---
+
+    def api_mounts(self):
+        """GET /api/mounts - list accessible volumes."""
+        return {"volumes": [{"path": vp} for vp in sorted(self.rvol)]}
+
+    def api_config(self):
+        """GET /api/config - client configuration."""
+        from .__version__ import S_VERSION
+
+        return {
+            "version": S_VERSION,
+            "name": self.args.name or self.args.bname or "",
+        }
+
+    def api_status(self):
+        """GET /api/status - server health."""
+        from .__version__ import S_VERSION
+
+        return {
+            "version": S_VERSION,
+            "uptime": time.time() - self.E.t0,
+            "ok": True,
+        }
