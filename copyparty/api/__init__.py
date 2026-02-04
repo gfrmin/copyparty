@@ -38,6 +38,9 @@ API_ROUTES_V1 = [
     ("POST", r"^files/delete$", "copyparty.api.file_api", "post_delete"),
     ("POST", r"^files/move$", "copyparty.api.file_api", "post_move"),
     ("POST", r"^files/rename$", "copyparty.api.file_api", "post_rename"),
+    ("POST", r"^auth/login$", "copyparty.api.auth_api", "post_login"),
+    ("POST", r"^auth/logout$", "copyparty.api.auth_api", "post_logout"),
+    ("POST", r"^auth/chpw$", "copyparty.api.auth_api", "post_chpw"),
 ]
 
 
