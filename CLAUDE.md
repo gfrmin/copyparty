@@ -38,11 +38,25 @@ pip install -e .
 # Run unit tests directly
 python3 -m unittest discover -s tests
 
+# Run a single test file
+python3 -m unittest tests.test_authctx
+
+# Run a specific test class
+python3 -m unittest tests.test_authctx.TestAuthCtx
+
+# Run a specific test method
+python3 -m unittest tests.test_authctx.TestAuthCtx.test_resolve_credentials
+
 # Run smoketest directly
 python3 scripts/test/smoketest.py
 ```
 
 Tests use Python's built-in `unittest` framework (not pytest). Test files are in `tests/`.
+
+**Test utilities** (`tests/util.py`):
+- `Cfg`: `Namespace` wrapper for building test args with sensible defaults
+- `get_ramdisk()`: Cross-platform ramdisk allocation (`/dev/shm`, `/Volumes/cptd`, or tempdir fallback)
+- `VHttpConn`, `VHttpSrv`: Virtual HTTP connection/server for testing without actual sockets
 
 ## Lint & Format
 
@@ -91,6 +105,9 @@ copyparty/           Main Python package
   ftpd.py            FTP/FTPS server (pyftpdlib)
   tftpd.py           TFTP server (partftpy)
   smbd.py            SMB/CIFS server (impacket)
+  api.py             API dispatch router (.cpr/api/*)
+  authctx.py         Auth middleware (pure functions)
+  db/                DB repositories (SQLite, repository pattern)
   mtag.py            Metadata tagging / media indexer
   u2idx.py           up2k file indexing
   web/               Frontend (vanilla JS, no build step)
@@ -111,12 +128,24 @@ contrib/             Third-party integrations (nginx, systemd, docker, themes)
 docs/                Documentation
 ```
 
+### Layered Architecture (Feb 2025)
+
+Commit `eae43d05` introduced architectural decoupling:
+
+- **API Layer** (`api.py`): Dispatch router for `.cpr/api/*` endpoints with standardized JSON responses (`{"ok": bool, "data": ..., "error": ...}`)
+- **Auth Middleware** (`authctx.py`): Pure functions for credential resolution, IP user mapping, and permission resolution
+- **DB Repositories** (`db/`): Repository pattern for SQLite operations
+  - `FileRepository` (`file_repo.py`): Upload tracking (up, mt, kv, dh, iu, cv, ds tables)
+  - `SessionRepository`, `ShareRepository`, `IdpRepository`
+
 ### Key Concepts
 
 - **up2k protocol**: Resumable chunked uploads with per-chunk SHA-512 hashing, deduplication, and integrity verification. Files are split into chunks (1 MiB default, up to 32 MiB), hashed client-side, and reassembled server-side.
 - **SFX build**: The main distributable is a self-extracting Python archive (`copyparty-sfx.py`) that bundles everything into a single file.
 - **Database**: SQLite for upload tracking, file metadata, and search indexes.
-- **Main branch**: `hovudstraum` (not `main` or `master`).
+- **Pebkac exception** (`util.py:4469`): Client error class carrying an HTTP status code. API handlers raise `Pebkac` for 4xx errors; generic `Exception` maps to 500.
+- **Permissions**: `resolve_permissions()` in `authctx.py` returns a 9-tuple: `(read, write, move, delete, get, upget, html, admin, dot)`. Special users: `"*"` (anonymous), `"leeloo_dallas"` (internal operations).
+- **Main branch**: This fork uses `master`. Upstream (9001/copyparty) uses `hovudstraum`.
 
 ### Entry Points
 
