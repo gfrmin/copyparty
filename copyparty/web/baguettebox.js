@@ -28,7 +28,7 @@ window.baguetteBox = (function () {
             onChange: null,
             readDirRtl: false,
         },
-        overlay, slider, btnPrev, btnNext, btnHelp, btnAnim, btnRotL, btnRotR, btnSel, btnFull, btnZoom, btnVmode, btnReadDir, btnClose,
+        overlay, slider, btnPrev, btnNext, btnHelp, btnAnim, btnRotL, btnRotR, btnSel, btnFull, btnZoom, btnVmode, btnReadDir, btnFilt, btnShuf, btnClose,
         currentGallery = [],
         currentIndex = 0,
         isOverlayVisible = false,
@@ -52,7 +52,11 @@ window.baguetteBox = (function () {
         loopB = null,
         url_ts = null,
         un_pp = 0,
-        resume_mp = false;
+        resume_mp = false,
+        vshuf = sread('vshuf') == '1',
+        gfilt = sread('gfilt') || 'a',
+        pl_order = [],
+        pl_pos = 0;
 
     var onFSC = function (e) {
         isFullscreen = !!document.fullscreenElement;
@@ -317,6 +321,8 @@ window.baguetteBox = (function () {
                 '<button id="bbox-full" type="button" tt="full-screen">⛶</button>' +
                 '<button id="bbzoom" type="button" tt="zoom/stretch">z</button>' +
                 '<button id="bbox-vmode" type="button" tt="a"></button>' +
+                '<button id="bbox-filt" type="button" tt="a"></button>' +
+                '<button id="bbox-shuf" type="button" tt="a"></button>' +
                 '<button id="bbox-close" type="button" aria-label="Close">X</button>' +
                 '</div></div>'
             );
@@ -336,6 +342,8 @@ window.baguetteBox = (function () {
         btnFull = ebi('bbox-full');
         btnZoom = ebi('bbzoom');
         btnVmode = ebi('bbox-vmode');
+        btnFilt = ebi('bbox-filt');
+        btnShuf = ebi('bbox-shuf');
         btnClose = ebi('bbox-close');
 
         bcfg_bind(options, 'bbzoom', 'bbzoom', false, setzoom);
@@ -364,6 +372,8 @@ window.baguetteBox = (function () {
             ['M', 'video: toggle mute'],
             ['V', 'video: toggle loop'],
             ['C', 'video: toggle auto-next'],
+            ['B', 'filter: all media / videos only'],
+            ['N', 'toggle shuffle'],
             ['<code>[</code>, <code>]</code>', 'video: loop start / end'],
         ],
             d = mknod('table', 'bbox-halp'),
@@ -436,6 +446,10 @@ window.baguetteBox = (function () {
             vloop = vloop && !vnext;
             setVmode();
         }
+        else if (kl == "n")
+            tglShuf();
+        else if (kl == "b")
+            tglFilt();
         else if (kl == "f")
             tglfull();
         else if (kl == "z")
@@ -490,7 +504,7 @@ window.baguetteBox = (function () {
         }
         else if (vnext) {
             lbl = 'Cont';
-            msg += 'continue to next';
+            msg += 'continue to next' + (vshuf ? ' (shuffled)' : '');
             tts = '$NHotkey: C';
         }
         else {
@@ -629,6 +643,8 @@ window.baguetteBox = (function () {
         bind(btnNext, 'click', showRightImage);
         bind(btnClose, 'click', hideOverlay);
         bind(btnVmode, 'click', tglVmode);
+        bind(btnFilt, 'click', tglFilt);
+        bind(btnShuf, 'click', tglShuf);
         bind(btnHelp, 'click', halp);
         bind(btnAnim, 'click', anim);
         bind(btnReadDir, 'click', toggleReadDir);
@@ -653,6 +669,8 @@ window.baguetteBox = (function () {
         unbind(btnNext, 'click', showRightImage);
         unbind(btnClose, 'click', hideOverlay);
         unbind(btnVmode, 'click', tglVmode);
+        unbind(btnFilt, 'click', tglFilt);
+        unbind(btnShuf, 'click', tglShuf);
         unbind(btnHelp, 'click', halp);
         unbind(btnAnim, 'click', anim);
         unbind(btnReadDir, 'click', toggleReadDir);
@@ -690,6 +708,7 @@ window.baguetteBox = (function () {
         }
         overlay.setAttribute('aria-labelledby', imagesFiguresIds.join(' '));
         overlay.setAttribute('aria-describedby', imagesCaptionsIds.join(' '));
+        buildPlOrder();
     }
 
     function setOptions(newOptions) {
@@ -970,12 +989,23 @@ window.baguetteBox = (function () {
 
     function showRightImage(e) {
         ev(e);
+        if (gfilt != 'a' || vshuf) {
+            var ni = plNav(1);
+            if (ni >= 0) return show(ni);
+            if (vshuf) return;
+            return bounceAnimation(options.readDirRtl ? 'left' : 'right');
+        }
         var dir = options.readDirRtl ? -1 : 1;
         return show(currentIndex + dir);
     }
 
     function showLeftImage(e) {
         ev(e);
+        if (gfilt != 'a' || vshuf) {
+            var ni = plNav(-1);
+            if (ni >= 0) return show(ni);
+            return bounceAnimation(options.readDirRtl ? 'right' : 'left');
+        }
         var dir = options.readDirRtl ? 1 : -1;
         return show(currentIndex + dir);
     }
@@ -1026,6 +1056,10 @@ window.baguetteBox = (function () {
         catch (ex) { }
 
         currentIndex = index;
+        if (gfilt != 'a' || vshuf) {
+            var sp = pl_order.indexOf(index);
+            if (sp >= 0) pl_pos = sp;
+        }
         loadImage(currentIndex, function () {
             preloadNext(currentIndex);
             preloadPrev(currentIndex);
@@ -1180,9 +1214,100 @@ window.baguetteBox = (function () {
             vid().currentTime += sec;
     }
 
+    function buildPlOrder() {
+        pl_order = [];
+        for (var a = 0; a < currentGallery.length; a++) {
+            if (gfilt == 'v') {
+                var src = currentGallery[a].href || currentGallery[a].imageElement.href;
+                if (!re_v.test(src))
+                    continue;
+            }
+            pl_order.push(a);
+        }
+        if (vshuf) {
+            for (var a = pl_order.length - 1; a > 0; a--) {
+                var b = Math.floor(Math.random() * (a + 1)),
+                    c = pl_order[a];
+                pl_order[a] = pl_order[b];
+                pl_order[b] = c;
+            }
+        }
+        var sp = pl_order.indexOf(currentIndex);
+        pl_pos = sp >= 0 ? sp : 0;
+    }
+
+    function plNav(dir) {
+        if (pl_order.length < 1)
+            return -1;
+
+        var np = pl_pos + dir;
+        if (np >= pl_order.length) {
+            if (vshuf) {
+                buildPlOrder();
+                np = 0;
+            } else {
+                return -1;
+            }
+        }
+        if (np < 0)
+            return -1;
+
+        pl_pos = np;
+        return pl_order[np];
+    }
+
+    function setFilt() {
+        var isVid = gfilt == 'v';
+        var msg = isVid ? 'navigate videos only' : 'navigate all media';
+        msg += '$NHotkey: B';
+        btnFilt.setAttribute('tt', msg);
+        btnFilt.setAttribute('aria-label', msg);
+        btnFilt.textContent = isVid ? 'Vid' : 'All';
+        btnState(btnFilt, isVid);
+    }
+
+    function tglFilt() {
+        gfilt = gfilt == 'v' ? 'a' : 'v';
+        swrite('gfilt', gfilt);
+        buildPlOrder();
+        setFilt();
+        if (tt.en)
+            tt.show.call(this);
+    }
+
+    function setShuf() {
+        var msg = vshuf ? 'shuffle: on' : 'shuffle: off';
+        msg += '$NHotkey: N';
+        btnShuf.setAttribute('tt', msg);
+        btnShuf.setAttribute('aria-label', msg);
+        btnShuf.textContent = 'Shuf';
+        btnState(btnShuf, vshuf);
+    }
+
+    function tglShuf() {
+        vshuf = !vshuf;
+        swrite('vshuf', vshuf ? '1' : '0');
+        if (vshuf) {
+            vnext = true;
+            vloop = false;
+            setVmode();
+        }
+        buildPlOrder();
+        setShuf();
+        if (tt.en)
+            tt.show.call(this);
+    }
+
     function vidEnd() {
-        if (this == vid() && vnext)
-            showNextImageIgnoreReadDir();
+        if (this != vid() || !vnext)
+            return;
+
+        if (gfilt != 'a' || vshuf) {
+            var ni = plNav(1);
+            if (ni >= 0) return show(ni);
+            if (vshuf) return;
+        }
+        showNextImageIgnoreReadDir();
     }
 
     function setloop(side) {
@@ -1281,6 +1406,8 @@ window.baguetteBox = (function () {
         selbg();
         mp_ctl();
         setVmode();
+        setFilt();
+        setShuf();
 
         var el = vidimg();
         if (el.getAttribute('rot'))
