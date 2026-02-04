@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>copyparty - Alpine.js Frontend</title>
+    <link rel="stylesheet" href="/res/browser.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        .loading { opacity: 0.5; pointer-events: none; }
+        .error { color: #c33; padding: 1em; background: #fee; border-radius: 4px; margin: 1em 0; }
+        .success { color: #3c3; padding: 1em; background: #efe; border-radius: 4px; margin: 1em 0; }
+        .btn { padding: 0.5em 1em; background: #eee; border: 1px solid #ccc; border-radius: 3px; cursor: pointer; }
+        .btn:hover { background: #ddd; }
+        .file-list { list-style: none; padding: 0; }
+        .file-item { padding: 0.5em; border-bottom: 1px solid #eee; }
+        .file-item:hover { background: #f5f5f5; }
+    </style>
+</head>
+<body x-cloak>
+    <div x-data="copypartyApp()" x-init="init()" :class="{ loading: isLoading }">
+        <header>
+            <h1>copyparty</h1>
+            <div class="breadcrumbs" x-show="session.user">
+                <span x-text="'User: ' + session.user"></span>
+                <button class="btn" @click="logout()" x-show="session.authenticated">Logout</button>
+            </div>
+        </header>
+
+        <!-- Login Form -->
+        <div x-show="!session.authenticated" style="max-width: 400px; margin: 2em auto;">
+            <h2>Login</h2>
+            <div x-show="error" class="error" x-text="error"></div>
+            <form @submit.prevent="login()">
+                <div style="margin: 1em 0;">
+                    <label>Password:</label>
+                    <input type="password" x-model="loginForm.password" required style="width: 100%; padding: 0.5em;">
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+        </div>
+
+        <!-- Main App -->
+        <div x-show="session.authenticated">
+            <div x-show="error" class="error" x-text="error"></div>
+            <div x-show="success" class="success" x-text="success"></div>
+
+            <!-- Breadcrumbs -->
+            <nav class="breadcrumbs" style="padding: 1em 0;">
+                <a href="#" @click.prevent="navigate('/')" style="cursor: pointer;">Home</a>
+                <template x-for="bc in currentListing.breadcrumbs">
+                    <span> / <a href="#" @click.prevent="navigate(bc.path)" style="cursor: pointer;" x-text="bc.name"></a></span>
+                </template>
+            </nav>
+
+            <!-- Directory Listing -->
+            <div style="padding: 1em 0;">
+                <h3>Directory Listing</h3>
+                <button class="btn" @click="showMkdir = true">New Folder</button>
+                <button class="btn" @click="showChpw = true" x-show="session.authenticated">Change Password</button>
+            </div>
+
+            <!-- Create Directory Modal -->
+            <div x-show="showMkdir" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;">
+                <div style="background: white; padding: 2em; border-radius: 8px; max-width: 400px;">
+                    <h3>Create Directory</h3>
+                    <input type="text" x-model="mkdirForm.name" placeholder="Directory name" style="width: 100%; padding: 0.5em; margin: 1em 0;">
+                    <button class="btn" @click="mkdir()">Create</button>
+                    <button class="btn" @click="showMkdir = false" style="margin-left: 0.5em;">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Change Password Modal -->
+            <div x-show="showChpw" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;">
+                <div style="background: white; padding: 2em; border-radius: 8px; max-width: 400px;">
+                    <h3>Change Password</h3>
+                    <input type="password" x-model="chpwForm.oldPwd" placeholder="Current password" style="width: 100%; padding: 0.5em; margin: 1em 0;">
+                    <input type="password" x-model="chpwForm.newPwd" placeholder="New password" style="width: 100%; padding: 0.5em; margin: 1em 0;">
+                    <button class="btn" @click="changePassword()">Change</button>
+                    <button class="btn" @click="showChpw = false" style="margin-left: 0.5em;">Cancel</button>
+                </div>
+            </div>
+
+            <!-- File List -->
+            <ul class="file-list">
+                <template x-for="item in currentListing.items">
+                    <li class="file-item" style="display: flex; justify-content: space-between;">
+                        <span>
+                            <span x-show="item.type === 'dir'">📁</span>
+                            <span x-show="item.type === 'file'">📄</span>
+                            <span x-show="item.type === 'link'">🔗</span>
+                            <a href="#" @click.prevent="item.type === 'dir' ? navigate(currentPath + '/' + item.name) : null"
+                               style="cursor: pointer; text-decoration: none;" x-text="item.name"></a>
+                        </span>
+                        <span x-text="item.size ? (item.size + ' B') : ''"></span>
+                    </li>
+                </template>
+            </ul>
+
+            <!-- Stats -->
+            <p style="margin-top: 2em; color: #666;" x-show="currentListing.stats">
+                <span x-text="currentListing.stats.count + ' items'"></span>
+                <span x-show="currentListing.stats.can_write"> · Write enabled</span>
+            </p>
+        </div>
+
+        <footer style="margin-top: 4em; padding: 2em; text-align: center; color: #999; border-top: 1px solid #eee;">
+            <span x-text="'copyparty ' + config.version"></span>
+        </footer>
+    </div>
+
+    <script>
+        function copypartyApp() {
+            return {
+                config: {},
+                session: { user: null, authenticated: false, permissions: null, volumes: [] },
+                currentPath: '/',
+                currentListing: { breadcrumbs: [], items: [], stats: {} },
+                isLoading: false,
+                error: null,
+                success: null,
+                showMkdir: false,
+                showChpw: false,
+                loginForm: { password: '' },
+                mkdirForm: { name: '' },
+                chpwForm: { oldPwd: '', newPwd: '' },
+
+                async init() {
+                    await this.loadConfig();
+                    await this.loadSession();
+                    if (this.session.authenticated) {
+                        await this.navigate('/');
+                    }
+                },
+
+                async loadConfig() {
+                    try {
+                        const resp = await fetch('/.cpr/api/v1/config');
+                        const data = await resp.json();
+                        if (data.ok) {
+                            this.config = data.data;
+                        }
+                    } catch (ex) {
+                        this.error = 'Failed to load config: ' + ex.message;
+                    }
+                },
+
+                async loadSession() {
+                    try {
+                        const resp = await fetch('/.cpr/api/v1/session');
+                        const data = await resp.json();
+                        if (data.ok) {
+                            this.session = data.data;
+                        }
+                    } catch (ex) {
+                        this.error = 'Failed to load session: ' + ex.message;
+                    }
+                },
+
+                async navigate(path) {
+                    this.isLoading = true;
+                    this.error = null;
+                    try {
+                        const resp = await fetch('/.cpr/api/v1/browse?path=' + encodeURIComponent(path));
+                        const data = await resp.json();
+                        if (data.ok) {
+                            this.currentPath = path;
+                            this.currentListing = data.data;
+                        } else {
+                            this.error = data.error || 'Failed to load directory';
+                        }
+                    } catch (ex) {
+                        this.error = 'Network error: ' + ex.message;
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+
+                async login() {
+                    this.isLoading = true;
+                    this.error = null;
+                    try {
+                        const resp = await fetch('/.cpr/api/v1/auth/login', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ password: this.loginForm.password })
+                        });
+                        const data = await resp.json();
+                        if (data.ok) {
+                            await this.loadSession();
+                            await this.navigate('/');
+                            this.loginForm.password = '';
+                        } else {
+                            this.error = data.error || 'Login failed';
+                        }
+                    } catch (ex) {
+                        this.error = 'Login error: ' + ex.message;
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+
+                async logout() {
+                    try {
+                        await fetch('/.cpr/api/v1/auth/logout', { method: 'POST' });
+                        await this.loadSession();
+                    } catch (ex) {
+                        this.error = 'Logout error: ' + ex.message;
+                    }
+                },
+
+                async mkdir() {
+                    if (!this.mkdirForm.name) {
+                        this.error = 'Directory name required';
+                        return;
+                    }
+                    this.isLoading = true;
+                    this.error = null;
+                    try {
+                        const resp = await fetch('/.cpr/api/v1/files/mkdir', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ path: this.currentPath, name: this.mkdirForm.name })
+                        });
+                        const data = await resp.json();
+                        if (data.ok) {
+                            this.success = 'Directory created';
+                            this.showMkdir = false;
+                            this.mkdirForm.name = '';
+                            await this.navigate(this.currentPath);
+                        } else {
+                            this.error = data.error || 'Failed to create directory';
+                        }
+                    } catch (ex) {
+                        this.error = 'Error: ' + ex.message;
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+
+                async changePassword() {
+                    if (!this.chpwForm.oldPwd || !this.chpwForm.newPwd) {
+                        this.error = 'Both passwords required';
+                        return;
+                    }
+                    this.isLoading = true;
+                    this.error = null;
+                    try {
+                        const resp = await fetch('/.cpr/api/v1/auth/chpw', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ old_password: this.chpwForm.oldPwd, new_password: this.chpwForm.newPwd })
+                        });
+                        const data = await resp.json();
+                        if (data.ok) {
+                            this.success = 'Password changed';
+                            this.showChpw = false;
+                            this.chpwForm = { oldPwd: '', newPwd: '' };
+                        } else {
+                            this.error = data.error || 'Failed to change password';
+                        }
+                    } catch (ex) {
+                        this.error = 'Error: ' + ex.message;
+                    } finally {
+                        this.isLoading = false;
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
