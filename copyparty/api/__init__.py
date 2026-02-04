@@ -34,6 +34,10 @@ API_ROUTES_V1 = [
     ("GET", r"^config$", "copyparty.api.config_api", "get_config"),
     ("GET", r"^session$", "copyparty.api.config_api", "get_session"),
     ("GET", r"^browse$", "copyparty.api.browse_api", "get_browse"),
+    ("POST", r"^files/mkdir$", "copyparty.api.file_api", "post_mkdir"),
+    ("POST", r"^files/delete$", "copyparty.api.file_api", "post_delete"),
+    ("POST", r"^files/move$", "copyparty.api.file_api", "post_move"),
+    ("POST", r"^files/rename$", "copyparty.api.file_api", "post_rename"),
 ]
 
 
