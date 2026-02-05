@@ -78,7 +78,7 @@ from .util import (
 
 try:
     from pathlib import Path
-except:
+except ImportError:
     pass
 
 if HAVE_SQLITE3:
@@ -1338,7 +1338,7 @@ class Up2k(object):
             self.volnfiles[cur] = 0
 
             return cur, db_path
-        except:
+        except ImportError:
             msg = "ERROR: cannot use database at [%s]:\n%s\n\033[33mhint: %s\n"
             self.log(msg % (db_path, traceback.format_exc(), HINT_HISTPATH), 1)
 

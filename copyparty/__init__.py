@@ -12,7 +12,7 @@ _:tuple[int,int]=(0,0)  # ______________________________________________________
 
 try:
     from typing import TYPE_CHECKING
-except:
+except ImportError:
     TYPE_CHECKING = False
 
 if True:

@@ -40,7 +40,7 @@ def get_path_param(query_string, key):
                 try:
                     v = v.replace("%", "").encode("utf-8")
                     v = binascii.unhexlify(v).decode("utf-8") if "%" in pair else pair.split("=", 1)[1]
-                except:
+                except ImportError:
                     pass
                 return v
 

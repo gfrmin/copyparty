@@ -3,7 +3,7 @@ from __future__ import print_function, unicode_literals
 
 try:
     from types import SimpleNamespace
-except:
+except ImportError:
 
     class SimpleNamespace(object):
         def __init__(self, **attr):
@@ -21,7 +21,7 @@ from datetime import datetime
 
 try:
     import inspect
-except:
+except ImportError:
     pass
 
 from partftpy import (

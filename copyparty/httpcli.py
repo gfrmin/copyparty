@@ -27,7 +27,7 @@ try:
         raise Exception()
 
     import lzma
-except:
+except ImportError:
     pass
 
 from .__init__ import ANYWIN, RES, RESM, TYPE_CHECKING, EnvParams, unicode

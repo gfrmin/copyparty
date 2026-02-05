@@ -30,7 +30,7 @@ if HAVE_SQLITE3:
 
 try:
     from pathlib import Path
-except:
+except ImportError:
     pass
 
 if True:  # pylint: disable=using-constant-test

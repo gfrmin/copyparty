@@ -121,7 +121,7 @@ try:
 
         ImageFont.load_default(size=16)
         HAVE_PILF = True
-    except:
+    except ImportError:
         pass
 
     try:
@@ -144,7 +144,7 @@ try:
 
         Image.new("RGB", (2, 2)).save(BytesIO(), format="jxl")
         HAVE_JXL = True
-    except:
+    except ImportError:
         pass
 
     try:
@@ -158,7 +158,7 @@ try:
 
         register_heif_opener()
         HAVE_HEIF = True
-    except:
+    except ImportError:
         pass
 
     try:
@@ -172,11 +172,11 @@ try:
         import pillow_avif  # noqa: F401  # pylint: disable=unused-import
 
         HAVE_AVIF = True
-    except:
+    except ImportError:
         pass
 
     logging.getLogger("PIL").setLevel(logging.WARNING)
-except:
+except ImportError:
     pass
 
 try:
@@ -202,7 +202,7 @@ try:
     import rawpy
 
     logging.getLogger("rawpy").setLevel(logging.WARNING)
-except:
+except ImportError:
     HAVE_RAW = False
 
 

@@ -38,7 +38,7 @@ try:
     sys.modules["gzip"] = gzip
     # sys.modules["zlib"] = zlib
     # `- somehow makes tarfile 3% slower with default malloc, and barely faster with mimalloc
-except:
+except ImportError:
     import gzip
     import zlib
 
@@ -66,7 +66,7 @@ try:
     from datetime import datetime, timezone
 
     UTC = timezone.utc
-except:
+except ImportError:
     from datetime import datetime, timedelta, tzinfo
 
     TD_ZERO = timedelta(0)
@@ -104,7 +104,7 @@ def _ens(want: str) -> tuple[int, ...]:
     for v in want.split():
         try:
             ret.append(getattr(errno, v))
-        except:
+        except AttributeError:
             pass
 
     return tuple(ret)
@@ -136,14 +136,14 @@ try:
 
     HAVE_FCNTL = True
     HAVE_FICLONE = hasattr(fcntl, "FICLONE")
-except:
+except ImportError:
     HAVE_FCNTL = False
     HAVE_FICLONE = False
 
 try:
     import ctypes
     import termios
-except:
+except ImportError:
     pass
 
 try:
@@ -158,7 +158,7 @@ try:
         from ifaddr import get_adapters
 
     HAVE_IFADDR = True
-except:
+except ImportError:
     HAVE_IFADDR = False
 
     def get_adapters(include_unconfigured=False):
@@ -173,14 +173,14 @@ try:
     import sqlite3
 
     assert hasattr(sqlite3, "connect")  # graalpy
-except:
+except ImportError:
     HAVE_SQLITE3 = False
 
 try:
     import importlib.util
 
     HAVE_ZMQ = bool(importlib.util.find_spec("zmq"))
-except:
+except ImportError:
     HAVE_ZMQ = False
 
 try:
@@ -189,7 +189,7 @@ try:
 
     HAVE_PSUTIL = True
     import psutil
-except:
+except ImportError:
     HAVE_PSUTIL = False
 
 try:
@@ -199,7 +199,7 @@ try:
         raise Exception()
 
     import magic
-except:
+except ImportError:
     pass
 
 if os.environ.get("PRTY_MODSPEC"):
@@ -216,7 +216,7 @@ if True:  # pylint: disable=using-constant-test
 
     try:
         from typing import LiteralString
-    except:
+    except ImportError:
         pass
 
     class RootLogger(Protocol):
@@ -258,7 +258,7 @@ try:
 
     socket.inet_pton(socket.AF_INET6, "::1")
     HAVE_IPV6 = True
-except:
+except ImportError:
 
     def inet_pton(fam, ip):
         return socket.inet_aton(ip)
@@ -631,7 +631,7 @@ def expat_ver() -> str:
         import pyexpat
 
         return ".".join([str(x) for x in pyexpat.version_info])
-    except:
+    except ImportError:
         return "?"
 
 
@@ -661,7 +661,7 @@ except:
 
 try:
     from jinja2 import __version__ as JINJA_VER
-except:
+except ImportError:
     JINJA_VER = "(None)"
 
 try:
@@ -669,7 +669,7 @@ try:
         raise Exception()
 
     from pyftpdlib.__init__ import __ver__ as PYFTPD_VER
-except:
+except ImportError:
     PYFTPD_VER = "(None)"
 
 try:
@@ -677,7 +677,7 @@ try:
         raise Exception()
 
     from partftpy.__init__ import __version__ as PARTFTPY_VER
-except:
+except ImportError:
     PARTFTPY_VER = "(None)"
 
 try:
@@ -685,7 +685,7 @@ try:
         raise Exception()
 
     from paramiko import __version__ as MIKO_VER
-except:
+except ImportError:
     MIKO_VER = "(None)"
 
 
@@ -2145,7 +2145,7 @@ def gen_filekey_dbg(
             import inspect
 
             ctx = ",".join(inspect.stack()[n].function for n in range(2, 5))
-        except:
+        except ImportError:
             ctx = ""
 
         p2 = "a"
@@ -3860,7 +3860,7 @@ def _zmq_hook(
 
     try:
         mtx = ZMQ["mtx"]
-    except:
+    except ImportError:
         ZMQ["mtx"] = threading.Lock()
         time.sleep(0.1)
         mtx = ZMQ["mtx"]
@@ -4333,7 +4333,7 @@ def _lock_file_windows(ap: str) -> bool:
         try:
             fd = _flocks.pop(ap)
             os.close(fd)
-        except:
+        except ImportError:
             pass
 
         fd = os.open(ap, os.O_RDWR | os.O_CREAT, 438)

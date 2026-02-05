@@ -590,7 +590,7 @@ try:
     class SftpHandler(FtpHandler, TLS_FTPHandler):
         pass
 
-except:
+except ImportError:
     pass
 
 

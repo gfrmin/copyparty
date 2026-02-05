@@ -14,7 +14,7 @@ try:
 
     HAVE_SSL = True
     import ssl
-except:
+except ImportError:
     HAVE_SSL = False
 
 from . import util as Util

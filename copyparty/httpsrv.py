@@ -16,7 +16,7 @@ from .__init__ import ANYWIN, CORES, EXE, MACOS, PY2, TYPE_CHECKING, EnvParams, 
 
 try:
     MNFE = ModuleNotFoundError
-except:
+except ImportError:
     MNFE = ImportError
 
 try:

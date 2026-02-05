@@ -41,7 +41,7 @@ try:
     from mutagen import version  # noqa: F401
 
     HAVE_MUTAGEN = True
-except:
+except ImportError:
     HAVE_MUTAGEN = False
 
 

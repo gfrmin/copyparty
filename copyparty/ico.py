@@ -73,7 +73,7 @@ class Ico(object):
                 pb = ImageDraw.Draw(img)
                 try:
                     _, _, tw, th = pb.textbbox((0, 0), ext)
-                except:
+                except ImportError:
                     tw, th = pb.textsize(ext)  # type: ignore
 
                 tw += len(ext)

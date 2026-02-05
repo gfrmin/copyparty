@@ -93,7 +93,7 @@ is_dbg = False
 
 try:
     from fuse import FUSE, FuseOSError, Operations
-except:
+except ImportError:
     if WINDOWS:
         libfuse = "install https://github.com/billziss-gh/winfsp/releases/latest"
     elif MACOS:

@@ -35,7 +35,7 @@ EXE = bool(getattr(sys, "frozen", False))
 
 try:
     import argparse
-except:
+except ImportError:
     m = "\n  ERROR: need 'argparse'; download it here:\n   https://github.com/ThomasWaldmann/argparse/raw/master/argparse.py\n"
     print(m)
     raise
@@ -510,7 +510,7 @@ def termsize():
 
             r = struct.unpack(b"hh", fcntl.ioctl(fd, termios.TIOCGWINSZ, b"AAAA"))
             return r[::-1]
-        except:
+        except ImportError:
             return None
 
     cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
@@ -1693,7 +1693,7 @@ NOTE: if server has --usernames enabled, then password is "username:password"
         try:
             import ssl
             import zipfile
-        except:
+        except ImportError:
             t = "ERROR: https is not available for some reason; please use http"
             print("\n\n   %s\n\n" % (t,))
             raise

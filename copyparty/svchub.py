@@ -89,7 +89,7 @@ if TYPE_CHECKING:
     try:
         from .mdns import MDNS
         from .ssdp import SSDPd
-    except:
+    except ImportError:
         pass
 
 if PY2:
@@ -469,7 +469,7 @@ class SvcHub(object):
         for zs in "ipu_nm ftp_ipa_nm tftp_ipa_nm".split():
             try:
                 getattr(args, zs).mutex = threading.Lock()
-            except:
+            except ImportError:
                 pass
         if args.ipr:
             for nm in args.ipr_u.values():
@@ -678,7 +678,7 @@ class SvcHub(object):
         db_lock = db_path + ".lock"
         try:
             create = not os.path.getsize(db_path)
-        except:
+        except ImportError:
             create = True
         zs = "creating new" if create else "opening"
         self.log("root", "%s shares-db %s" % (zs, db_path))
@@ -1282,7 +1282,7 @@ class SvcHub(object):
                 int(x) if x > 0 else 1024 * 1024
                 for x in list(resource.getrlimit(resource.RLIMIT_NOFILE))
             ]
-        except:
+        except ImportError:
             self.log("root", "failed to read rlimits from os", 6)
             return
 
@@ -1304,7 +1304,7 @@ class SvcHub(object):
 
             resource.setrlimit(resource.RLIMIT_NOFILE, (new_soft, hard))
             soft = new_soft
-        except:
+        except ImportError:
             t = "rlimit denied; max open files: {}"
             self.log("root", t.format(soft), 3)
             return
@@ -1349,7 +1349,7 @@ class SvcHub(object):
                 self.args.no_logflush = True
             else:
                 lh = open(fn, "wt", encoding="utf-8", errors="replace")
-        except:
+        except ImportError:
             import codecs
 
             lh = codecs.open(fn, "w", encoding="utf-8", errors="replace")
@@ -1420,7 +1420,7 @@ class SvcHub(object):
 
                 self.mdns = MDNS(self, self.zc_ngen)
                 Daemon(self.mdns.run, "mdns")
-            except:
+            except ImportError:
                 self.log("root", "mdns startup failed;\n" + min_ex(), 3)
 
         if getattr(self.args, "zs", False):
@@ -1432,7 +1432,7 @@ class SvcHub(object):
 
                 self.ssdp = SSDPd(self, self.zc_ngen)
                 Daemon(self.ssdp.run, "ssdp")
-            except:
+            except ImportError:
                 self.log("root", "ssdp startup failed;\n" + min_ex(), 3)
 
     def reload(self, rescan_all_vols: bool, up2k: bool) -> str:
