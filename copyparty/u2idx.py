@@ -11,6 +11,7 @@ from operator import itemgetter
 from .__init__ import ANYWIN, PY2, TYPE_CHECKING, unicode
 from .authsrv import LEELOO_DALLAS, VFS
 from .bos import bos
+from .db.share_repo import ShareRepository
 from .up2k import up2k_wark_from_hashlist
 from .util import (
     HAVE_SQLITE3,
@@ -67,6 +68,7 @@ class U2idx(object):
         self.mem_cur.execute(r"create table a (b text)")
 
         self.sh_cur: Optional["sqlite3.Cursor"] = None
+        self.sh_repo: Optional[ShareRepository] = None
 
         self.p_end = 0.0
         self.p_dur = 0.0
@@ -104,6 +106,9 @@ class U2idx(object):
                 cur.close()
                 db.close()
 
+        if self.sh_repo:
+            self.sh_repo.close()
+
     def fsearch(
         self, uname: str, vols: list[VFS], body: dict[str, Any]
     ) -> list[dict[str, Any]]:
@@ -137,6 +142,17 @@ class U2idx(object):
         cur.execute('pragma table_info("sh")').fetchall()
         self.sh_cur = cur
         return cur
+
+    def get_share_repo(self) -> Optional[ShareRepository]:
+        """Get ShareRepository instance for share operations."""
+        if self.sh_repo:
+            return self.sh_repo
+
+        if not HAVE_SQLITE3 or not self.args.shr:
+            return None
+
+        self.sh_repo = ShareRepository(self.args.shr_db)
+        return self.sh_repo
 
     def get_cur(self, vn: VFS) -> Optional["sqlite3.Cursor"]:
         cur = self.cur.get(vn.realpath)

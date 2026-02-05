@@ -136,7 +136,9 @@ Commit `eae43d05` introduced architectural decoupling:
 - **Auth Middleware** (`authctx.py`): Pure functions for credential resolution, IP user mapping, and permission resolution
 - **DB Repositories** (`db/`): Repository pattern for SQLite operations
   - `FileRepository` (`file_repo.py`): Upload tracking (up, mt, kv, dh, iu, cv, ds tables)
-  - `SessionRepository`, `ShareRepository`, `IdpRepository`
+  - `SessionRepository`, `ShareRepository` (actively used), `IdpRepository`
+
+**ShareRepository activation**: As of Feb 2025, `ShareRepository` is actively used in `httpcli.py` for all share operations (listing, creating, deleting, updating expiry). The repository is accessed via `U2idx.get_share_repo()` in `u2idx.py`. This replaced ~15 direct SQL queries with repository method calls.
 
 ### Key Concepts
 

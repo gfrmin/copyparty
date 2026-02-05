@@ -6183,23 +6183,22 @@ class HttpCli(object):
                 raise Pebkac(500, "sqlite3 not found on server; sharing is disabled")
             raise Pebkac(500, "server busy, cannot list shares; please retry in a bit")
 
-        cur = idx.get_shr()
-        if not cur:
+        share_repo = idx.get_share_repo()
+        if not share_repo:
             raise Pebkac(400, "huh, sharing must be disabled in the server config...")
 
-        rows = cur.execute("select * from sh").fetchall()
+        rows = share_repo.list_shares()
         rows = [list(x) for x in rows]
 
         if self.uname != self.args.shr_adm:
             rows = [x for x in rows if x[5] == self.uname]
 
-        q = "select vp from sf where k=? limit 99"
         for r in rows:
             if not r[4]:
                 r[4] = "---"
             else:
-                zstl = cur.execute(q, (r[0],)).fetchall()
-                zsl = [html_escape(zst[0]) for zst in zstl]
+                files = share_repo.get_share_files(r[0])
+                zsl = [html_escape(f) for f in files]
                 r[4] = "<br />".join(zsl)
 
         if self.args.shr_site:
@@ -6232,17 +6231,17 @@ class HttpCli(object):
         if self.args.shr_v:
             self.log("handle_eshare: " + skey)
 
-        cur = idx.get_shr()
-        if not cur:
+        share_repo = idx.get_share_repo()
+        if not share_repo:
             raise Pebkac(400, "huh, sharing must be disabled in the server config...")
 
-        rows = cur.execute("select un, t1 from sh where k = ?", (skey,)).fetchall()
-        un = rows[0][0] if rows and rows[0] else ""
-
-        if not un:
+        share = share_repo.get_share(skey)
+        if not share:
             raise Pebkac(400, "that sharekey didn't match anything")
 
-        expiry = rows[0][1]
+        # share tuple: (k, pw, vp, pr, st, un, t0, t1)
+        un = share[5]
+        expiry = share[7]
 
         if un != self.uname and self.uname != self.args.shr_adm:
             t = "your username (%r) does not match the sharekey's owner (%r) and you're not admin"
@@ -6251,7 +6250,7 @@ class HttpCli(object):
         reload = False
         act = self.uparam["eshare"]
         if act == "rm":
-            cur.execute("delete from sh where k = ?", (skey,))
+            share_repo.delete_share(skey)
             if skey in self.asrv.vfs.nodes[self.args.shr.strip("/")].nodes:
                 reload = True
         else:
@@ -6260,9 +6259,9 @@ class HttpCli(object):
                 expiry = now
                 reload = True
             expiry += int(act) * 60
-            cur.execute("update sh set t1 = ? where k = ?", (expiry, skey))
+            share_repo.update_expiry(skey, expiry)
 
-        cur.connection.commit()
+        share_repo.commit()
         if reload:
             self.conn.hsrv.broker.ask("reload", False, True).get()
             self.conn.hsrv.broker.ask("up2k.wake_rescanner").get()
@@ -6312,14 +6311,13 @@ class HttpCli(object):
         if vp.startswith(self.args.shr1):
             raise Pebkac(400, "yo dawg...")
 
-        cur = idx.get_shr()
-        if not cur:
+        share_repo = idx.get_share_repo()
+        if not share_repo:
             raise Pebkac(400, "huh, sharing must be disabled in the server config...")
 
-        q = "select * from sh where k = ?"
-        qr = cur.execute(q, (skey,)).fetchall()
-        if qr and qr[0]:
-            self.log("sharekey taken by %r" % (qr,))
+        existing = share_repo.get_share(skey)
+        if existing:
+            self.log("sharekey taken by %r" % (existing,))
             raise Pebkac(400, "sharekey %r is already in use" % (skey,))
 
         # ensure user has requested perms
@@ -6358,14 +6356,12 @@ class HttpCli(object):
         exp = now + exp * 60 if exp else 0
         pr = "".join(zc for zc, zb in zip("rwmdg", s_axs) if zb)
 
-        q = "insert into sh values (?,?,?,?,?,?,?,?)"
-        cur.execute(q, (skey, pw, vp, pr, len(fns), self.uname, now, exp))
+        share_repo.create_share(skey, pw, vp, pr, len(fns), self.uname, now, exp)
 
-        q = "insert into sf values (?,?)"
         for fn in fns:
-            cur.execute(q, (skey, fn))
+            share_repo.add_share_file(skey, fn)
 
-        cur.connection.commit()
+        share_repo.commit()
         self.conn.hsrv.broker.ask("reload", False, True).get()
         self.conn.hsrv.broker.ask("up2k.wake_rescanner").get()
 
