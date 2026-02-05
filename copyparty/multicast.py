@@ -121,7 +121,7 @@ class MCast(object):
             for av in list(lst):
                 try:
                     arg_net = ip_network(av, False)
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     arg_net = None
 
                 for sk, sv in netdevs.items():
@@ -168,7 +168,7 @@ class MCast(object):
             try:
                 # safe for this purpose; https://lwn.net/Articles/853637/
                 sck.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
-            except:
+            except (OSError, ValueError, TypeError, UnicodeDecodeError):
                 pass
 
             # most ipv6 clients expect multicast on linklocal ip only;
@@ -250,7 +250,7 @@ class MCast(object):
                     raise Exception()
 
                 sck.bind((grp, self.port, 0, srv.idx))
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 sck.bind(("", self.port, 0, srv.idx))
 
             bgrp = socket.inet_pton(socket.AF_INET6, self.grp6)

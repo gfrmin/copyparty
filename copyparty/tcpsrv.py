@@ -128,7 +128,7 @@ class TcpSrv(object):
         if nonlocals:
             try:
                 self.netdevs = self.detect_interfaces(self.args.i)
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 t = "failed to discover server IP addresses\n"
                 self.log("tcpsrv", t + min_ex(), 3)
                 self.netdevs = {}
@@ -289,7 +289,7 @@ class TcpSrv(object):
 
         try:
             srv.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, False)
-        except:
+        except (OSError, ValueError, TypeError, UnicodeDecodeError):
             pass  # will create another ipv4 socket instead
 
         if getattr(self.args, "freebind", False):
@@ -376,13 +376,13 @@ class TcpSrv(object):
                 srv.listen(self.args.nc)
                 try:
                     ok = srv.getsockopt(socket.SOL_SOCKET, socket.SO_ACCEPTCONN)
-                except:
+                except (OSError, ValueError, TypeError, UnicodeDecodeError):
                     ok = 1  # macos
 
                 if not ok:
                     # some linux don't throw on listen(0.0.0.0) after listen(::)
                     raise Exception("failed to listen on {}".format(srv.getsockname()))
-            except:
+            except (OSError, ValueError, TypeError, UnicodeDecodeError):
                 if ip == "0.0.0.0" and ("::", port) in bound:
                     # dualstack
                     srv.close()
@@ -640,7 +640,7 @@ class TcpSrv(object):
                 tw, th = termsize()
                 tsz = min(tw // 2, th)
                 zoom = 1 if qrc.size + pad * 2 >= tsz else 2
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 zoom = 1
 
         qr = qr2txt(qrc, zoom, pad)
@@ -694,5 +694,5 @@ class TcpSrv(object):
     def _h2i(self, hs):
         try:
             return tuple(int(hs[i : i + 2], 16) for i in (0, 2, 4))
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             return None

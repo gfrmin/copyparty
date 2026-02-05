@@ -55,7 +55,7 @@ def have_ff(scmd: str) -> bool:
         try:
             sp.Popen(acmd, stdout=sp.PIPE, stderr=sp.PIPE).communicate()
             return True
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             return False
     else:
         return bool(shutil.which(scmd))
@@ -92,7 +92,7 @@ class MParser(object):
                 if bos.path.exists(bp):
                     self.bin = bp
                     return
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 pass
 
             arg, args = args.split(",", 1)
@@ -243,7 +243,7 @@ def parse_ffprobe(
             sk, sv = ln.split("=", 1)
             g[sk] = sv
             continue
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass
 
         if ln == "[STREAM]":
@@ -353,7 +353,7 @@ def parse_ffprobe(
             fa, fb = fps.split("/")
             try:
                 fps = float(fa) / float(fb)
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 fps = 9001
 
         if fps < 1000 and fmt.get("format_name") not in ["image2", "png_pipe"]:
@@ -676,7 +676,7 @@ class MTag(object):
                 try:
                     zs = os.getxattr(abspath, xattr)
                     ret[name] = zs.decode("utf-8", "replace")
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     pass
         return ret
 
@@ -742,7 +742,7 @@ class MTag(object):
                     v = str(md.info).split(".")[1]
                     if v.startswith("ogg"):
                         v = v[3:]
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     continue
 
             if not v:
@@ -833,7 +833,7 @@ class MTag(object):
                     for tag in tagname.split(","):
                         if tag and tag in zj:
                             ret[tag] = zj[tag]
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 if self.args.mtag_v:
                     t = "mtag error: tagname %r, parser %r, file %r => %r"
                     self.log(t % (tagname, parser.bin, abspath, min_ex()), 6)

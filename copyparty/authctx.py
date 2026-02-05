@@ -29,7 +29,7 @@ def resolve_credentials(headers, uparam, cookie_pw, args, asrv):
                 hpw = asrv.ah.hash(bauth)
                 if asrv.iacct.get(hpw):
                     break
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass
 
     pw = (

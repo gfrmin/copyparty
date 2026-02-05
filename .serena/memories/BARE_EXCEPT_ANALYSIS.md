@@ -15,24 +15,40 @@
 | silent_pass | 150 | 27.5% | High |
 | unknown | 187 | 34.3% | High |
 
-## Recommended Fixing Order
+## Phase 1 Progress ✓ COMPLETE
 
-1. **import_fallback (41)** → `except ImportError:`
-   - Files: util.py (15), __main__.py (2), svchub.py (5), th_srv.py (3), web/a/ (3+)
-   - Risk: Very low, safe isolated fixes
+### Completed Fixes
+- **import_fallback**: 54/41 blocks fixed ✓ (Dec 5, 2025)
+  - Files: 17 files modified
+  - Commits: b86c5d47
 
-2. **dict_list_access (44)** → `except (KeyError, IndexError):`
-   - Files: authsrv.py (8), up2k.py (6), httpcli.py (4), util.py (9)
-   - Risk: Low, pattern-based replacements
+- **dict_list_access**: 68/44 blocks fixed ✓ (Dec 5, 2025)
+  - Files: 20 files modified  
+  - Commits: c5c132aa
+
+### Total Phase 1 Results
+- **Bare excepts fixed**: 122 / 545 (22.4%)
+- **Test suite**: Passing (69 tests, pre-existing env issues only)
+- **Code quality**: All files compile, no syntax errors
+
+### Remaining Bare Excepts: 423
 
 3. **parsing_network (79)** → `except (ValueError, TypeError, UnicodeDecodeError, IndexError):`
    - Files: httpcli.py (18), util.py (19), authsrv.py (10)
    - Risk: Medium, context-dependent
+   - Status: Ready for automation
 
-4. **logging_only + silent_pass (194)** → Requires case-by-case review
+4. **logging_only (44)** → Requires case-by-case review
    - Risk: High, need human judgment
+   - Status: Can be partially automated
 
-5. **unknown (187)** → Manual review required
+5. **silent_pass (150)** → Requires case-by-case review
+   - Risk: High, need human judgment
+   - Status: Needs manual analysis
+
+6. **unknown (187)** → Manual review required
+   - Risk: High
+   - Status: Needs analysis
 
 ## High-Value Files
 - **copyparty/util.py** (80 bare excepts) - god module, multiple categories

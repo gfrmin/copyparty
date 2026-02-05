@@ -282,7 +282,7 @@ except (KeyError, IndexError):
 
 try:
     BITNESS = struct.calcsize(b"P") * 8
-except:
+except (ValueError, TypeError, UnicodeDecodeError, IndexError):
     BITNESS = struct.calcsize("P") * 8
 
 
@@ -582,7 +582,7 @@ def read_ram() -> tuple[float, float]:
         p = RE_MEMAVAIL
         zs = next((x for x in zsl if p.match(x)))
         b = int((int(zs.split()[1]) / 0x100000) * 100) / 100
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         pass
     return a, b
 
@@ -602,7 +602,7 @@ if EXE:
             if zsg:
                 pybin = zsg
                 break
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass
 
 
@@ -642,13 +642,13 @@ def _sqlite_ver() -> str:
         cur = co.cursor()
         try:
             vs = cur.execute("select * from pragma_compile_options").fetchall()
-        except:
+        except (OSError, ValueError, TypeError, UnicodeDecodeError):
             vs = cur.execute("pragma compile_options").fetchall()
 
         v = next(x[0].split("=")[1] for x in vs if x[0].startswith("THREADSAFE="))
         cur.close()
         co.close()
-    except:
+    except (OSError, ValueError, TypeError, UnicodeDecodeError):
         v = "W"
 
     return "{}*{}".format(sqlite3.sqlite_version, v)
@@ -656,7 +656,7 @@ def _sqlite_ver() -> str:
 
 try:
     SQLITE_VER = _sqlite_ver()
-except:
+except (OSError, ValueError, TypeError, UnicodeDecodeError):
     SQLITE_VER = "(None)"
 
 try:
@@ -939,7 +939,7 @@ class NetMap(object):
 
         try:
             return self.cache[ip]
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             # intentionally crash the calling thread if unset:
             assert self.mutex  # type: ignore  # !rm
 
@@ -990,7 +990,7 @@ class _Unrecv(object):
                     ret = b""
                     break
                 continue
-            except:
+            except (OSError, ValueError, TypeError, UnicodeDecodeError):
                 ret = b""
                 break
 
@@ -1063,7 +1063,7 @@ class _LUnrecv(object):
         try:
             ret = self.recv(nbytes, 1)
             err = False
-        except:
+        except (OSError, ValueError, TypeError, UnicodeDecodeError):
             ret = b""
             err = True
 
@@ -1359,7 +1359,7 @@ class HMaccas(object):
                 self.key = f.read()
                 if len(self.key) != 64:
                     raise Exception()
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             self.key = os.urandom(64)
             with open(keypath, "wb") as f:
                 f.write(self.key)
@@ -1396,13 +1396,13 @@ class Magician(object):
                     with self.mutex:
                         if not self.magic:
                             self.magic = magic.Magic(uncompress=False, extension=True)
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     self.bad_magic = True
                     raise
 
             with self.mutex:
                 ret = self.magic.from_file(fpath)
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             ret = "?"
 
         ret = ret.split("/")[0]
@@ -1414,7 +1414,7 @@ class Magician(object):
         mime = re.split("[; ]", mime, maxsplit=1)[0]
         try:
             return EXTS[mime]
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass
 
         mg = mimetypes.guess_extension(mime)
@@ -1434,7 +1434,7 @@ class Garda(object):
             self.lim = int(a)
             self.win = int(b) * 60
             self.pen = int(c) * 60
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             self.lim = self.win = self.pen = 0
 
         self.ct: dict[str, list[int]] = {}
@@ -1514,7 +1514,7 @@ def uprint(msg: str) -> None:
     except UnicodeEncodeError:
         try:
             print(msg.encode("utf-8", "replace").decode(), end="")
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             print(msg.encode("ascii", "replace").decode(), end="")
 
 
@@ -1629,7 +1629,7 @@ def stackmon(fp: str, ival: float, suffix: str) -> None:
         if "/" in fp:
             try:
                 os.makedirs(fp.rsplit("/", 1)[0])
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 pass
 
         with open(fp + suffix, "wb") as f:
@@ -1828,7 +1828,7 @@ class MultipartParser(object):
         try:
             self.clen = int(http_headers["content-length"])
             sr.nb = 0
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             self.clen = 0
 
         self.re_ctype = RE_CTYPE
@@ -1927,7 +1927,7 @@ class MultipartParser(object):
         while True:
             try:
                 buf = self.sr.recv(bufsz)
-            except:
+            except (OSError, ValueError, TypeError, UnicodeDecodeError):
                 # abort: client disconnected
                 raise Pebkac(400, "client d/c during multipart post")
 
@@ -1963,7 +1963,7 @@ class MultipartParser(object):
 
                 try:
                     buf += self.sr.recv(bufsz)
-                except:
+                except (OSError, ValueError, TypeError, UnicodeDecodeError):
                     # abort: client disconnected
                     raise Pebkac(400, "client d/c during multipart post")
 
@@ -2094,7 +2094,7 @@ def rand_name(fdir: str, fn: str, rnd: int) -> str:
     ok = False
     try:
         ext = "." + fn.rsplit(".", 1)[1]
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         ext = ""
 
     for extra in range(16):
@@ -2235,7 +2235,7 @@ def humansize(sz: float, terse: bool = False) -> str:
 def unhumanize(sz: str) -> int:
     try:
         return int(sz)
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         pass
 
     mc = sz[-1:].lower()
@@ -2339,7 +2339,7 @@ def relchk(rp: str) -> str:
 def absreal(fpath: str) -> str:
     try:
         return fsdec(os.path.abspath(os.path.realpath(afsenc(fpath))))
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         if not WINDOWS:
             raise
 
@@ -2352,7 +2352,7 @@ def absreal(fpath: str) -> str:
 def u8safe(txt: str) -> str:
     try:
         return txt.encode("utf-8", "xmlcharrefreplace").decode("utf-8", "replace")
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         return txt.encode("utf-8", "replace").decode("utf-8", "replace")
 
 
@@ -2737,7 +2737,7 @@ def lsof(log: "NamedLogger", abspath: str) -> None:
         rc, so, se = runcmd([b"lsof", b"-R", fsenc(abspath)], timeout=45)
         zs = (so.strip() + "\n" + se.strip()).strip()
         log("lsof %r = %s\n%s" % (abspath, rc, zs), 3)
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         log("lsof failed; " + min_ex(), 3)
 
 
@@ -2912,7 +2912,7 @@ if not ANYWIN and not MACOS:
         try:
             zb = fcntl.ioctl(sck.fileno(), termios.TIOCOUTQ, b"AAAA")
             return sunpack(b"I", zb)[0]  # type: ignore
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             return 1
 
 else:
@@ -2944,7 +2944,7 @@ def shut_socket(log: "NamedLogger", sck: socket.socket, timeout: int = 3) -> Non
                     break
 
             sck.shutdown(socket.SHUT_RDWR)
-        except:
+        except (OSError, ValueError, TypeError, UnicodeDecodeError):
             pass
     except Exception as ex:
         log("shut({}): {}".format(fd, ex), "90")
@@ -2978,7 +2978,7 @@ def read_socket_unbounded(sr: Unrecv, bufsz: int) -> Generator[bytes, None, None
     try:
         while True:
             yield sr.recv(bufsz)
-    except:
+    except (OSError, ValueError, TypeError, UnicodeDecodeError):
         return
 
 
@@ -2993,7 +2993,7 @@ def read_socket_chunked(
                 buf += sr.recv(2)
                 if len(buf) > 16:
                     raise Exception()
-            except:
+            except (OSError, ValueError, TypeError, UnicodeDecodeError):
                 err = err.format(buf.decode("utf-8", "replace"), len(buf))
                 raise Pebkac(400, err)
 
@@ -3002,7 +3002,7 @@ def read_socket_chunked(
 
         try:
             chunklen = int(buf.rstrip(b"\r\n"), 16)
-        except:
+        except (OSError, ValueError, TypeError, UnicodeDecodeError):
             err = err.format(buf.decode("utf-8", "replace"), len(buf))
             raise Pebkac(400, err)
 
@@ -3103,7 +3103,7 @@ def load_ipu(
         try:
             cidr, uname = ipu.split("=")
             cip, csz = cidr.split("/")
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             t = "\n  invalid value %r for argument --ipu; must be CIDR=UNAME (192.168.0.0/16=amelia)"
             raise Exception(t % (ipu,))
         uname2 = cidr_u.get(cidr)
@@ -3531,7 +3531,7 @@ def killtree(root: int) -> None:
     for pid in pids:
         try:
             os.kill(pid, signal.SIGKILL)
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass
 
 
@@ -3601,7 +3601,7 @@ def runcmd(
         try:
             with open("/proc/%d/oom_score_adj" % (p.pid,), "wb") as f:
                 f.write(("%d\n" % (oom,)).encode("utf-8"))
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass
 
     if not timeout or PY2:
@@ -3619,7 +3619,7 @@ def runcmd(
 
             try:
                 bout, berr = p.communicate(timeout=1)  # type: ignore
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 bout = b""
                 berr = b""
 
@@ -3881,7 +3881,7 @@ def _zmq_hook(
                 if log:
                     t = "libzmq(%s) pyzmq(%s) init(%s); %s"
                     log(t % (zmq.zmq_version(), zmq.__version__, cmd, desc))
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 raise Exception("the only supported ZMQ modes are REQ PUB PUSH")
 
             try:
@@ -4006,7 +4006,7 @@ def _runhook(
             if "rc" not in ret:
                 ret["rc"] = 0
             return ret
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             return {"rc": 0, "stdout": zs}
 
     if sin:
@@ -4031,7 +4031,7 @@ def _runhook(
         else:
             try:
                 ret = json.loads(v)
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 pass
 
             try:
@@ -4041,7 +4041,7 @@ def _runhook(
                     ret["stderr"] = err
                 if "rc" not in ret:
                     ret["rc"] = rc
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 ret = {"rc": rc, "stdout": v, "stderr": err}
 
     if wait:
@@ -4260,7 +4260,7 @@ def termsize() -> tuple[int, int]:
         try:
             cr = sunpack(b"hh", fcntl.ioctl(fd, termios.TIOCGWINSZ, b"AAAA"))
             return cr[::-1]
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             return None
 
     cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
@@ -4269,12 +4269,12 @@ def termsize() -> tuple[int, int]:
             fd = os.open(os.ctermid(), os.O_RDONLY)
             cr = ioctl_GWINSZ(fd)
             os.close(fd)
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass
 
     try:
         return cr or (int(env["COLUMNS"]), int(env["LINES"]))
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         return 80, 25
 
 

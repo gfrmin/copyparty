@@ -147,7 +147,7 @@ class HCli(object):
         tls = url.scheme.lower() == "https"
         try:
             addr, port = url.netloc.split(":")
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             addr = url.netloc
             port = 443 if tls else 80
 
@@ -227,7 +227,7 @@ class HCli(object):
                 self.ar.cxp = 4
             c.close()
             raise
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             c.close()
             raise
 
@@ -336,7 +336,7 @@ class FileSlice(object):
         try:
             for fun in funs.split():
                 setattr(self, fun, getattr(self.f, fun))
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass  # py27 probably
 
     def close(self, *a, **ka):
@@ -497,7 +497,7 @@ def termsize():
     try:
         w, h = os.get_terminal_size()
         return w, h
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         pass
 
     env = os.environ
@@ -519,12 +519,12 @@ def termsize():
             fd = os.open(os.ctermid(), os.O_RDONLY)
             cr = ioctl_GWINSZ(fd)
             os.close(fd)
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass
 
     try:
         return cr or (int(env["COLUMNS"]), int(env["LINES"]))
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         return 80, 25
 
 
@@ -661,7 +661,7 @@ def walkdirs(err, tops, excl):
                 ap = os.path.abspath(os.path.realpath(td))
                 if td[-1:] in (b"\\", b"/"):
                     ap += sep
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 # maybe cpython #88013 (ok)
                 ap = td
 
@@ -875,7 +875,7 @@ def handshake(ar, file, search):
 
     try:
         r = json.loads(txt)
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         raise Exception(txt)
 
     if search:
@@ -1229,7 +1229,7 @@ class Ctl(object):
                         dp = os.path.join(top, rd)
                         try:
                             lnodes = set(os.listdir(dp))
-                        except:
+                        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                             lnodes = list(ls)  # fs eio; don't delete
                         if ptn:
                             zs = dp.replace(sep, b"/").rstrip(b"/") + b"/"
@@ -1714,7 +1714,7 @@ NOTE: if server has --usernames enabled, then password is "username:password"
             break
         except KeyboardInterrupt:
             raise
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             if n > ar.rh - 2:
                 raise
 

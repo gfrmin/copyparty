@@ -79,7 +79,7 @@ class Fstab(object):
         vid = path.split(":", 1)[0].strip("\\").split("\\", 1)[0]
         try:
             return "{}*{}".format(vid, bos.stat(path).st_dev)
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             return vid
 
     def build_fallback(self) -> None:
@@ -143,7 +143,7 @@ class Fstab(object):
                 fs, mp = zsl
                 if mp in fuses:
                     dtab[mp] = fs
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass
 
         tab1 = list(dtab.items())
@@ -189,7 +189,7 @@ class Fstab(object):
             try:
                 self.build_tab()
                 self.trusted = True
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 # prisonparty or other restrictive environment
                 if not self.warned:
                     self.warned = True

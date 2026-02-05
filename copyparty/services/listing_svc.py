@@ -89,7 +89,7 @@ def build_listing(vn, rem, uname, can_read, can_write, can_dot):
 
             linf = stats_dict.get(fn) or bos.lstat(fspath)
             inf = bos.stat(fspath) if stat.S_ISLNK(linf.st_mode) else linf
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             # Skip broken symlinks and inaccessible files
             continue
 

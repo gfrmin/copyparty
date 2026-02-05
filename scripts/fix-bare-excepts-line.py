@@ -103,12 +103,62 @@ def fix_dict_list_access(lines: List[str], lineno: int) -> Optional[str]:
     return None
 
 
+def fix_parsing_network(lines: List[str], lineno: int) -> Optional[str]:
+    """Fix bare except in parsing/network context."""
+    idx = lineno - 1
+    line = lines[idx]
+
+    if not re.search(r'except\s*:\s*', line):
+        return None
+
+    # Check try block for parsing/network operations
+    indent = len(line) - len(line.lstrip())
+
+    # Look backwards for parsing/network patterns
+    for i in range(max(0, idx - 25), idx):
+        try_line = lines[i]
+
+        # Parsing/conversion patterns
+        if re.search(
+            r'\.(split|strip|parse|decode|encode|int|float|loads|dumps)\s*\(',
+            try_line
+        ):
+            new_line = re.sub(
+                r'except\s*:',
+                'except (ValueError, TypeError, UnicodeDecodeError, IndexError):',
+                line
+            )
+            return new_line
+
+        # JSON/unpacking patterns
+        if re.search(r'json\.|unpack\(', try_line):
+            new_line = re.sub(
+                r'except\s*:',
+                'except (ValueError, TypeError, UnicodeDecodeError, IndexError):',
+                line
+            )
+            return new_line
+
+        # Network/socket patterns
+        if re.search(r'\.(socket|recv|send|connect|accept|listen)\s*\(', try_line):
+            new_line = re.sub(
+                r'except\s*:',
+                'except (OSError, ValueError, TypeError, UnicodeDecodeError):',
+                line
+            )
+            return new_line
+
+    return None
+
+
 def fix_except_block(lines: List[str], lineno: int, category: str) -> Optional[str]:
     """Fix a bare except block based on category."""
     if category == "import_fallback":
         return fix_import_fallback(lines, lineno)
     elif category == "dict_list_access":
         return fix_dict_list_access(lines, lineno)
+    elif category == "parsing_network":
+        return fix_parsing_network(lines, lineno)
     return None
 
 
@@ -153,7 +203,7 @@ def main() -> None:
     category = sys.argv[1]
     dry_run = "--dry-run" in sys.argv
 
-    valid_categories = ["import_fallback", "dict_list_access"]
+    valid_categories = ["import_fallback", "dict_list_access", "parsing_network"]
     if category not in valid_categories:
         print(f"Invalid category: {category}")
         print(f"Valid categories: {', '.join(valid_categories)}")

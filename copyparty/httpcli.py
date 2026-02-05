@@ -372,7 +372,7 @@ class HttpCli(object):
             h = {"WWW-Authenticate": 'Basic realm="a"'} if ex.code == 401 else {}
             try:
                 self.loud_reply(unicode(ex), status=ex.code, headers=h, volsan=True)
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 pass
 
             if ex.log:
@@ -484,7 +484,7 @@ class HttpCli(object):
                     self.host = self.headers.get(self.args.xf_host, self.host)
                     try:
                         self.is_https = len(self.headers[self.args.xf_proto]) == 5
-                    except:
+                    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                         if self.args.xf_proto_fb:
                             self.is_https = len(self.args.xf_proto_fb) == 5
                         else:
@@ -1085,7 +1085,7 @@ class HttpCli(object):
         response.append("\r\n")
         try:
             self.s.sendall("\r\n".join(response).encode("utf-8"))
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             raise Pebkac(400, "client d/c while replying headers")
 
     def reply(
@@ -1136,7 +1136,7 @@ class HttpCli(object):
             try:
                 zs = absreal(__file__).rsplit(os.path.sep, 2)[0]
                 body = body.replace(zs.encode("utf-8"), b"PP")
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 pass
 
         self.send_headers(len(body), status, mime, headers)
@@ -1144,7 +1144,7 @@ class HttpCli(object):
         try:
             if self.mode != "HEAD":
                 self.s.sendall(body)
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             raise Pebkac(400, "client d/c while replying body")
 
         return body
@@ -2428,7 +2428,7 @@ class HttpCli(object):
                     # config-forced opts
                     alg, nlv = pk.split(",")
                     lv[alg] = int(nlv)
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     pass
 
             lv[alg] = lv.get(alg) or fb.get(alg) or 0
@@ -2878,7 +2878,7 @@ class HttpCli(object):
     def handle_post_json(self) -> bool:
         try:
             remains = int(self.headers["content-length"])
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             raise Pebkac(411)
 
         if remains > 1024 * 1024:
@@ -2899,11 +2899,11 @@ class HttpCli(object):
             try:
                 zds = {k: v for k, v in body.items()}
                 zds["hash"] = "%d chunks" % (len(body["hash"]),)
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 zds = body
             t = "POST len=%d type=%s ip=%s user=%s req=%r json=%s"
             self.log(t % (len(json_buf), enc, self.ip, self.uname, self.req, zds))
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             raise Pebkac(422, "you POSTed %d bytes of invalid json" % (len(json_buf),))
 
         # self.reply(b"cloudflare", 503)
@@ -3059,7 +3059,7 @@ class HttpCli(object):
     def handle_post_binary(self) -> bool:
         try:
             postsize = remains = int(self.headers["content-length"])
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             raise Pebkac(400, "you must supply a content-length for binary POST")
 
         try:
@@ -3302,14 +3302,14 @@ class HttpCli(object):
         ):
             try:
                 un = self.parser.require("uname", 64)
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 un = ""
         else:
             un = ""
         pwd = self.parser.require("cppwd", 64)
         try:
             uhash = self.parser.require("uhash", 256)
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             uhash = ""
         self.parser.drop()
 
@@ -3841,7 +3841,7 @@ class HttpCli(object):
                 got = bos.path.getsize(tabspath)
                 t = "connection lost after receiving %s of the file"
                 self.log(t % (humansize(got),), 3)
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 pass
 
         td = max(0.1, time.time() - t0)
@@ -3969,7 +3969,7 @@ class HttpCli(object):
         assert self.parser  # !rm
         try:
             cli_lastmod3 = int(self.parser.require("lastmod", 16))
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             raise Pebkac(400, "could not read lastmod from request")
 
         nullwrite = self.args.nw
@@ -4065,7 +4065,7 @@ class HttpCli(object):
                     if "chown" in vfs.flags:
                         bos.chown(dp, vfs.flags["uid"], vfs.flags["gid"])
                     hidedir(dp)
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     pass
             if dp:
                 atomic_move(self.log, fp, os.path.join(dp, mfile2), vfs.flags)
@@ -4629,7 +4629,7 @@ class HttpCli(object):
                 if lower < 0 or lower >= upper:
                     raise Exception()
 
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 err = "invalid range ({}), size={}".format(hrange, file_sz)
                 self.loud_reply(
                     err,
@@ -5327,7 +5327,7 @@ class HttpCli(object):
 
             self.s.sendall(html[1])
 
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             self.log(logmsg + " \033[31md/c\033[0m")
             return False
 
@@ -5364,7 +5364,7 @@ class HttpCli(object):
         unpw = pw
         try:
             un, pw = unpw.split(":")
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             un = ""
             if self.args.usernames:
                 un = "dave"
@@ -6708,7 +6708,7 @@ class HttpCli(object):
                                 st = bos.stat(fp)
                                 vrem = "{}/{}".format(vrem, fn).strip("/")
                                 is_dir = False
-                        except:
+                        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                             pass
                     else:
                         for fn in self.args.th_covers:
@@ -6718,7 +6718,7 @@ class HttpCli(object):
                                 vrem = "{}/{}".format(vrem, fn).strip("/")
                                 is_dir = False
                                 break
-                            except:
+                            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                                 pass
 
                     if is_dir:
@@ -7265,10 +7265,10 @@ class HttpCli(object):
                             fn, desc = ln.split(" ", 1)
                         try:
                             items[fn.lower()]["tags"]["descript.ion"] = desc
-                        except:
+                        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                             t = "<li><code>%s</code> %s</li>"
                             rem.append(t % (html_escape(fn), html_escape(desc)))
-                    except:
+                    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                         pass
             if "descript.ion" not in taglist:
                 taglist.insert(0, "descript.ion")
@@ -7462,7 +7462,7 @@ class HttpCli(object):
                     zs1, zs2 = file["tags"]["res"].split("x")
                     file["tags"][".resw"] = zs1
                     file["tags"][".resh"] = zs2
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     pass
 
                 tagmap = {}

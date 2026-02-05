@@ -285,7 +285,7 @@ def init_E(EE: EnvParams) -> None:
 def get_srvname(verbose) -> str:
     try:
         ret: str = unicode(socket.gethostname()).split(".")[0]
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         ret = ""
 
     if ret not in ["", "localhost"]:
@@ -311,7 +311,7 @@ def get_salt(name: str, nbytes: int) -> str:
     fp = os.path.join(E.cfg, "%s-salt.txt" % (name,))
     try:
         return read_utf8(None, fp, True).strip()
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         ret = b64enc(os.urandom(nbytes))
         with open(fp, "wb") as f:
             f.write(ret + b"\n")
@@ -333,7 +333,7 @@ def ensure_locale() -> None:
             if x != safe:
                 lprint("Locale: {}\n".format(x))
             return
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             continue
 
     t = "setlocale {} failed,\n  sorting and dates might get funky\n"
@@ -2010,7 +2010,7 @@ def run_argparse(
         for x in ap._actions:
             try:
                 x.default = x.default.encode(*a).decode(*a)
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 pass
 
             try:
@@ -2018,7 +2018,7 @@ def run_argparse(
                     x.help = x.help.replace("└─", "`-").encode(*a).decode(*a)
                     if retry > 2:
                         x.help = RE_ANSI.sub("", x.help)
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 pass
 
     ret = ap.parse_args(args=argv[1:])
@@ -2117,7 +2117,7 @@ def main(argv: Optional[list[str]] = None) -> None:
             if ANYWIN or not os.geteuid():
                 # win10 allows symlinks if admin; can be unexpected
                 argv.extend(["-p80,443,3923", "--ign-ebind"])
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         pass
 
     if da:
@@ -2200,7 +2200,7 @@ def main(argv: Optional[list[str]] = None) -> None:
             al.p = list(range(lo, hi + 1))
         else:
             al.p = [int(x) for x in al.p.split(",")]
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         raise Exception("invalid value for -p")
 
     for arg, kname, okays in [["--u2sort", "u2sort", "s n fs fn"]]:

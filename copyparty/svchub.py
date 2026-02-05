@@ -541,7 +541,7 @@ class SvcHub(object):
                         raise Exception(zs % (desc, native_ver, sver))
 
                     cur.execute(sanchk_q).fetchone()
-                except:
+                except (OSError, ValueError, TypeError, UnicodeDecodeError):
                     if sver:
                         raise
                     sver = createfun(cur)
@@ -705,7 +705,7 @@ class SvcHub(object):
             if len(zil) > 1:
                 raise Exception()
             owner = zil[0][0]
-        except:
+        except (OSError, ValueError, TypeError, UnicodeDecodeError):
             owner = 0
 
         if not lock_file(db_lock):
@@ -1682,7 +1682,7 @@ class SvcHub(object):
             except UnicodeEncodeError:
                 try:
                     print(msg.encode("utf-8", "replace").decode(), end="")
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     print(msg.encode("ascii", "replace").decode(), end="")
             except OSError as ex:
                 if ex.errno != errno.EPIPE:
@@ -1759,7 +1759,7 @@ class SvcHub(object):
             sck = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
             sck.connect(addr)
             sck.sendall(b"READY=1")
-        except:
+        except (OSError, ValueError, TypeError, UnicodeDecodeError):
             self.log("sd_notify", min_ex())
 
     def log_stacks(self) -> None:

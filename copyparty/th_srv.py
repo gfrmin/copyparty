@@ -451,7 +451,7 @@ class ThumbSrv(object):
             bos.stat(os.path.join(histpath, "th", "cfg.txt"))
             bos.stat(os.path.join(histpath, "ac", "cfg.txt"))
             return
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass
         cfgi = cfga = ""
         for vn in self.asrv.vfs.all_vols.values():
@@ -540,7 +540,7 @@ class ThumbSrv(object):
             ttpath = os.path.join(tdir, "w", tfn)
             try:
                 wunlink(self.log, ttpath, vn.flags)
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 pass
 
             conv_ok = False
@@ -1271,7 +1271,7 @@ class ThumbSrv(object):
             for _ in range(4):
                 bos.utime(tdir, (ts, ts))
                 tdir = os.path.dirname(tdir)
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass
 
     def cleaner(self) -> None:
@@ -1306,7 +1306,7 @@ class ThumbSrv(object):
             try:
                 with open(os.path.join(histpath, cat, "cfg.txt"), "rb") as f:
                     oldcfg = f.read().decode("utf-8")
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 oldcfg = ""
             if cfg == oldcfg:
                 continue

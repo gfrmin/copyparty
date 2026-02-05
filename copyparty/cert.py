@@ -94,7 +94,7 @@ def _read_crt(args, fn):
         if ex.errno == errno.ENOENT:
             raise
         return 0, {}
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         return 0, {}
 
 
@@ -132,7 +132,7 @@ def _gen_ca(log: "RootLogger", args):
     bname = os.path.join(args.crt_dir, "ca")
     try:
         wunlink(nlog, bname + ".key", VF)
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         pass
     atomic_move(nlog, bname + "-key.pem", bname + ".key", VF)
     wunlink(nlog, bname + ".csr", VF)
@@ -226,7 +226,7 @@ def _gen_srv(log: "RootLogger", args, netdevs: dict[str, Netdev]):
     bname = os.path.join(args.crt_dir, "srv")
     try:
         wunlink(nlog, bname + ".key", VF)
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         pass
     atomic_move(nlog, bname + "-key.pem", bname + ".key", VF)
     wunlink(nlog, bname + ".csr", VF)

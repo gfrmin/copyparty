@@ -70,7 +70,7 @@ MON3 = {b: a for a, b in enumerate(MON3S.split(), 1)}
 def print(*args, **kwargs):
     try:
         builtins.print(*list(args), **kwargs)
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         builtins.print(termsafe(" ".join(str(x) for x in args)), **kwargs)
 
 
@@ -114,7 +114,7 @@ def termsafe(txt):
     enc = sys.stdout.encoding
     try:
         return txt.encode(enc, "backslashreplace").decode(enc)
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         return txt.encode(enc, "replace").decode(enc)
 
 
@@ -267,7 +267,7 @@ class Gateway(object):
         try:
             self.web_host, self.web_port = ui.netloc.split(":")
             self.web_port = int(self.web_port)
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             self.web_host = ui.netloc
             if ui.scheme == "http":
                 self.web_port = 80
@@ -496,7 +496,7 @@ class Gateway(object):
                 try:
                     sz = int(fsize)
                     ts = calendar.timegm(time.strptime(fdate, "%Y-%m-%d %H:%M:%S"))
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     info("bad HTML or OS %r %r\n%r", fdate, fsize, line)
                     # python cannot strptime(1959-01-01) on windows
 
@@ -546,7 +546,7 @@ class Gateway(object):
                     fdate = "%s-%02d-%s %s" % (year, MON3[smon], day, hm)
                     ts = calendar.timegm(time.strptime(fdate, "%Y-%m-%d %H:%M"))
                     sz = -1 if fsize == "-" else int(fsize)
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     info("bad HTML or OS %r %r\n%r", fdate, fsize, line)
 
                 if sz == -1:
@@ -597,7 +597,7 @@ class Gateway(object):
                 try:
                     ts = calendar.timegm(time.strptime(fdate, "%Y-%m-%d %H:%M %p"))
                     sz = -1 if fsize == "&lt;dir&gt;" else int(fsize)
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     info("bad HTML or OS %r %r\n%r", fdate, fsize, line)
 
                 if sz == -1:
@@ -989,7 +989,7 @@ class CPPF(Operations):
 
         try:
             dirpath, fname = path.rsplit("/", 1)
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             dirpath = ""
             fname = path
 
@@ -1003,7 +1003,7 @@ class CPPF(Operations):
             ret = dents[fname]
             dbg("s=%r", ret)
             return ret
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass
 
         fun = info

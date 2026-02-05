@@ -210,19 +210,19 @@ class Tftpd(object):
             try:
                 # this is the listen loop; it should block forever
                 srv.listen(ip, self.port, af_family=fam, ports=ports)
-            except:
+            except (OSError, ValueError, TypeError, UnicodeDecodeError):
                 with self.mutex:
                     self.srv.remove(srv)
                     self.ips.remove(ip)
 
                 try:
                     srv.sock.close()
-                except:
+                except (OSError, ValueError, TypeError, UnicodeDecodeError):
                     pass
 
                 try:
                     bound = bool(srv.listenport)
-                except:
+                except (OSError, ValueError, TypeError, UnicodeDecodeError):
                     bound = False
 
                 if bound:

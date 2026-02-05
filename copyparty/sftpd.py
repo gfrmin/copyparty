@@ -378,7 +378,7 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
                 self.v2a(path, w=True)
                 self.log("ls(%s): [] (write-only)" % (path,))
                 return []  # display write-only folders as empty
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 pass
             if path not in self.vis:
                 self.log("ls(%s): EPERM" % (path,))
@@ -421,14 +421,14 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
     def stat(self, path: str) -> SATTR | int:
         try:
             return self._stat(path)
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             self.log("unhandled exception: %s" % (min_ex(),), 1)
             return SFTP_FAILURE
 
     def lstat(self, path: str) -> SATTR | int:
         try:
             return self._stat(path)
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             self.log("unhandled exception: %s" % (min_ex(),), 1)
             return SFTP_FAILURE
 
@@ -445,7 +445,7 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
                 return SFTP_PERMISSION_DENIED
             st = bos.stat(ap)
             self.log("stat(%s): %s" % (vp, st))
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             if vp not in self.vis:
                 self.log("stat(%s): ENOENT" % (vp,))
                 return SFTP_NO_SUCH_FILE
@@ -457,7 +457,7 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
     def open(self, path: str, flags: int, attr: SATTR) -> paramiko.SFTPHandle | int:
         try:
             return self._open(path, flags, attr)
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             self.log("unhandled exception: %s" % (min_ex(),), 1)
             return SFTP_FAILURE
 
@@ -649,7 +649,7 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
     def mkdir(self, path: str, attr: SATTR) -> int:
         try:
             return self._mkdir(path, attr)
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             self.log("unhandled exception: %s" % (min_ex(),), 1)
             return SFTP_FAILURE
 
@@ -795,7 +795,7 @@ class Sftpd(object):
             srv.settimeout(0)  # == srv.setblocking(False)
             try:
                 srv.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, False)
-            except:
+            except (OSError, ValueError, TypeError, UnicodeDecodeError):
                 pass  # will create another ipv4 socket instead
             if getattr(self.args, "freebind", False):
                 srv.setsockopt(socket.SOL_IP, socket.IP_FREEBIND, 1)

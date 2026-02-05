@@ -41,7 +41,7 @@ def unixtime2dos(ts: int) -> bytes:
     bt = (th << 11) + (tm << 5) + ts // 2
     try:
         return spack(b"<HH", bt, bd)
-    except:
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
         return b"\x00\x00\x21\x00"
 
 

@@ -74,7 +74,7 @@ class FileRepository(object):
         if self._conn:
             try:
                 self._conn.commit()
-            except:
+            except (OSError, ValueError, TypeError, UnicodeDecodeError):
                 pass
             self._conn.close()
             self._conn = None
@@ -151,7 +151,7 @@ class FileRepository(object):
         sql = "select w, mt, sz, rd, fn, ip, at, un from up where rd = ? and fn = ?"
         try:
             rows = self.cur.execute(sql, (rd, fn)).fetchall()
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             rd2, fn2 = self._s3enc(rd, fn)
             rows = self.cur.execute(sql, (rd2, fn2)).fetchall()
         return rows[0] if rows else None

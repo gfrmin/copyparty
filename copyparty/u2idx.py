@@ -94,7 +94,7 @@ class U2idx(object):
             db = cur.connection
             try:
                 db.interrupt()
-            except:
+            except (OSError, ValueError, TypeError, UnicodeDecodeError):
                 pass
 
             cur.close()
@@ -312,7 +312,7 @@ class U2idx(object):
                     try:
                         v = calendar.timegm(time.strptime(str(v), fmt))
                         break
-                    except:
+                    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                         pass
 
             elif is_size:
@@ -339,7 +339,7 @@ class U2idx(object):
             if icase and "casefold(" in q:
                 try:
                     v = unicode(v).casefold()
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     v = unicode(v).lower()
 
             q += " {}?{} ".format(head, tail)

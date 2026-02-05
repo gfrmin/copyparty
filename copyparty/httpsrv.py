@@ -415,7 +415,7 @@ class HttpSrv(object):
                     self.log(self.name, t % (fno,), c=3)
                     try:
                         sck.close()  # type: ignore
-                    except:
+                    except (OSError, ValueError, TypeError, UnicodeDecodeError):
                         pass
                     time.sleep(0.02)
                     continue
@@ -494,7 +494,7 @@ class HttpSrv(object):
         for srv in self.srvs:
             try:
                 srv.close()
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 pass
 
         thrs = []

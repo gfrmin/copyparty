@@ -69,7 +69,7 @@ class StreamTar(StreamArc):
         try:
             cmp, zs = cmp.replace(":", ",").split(",")
             lv = int(zs)
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             lv = -1
 
         arg = {"name": None, "fileobj": self.qfile, "mode": "w", "format": fmt}

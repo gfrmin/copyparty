@@ -50,7 +50,7 @@ EXE = bool(getattr(sys, "frozen", False))
 
 try:
     CORES = len(os.sched_getaffinity(0))
-except:
+except (ValueError, TypeError, UnicodeDecodeError, IndexError):
     CORES = (os.cpu_count() if hasattr(os, "cpu_count") else 0) or 2
 
 # all embedded resources to be retrievable over http

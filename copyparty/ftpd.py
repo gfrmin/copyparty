@@ -370,7 +370,7 @@ class FtpFs(AbstractedFS):
                 try:
                     self.hub.asrv.vfs.get(vn.vpath, self.uname, True, False)
                     ret.append(vn.vpath)
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     pass
 
             ret.sort()

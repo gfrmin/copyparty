@@ -57,7 +57,7 @@ class PWHash(object):
         with self.mutex:
             try:
                 return self.cache[plain]
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 pass
 
             if not plain:
@@ -94,7 +94,7 @@ class PWHash(object):
             blksz = int(self.ac[2])
             para = int(self.ac[3])
             ramcap = int(self.ac[4]) * 1024 * 1024
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass
 
         cfg = {"salt": self.salt, "n": cost, "r": blksz, "p": para, "dklen": 24}
@@ -120,7 +120,7 @@ class PWHash(object):
             mem_cost = int(self.ac[1])
             parallelism = int(self.ac[2])
             version = int(self.ac[3])
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass
 
         bplain = plain.encode("utf-8")

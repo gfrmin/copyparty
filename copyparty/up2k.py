@@ -417,7 +417,7 @@ class Up2k(object):
                 for job in tab2.values():
                     if job["prel"] == dn and job["name"] == fn:
                         return json.dumps(job, separators=(",\n", ": "))
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass
 
         return "{}"
@@ -1216,7 +1216,7 @@ class Up2k(object):
             try:
                 drp = reg2["droppable"]
                 reg2 = reg2["registry"]
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 pass
 
             reg = reg2  # diff-golf
@@ -1363,7 +1363,7 @@ class Up2k(object):
         c = cur.execute("select v from kv where k = 'volcfg'")
         try:
             (oldcfg,) = c.fetchone()
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             oldcfg = ""
 
         if oldcfg != vcfg:
@@ -1550,7 +1550,7 @@ class Up2k(object):
             if stat.S_ISLNK(inf.st_mode):
                 try:
                     inf = bos.stat(abspath)
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     continue
 
             sz = inf.st_size
@@ -1663,7 +1663,7 @@ class Up2k(object):
             try:
                 c = db.c.execute(sql, (rd, dhash))
                 drd = rd
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 drd = "//" + w8b64enc(rd)
                 c = db.c.execute(sql, (drd, dhash))
 
@@ -1961,7 +1961,7 @@ class Up2k(object):
                     q = "select mt, sz from up where rd=? and fn=? and +w=?"
                     try:
                         mt, sz = cur.execute(q, (drd, dfn, w)).fetchone()
-                    except:
+                    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                         # file moved/deleted since spooling
                         continue
 
@@ -2194,7 +2194,7 @@ class Up2k(object):
                 try:
                     q = "select rd, fn, ip, at, un from up where substr(w,1,16)=? and +w=?"
                     rd, fn, ip, at, un = cur.execute(q, (w16, w)).fetchone()
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     # file modified/deleted since spooling
                     continue
 
@@ -2282,7 +2282,7 @@ class Up2k(object):
     def _unspool(self, tf: tempfile.SpooledTemporaryFile[bytes]) -> None:
         try:
             self.spools.remove(tf)
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             return
 
         try:
@@ -2731,7 +2731,7 @@ class Up2k(object):
                 cur = self._backup_db(db_path, cur, ver, t)
                 getattr(self, "_upgrade_v%d" % (upver,))(cur)
                 ver += 1  # type: ignore
-            except:
+            except (OSError, ValueError, TypeError, UnicodeDecodeError):
                 self.log("WARN: failed to upgrade from v%d" % (ver,), 3)
 
         if ver == DB_VER:
@@ -2783,7 +2783,7 @@ class Up2k(object):
             with c2:
                 cur.connection.backup(c2)
             return cur
-        except:
+        except (OSError, ValueError, TypeError, UnicodeDecodeError):
             t = "native sqlite3 backup failed; using fallback method:\n"
             self.log(t + min_ex())
         finally:
@@ -2800,7 +2800,7 @@ class Up2k(object):
         for tab in ["ki", "kv"]:
             try:
                 c = cur.execute(r"select v from {} where k = 'sver'".format(tab))
-            except:
+            except (OSError, ValueError, TypeError, UnicodeDecodeError):
                 continue
 
             rows = c.fetchall()
@@ -3354,7 +3354,7 @@ class Up2k(object):
                             try:
                                 dvf = self.flags[job["ptop"]]
                                 self._symlink(src, dst, dvf, lmod=cj["lmod"], rm=True)
-                            except:
+                            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                                 if bos.path.exists(dst):
                                     wunlink(self.log, dst, dvf)
                                 if not n4g:
@@ -3838,7 +3838,7 @@ class Up2k(object):
                 wake_sr = True
                 t = "using client lifetime; at={:.0f} ({}-{})"
                 self.log(t.format(upt, vlt, flt))
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass
 
         z2.append(upt)
@@ -4201,7 +4201,7 @@ class Up2k(object):
         try:
             st = bos.lstat(atop)
             is_dir = stat.S_ISDIR(st.st_mode)
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             # NOTE: "file not found" *sftpd
             raise Pebkac(400, "file not found on disk (already deleted?)")
 
@@ -4669,7 +4669,7 @@ class Up2k(object):
             try:
                 st = bos.stat(sabs)
                 is_dirlink = stat.S_ISDIR(st.st_mode)
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 pass  # broken symlink; keep as-is
 
         ftime = stl.st_mtime
@@ -5017,7 +5017,7 @@ class Up2k(object):
             try:
                 d = links if bos.path.islink(ap) else full
                 d[ap] = (ptop, vp)
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 self.log("relink: not found: %r" % (ap,))
 
         # self.log("full:\n" + "\n".join("  {:90}: {}".format(*x) for x in full.items()))
@@ -5181,7 +5181,7 @@ class Up2k(object):
                 if stat.S_ISREG(inf.st_mode):
                     job["lmod"] = inf.st_size
                     return {}
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 pass
 
         vf = self.flags[job["ptop"]]

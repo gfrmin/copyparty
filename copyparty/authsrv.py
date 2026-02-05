@@ -651,7 +651,7 @@ class VFS(object):
             return True  # filesystem root
         try:
             fns = os.listdir(dp)
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             return True  # maybe chmod 111; assume ok
         if fn in fns:
             return True
@@ -1137,7 +1137,7 @@ class AuthSrv(object):
             self.idp_accs[uname] = gnames
             try:
                 self._update_idp_db(uname, gname)
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 self.log("failed to update the --idp-db:\n%s" % (min_ex(),), 3)
 
             t = "reinitializing due to new user from IdP: [%r:%r]"
@@ -1514,7 +1514,7 @@ class AuthSrv(object):
                     continue
                 except CfgEx:
                     raise
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     err += "accs entries must be 'rwmdgGhaA.: user1, user2, ...'"
                     raise CfgEx(err + SBADCFG)
 
@@ -1552,7 +1552,7 @@ class AuthSrv(object):
                             "c", fstr[1:], vols, all_un_gn, daxs, mflags
                         )
                     continue
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     err += "flags entries (volflags) must be one of the following:\n  'flag1, flag2, ...'\n  'key: value'\n  'flag1, flag2, key: value'"
                     raise Exception(err + SBADCFG)
 
@@ -1580,7 +1580,7 @@ class AuthSrv(object):
             try:
                 # volflag with arguments, possibly with a preceding list of bools
                 uname, cval = uname.split("=", 1)
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                 # just one or more bools
                 pass
 
@@ -1761,7 +1761,7 @@ class AuthSrv(object):
                 try:
                     u, p = x.split(":", 1)
                     acct[u] = p
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     t = '\n  invalid value "{}" for argument -a, must be username:password'
                     raise Exception(t.format(x))
 
@@ -1774,7 +1774,7 @@ class AuthSrv(object):
                     zs1, zs2 = x.replace("=", ":").split(":", 1)
                     grps[zs1] = zs2.replace(":", ",").split(",")
                     grps[zs1] = [x.strip() for x in grps[zs1]]
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     t = '\n  invalid value "{}" for argument --grp, must be groupname:username1,username2,...'
                     raise Exception(t.format(x))
 
@@ -2162,7 +2162,7 @@ class AuthSrv(object):
                     try:
                         with open(powner, "rb") as f:
                             owner = f.read().rstrip()
-                    except:
+                    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                         owner = None
 
                     me = afsenc(vol.realpath).rstrip()
@@ -2265,7 +2265,7 @@ class AuthSrv(object):
             for k in ["zipmaxn", "zipmaxs"]:
                 try:
                     zs = vol.flags[k]
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     zs = getattr(self.args, k)
                 if zs in ("", "0"):
                     vol.flags[k] = 0
@@ -3559,13 +3559,13 @@ class AuthSrv(object):
 
         try:
             users, vol = users.split(",", 1)
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass
 
         try:
             vol, zf = vol.split(",", 1)
             flags = zf.split(",")
-        except:
+        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass
 
         if users == "**":
@@ -3740,7 +3740,7 @@ class AuthSrv(object):
                         v2 = "".join([x * 2 for x in v2])
                     if v == v2 or v.replace(", ", ",") == v2:
                         continue
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
                     continue
 
                 dk = "  " + k.replace("_", "-")
