@@ -12,9 +12,13 @@ Modules:
 """
 
 from .parsers import AccountParser, GroupParser, VolspecParser
+from .vfs_builder import VFSBuilder
+from .permissions import PermissionResolver
 
 __all__ = [
     "AccountParser",
     "GroupParser",
     "VolspecParser",
+    "VFSBuilder",
+    "PermissionResolver",
 ]
