@@ -293,7 +293,7 @@ class StreamZip(StreamArc):
                             mbuf = b""
                 except GeneratorExit:
                     raise
-                except:
+                except (KeyError, IndexError):
                     ex = min_ex(5, True).replace("\n", "\n-- ")
                     errors.append((f["vp"], ex))
 

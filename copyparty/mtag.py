@@ -319,7 +319,7 @@ def parse_ffprobe(
                     v2 = ret.get(rk)
                     if v2 is None or zf > v2:
                         ret[rk] = zf
-                except:
+                except (KeyError, IndexError):
                     # sqlite doesnt care but the code below does
                     if v1 not in ["N/A"]:
                         ret[rk] = v1
@@ -665,7 +665,7 @@ class MTag(object):
                 for xattr in zsl:
                     zb = os.getxattr(abspath, xattr)
                     ret[xattr] = zb.decode("utf-8", "replace")
-            except:
+            except (KeyError, IndexError):
                 self.log("failed to read xattrs from [%s]\n%s", abspath, min_ex(), 3)
         elif "db_xattr_yes" in vf:
             for xattr in vf["db_xattr_yes"]:
@@ -734,7 +734,7 @@ class MTag(object):
         ]:
             try:
                 v = getattr(md.info, attr)
-            except:
+            except (KeyError, IndexError):
                 if k != "ac":
                     continue
 

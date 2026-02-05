@@ -346,7 +346,7 @@ class HttpSrv(object):
                         ip = ipnorm(c.ip)
                         try:
                             ipfreq[ip] += 1
-                        except:
+                        except (KeyError, IndexError):
                             ipfreq[ip] = 1
 
                 ip, n = sorted(ipfreq.items(), key=lambda x: x[1], reverse=True)[0]

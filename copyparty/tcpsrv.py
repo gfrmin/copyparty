@@ -90,7 +90,7 @@ class TcpSrv(object):
                             self._listen(ipa, port)
                             ok[ipa].append(port)
                             successful_binds += 1
-                        except:
+                        except (KeyError, IndexError):
                             if dual and ":" in ipa:
                                 t = "listen on IPv6 [{}] failed; trying IPv4 {}...\n{}"
                                 self.log("tcpsrv", t.format(ipa, ips[1], min_ex()), 3)
@@ -195,7 +195,7 @@ class TcpSrv(object):
                 qrt = qr1 if is_ext else qr2
                 try:
                     qrt[ip].append(port)
-                except:
+                except (KeyError, IndexError):
                     qrt[ip] = [port]
 
                 if not self.args.wintitle:
@@ -220,7 +220,7 @@ class TcpSrv(object):
                 for tk, tv in hits:
                     try:
                         title_tab[tk][tv] = 1
-                    except:
+                    except (KeyError, IndexError):
                         title_tab[tk] = {tv: 1}
 
         if msgs:
@@ -260,7 +260,7 @@ class TcpSrv(object):
             if len(uds) > 3:
                 try:
                     uds_gid = int(uds[2])
-                except:
+                except (KeyError, IndexError):
                     import grp
 
                     uds_gid = grp.getgrnam(uds[2]).gr_gid
@@ -492,7 +492,7 @@ class TcpSrv(object):
             ext_ips = [x.split("/")[0] for x in ext_ips]
             if not ext_ips:
                 raise Exception()
-        except:
+        except (KeyError, IndexError):
             rt = self._defroute()
             ext_ips = [rt] if rt else []
 

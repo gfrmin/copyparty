@@ -310,7 +310,7 @@ class MDNS(MCast):
     def run(self) -> None:
         try:
             bound = self.create_servers()
-        except:
+        except (KeyError, IndexError):
             t = "no server IP matches the mdns config\n{}"
             self.log(t.format(min_ex()), 1)
             bound = []
@@ -377,7 +377,7 @@ class MDNS(MCast):
                 try:
                     buf, addr = sck.recvfrom(4096)
                     self.eat(buf, addr, sck)
-                except:
+                except (KeyError, IndexError):
                     if not self.running:
                         self.log("stopped", 2)
                         return

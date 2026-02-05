@@ -373,7 +373,7 @@ class ThumbSrv(object):
             try:
                 self.busy[tpath].append(cond)
                 self.log("joined waiting room for %r" % (tpath,))
-            except:
+            except (KeyError, IndexError):
                 thdir = os.path.dirname(tpath)
                 chmod = bos.MKD_700 if self.args.free_umask else bos.MKD_755
                 bos.makedirs(os.path.join(thdir, "w"), vf=chmod)
@@ -685,7 +685,7 @@ class ThumbSrv(object):
                 kw["crop"] = c
                 img = loader(w, kw)
                 break
-            except:
+            except (KeyError, IndexError):
                 if c == crops[-1]:
                     raise
 
@@ -944,7 +944,7 @@ class ThumbSrv(object):
                 infile = f.name
                 try:
                     self.untemp[tpath].append(infile)
-                except:
+                except (KeyError, IndexError):
                     self.untemp[tpath] = [infile]
 
             # fmt: off
@@ -1373,7 +1373,7 @@ class ThumbSrv(object):
                     ts = "yeahokay"
                 if len(b64) != 24 or len(ts) != 8 or ext not in exts:
                     raise Exception()
-            except:
+            except (KeyError, IndexError):
                 if f != "dir.txt" and f != "cfg.txt":
                     self.log("foreign file in thumbs dir: [{}]".format(fp), 1)
 

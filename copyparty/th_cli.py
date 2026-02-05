@@ -37,7 +37,7 @@ class ThumbCli(object):
             c = hsrv.th_cfg
             if not c:
                 raise Exception()
-        except:
+        except (KeyError, IndexError):
             c = {
                 k: set()
                 for k in ["thumbable", "pil", "vips", "raw", "ffi", "ffv", "ffa"]

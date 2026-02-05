@@ -358,7 +358,7 @@ class HttpCli(object):
                     self.headers[k.lower()] = zs.strip()
                     if zs.endswith(" HTTP/1.1") and RE_HTTP1.search(zs):
                         raise Exception()
-            except:
+            except (KeyError, IndexError):
                 headerlines = [repr(x) for x in headerlines]
                 msg = "#[ " + " ]\n#[ ".join(headerlines) + " ]"
                 raise Pebkac(400, "bad headers", log=msg)
@@ -422,7 +422,7 @@ class HttpCli(object):
                 zsl = zso.split(",")
                 try:
                     cli_ip = zsl[n].strip()
-                except:
+                except (KeyError, IndexError):
                     cli_ip = self.ip
                     self.bad_xff = True
                     if self.args.rproxy != 9999999:
@@ -1312,7 +1312,7 @@ class HttpCli(object):
             if "range" in self.headers:
                 try:
                     rval = self.headers["range"].split("=", 1)[1]
-                except:
+                except (KeyError, IndexError):
                     rval = self.headers["range"]
 
                 logmsg += " [\033[36m" + rval + "\033[0m]"
@@ -5752,7 +5752,7 @@ class HttpCli(object):
             )
             dots = self.uname in vn.axs.udot
             dk_sz = vn.flags.get("dk")
-        except:
+        except (KeyError, IndexError):
             dk_sz = None
             vfs_ls = []
             vfs_virt = {}
@@ -6626,7 +6626,7 @@ class HttpCli(object):
 
         try:
             st = bos.stat(abspath)
-        except:
+        except (KeyError, IndexError):
             if "on404" not in vn.flags:
                 return self.tx_404(not self.can_read)
 

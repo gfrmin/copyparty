@@ -353,7 +353,7 @@ class Lim(object):
     def nup(self, ip: str) -> None:
         try:
             self.nups[ip].append(time.time())
-        except:
+        except (KeyError, IndexError):
             self.nups[ip] = [time.time()]
 
     def bup(self, ip: str, nbytes: int) -> None:
@@ -361,7 +361,7 @@ class Lim(object):
         try:
             self.bups[ip].append(v)
             self.bupc[ip] += nbytes
-        except:
+        except (KeyError, IndexError):
             self.bups[ip] = [v]
             self.bupc[ip] = nbytes
 
@@ -953,7 +953,7 @@ class VFS(object):
                     try:
                         st = bos.stat(ap2)
                         break
-                    except:
+                    except (KeyError, IndexError):
                         if "/" not in ap2:
                             raise
                         ap2 = ap2.rsplit("/", 1)[0]
@@ -1336,7 +1336,7 @@ class AuthSrv(object):
             for un in uns:
                 try:
                     ret[un].append(gn)
-                except:
+                except (KeyError, IndexError):
                     ret[un] = [gn]
 
         return ret
@@ -1458,7 +1458,7 @@ class AuthSrv(object):
                         self.log(t % (u, zs1, zs2), 3)
                     self._l(ln, 5, "account [{}], password [{}]".format(u, p))
                     acct[u] = p
-                except:
+                except (KeyError, IndexError):
                     t = 'lines inside the [accounts] section must be "username: password"'
                     raise Exception(t + SBADCFG)
                 continue
@@ -1474,7 +1474,7 @@ class AuthSrv(object):
                         grps[gn].extend(uns)
                     else:
                         grps[gn] = uns
-                except:
+                except (KeyError, IndexError):
                     t = 'lines inside the [groups] section must be "groupname: user1, user2, user..."'
                     raise Exception(t + SBADCFG)
                 continue
@@ -1817,7 +1817,7 @@ class AuthSrv(object):
                     self.log(t.format(len(zst), "\n".join(zst)))
                     cfg_files_loaded = zst
 
-                except:
+                except (KeyError, IndexError):
                     lns = lns[: self.line_ctr]
                     slns = ["{:4}: {}".format(n, s) for n, s in enumerate(lns, 1)]
                     t = "\033[1;31m\nerror @ line {}, included from {}\033[0m"
@@ -1871,7 +1871,7 @@ class AuthSrv(object):
             if ehint:
                 try:
                     files = os.listdir(E.cfg)
-                except:
+                except (KeyError, IndexError):
                     files = []
                 hits = [
                     x
@@ -2459,7 +2459,7 @@ class AuthSrv(object):
                     zs1, zs2 = vol.flags[k + "try"].split("/")
                     vol.flags[k + "_t"] = float(zs1)
                     vol.flags[k + "_r"] = float(zs2)
-                except:
+                except (KeyError, IndexError):
                     t = 'volume "/%s" has invalid %stry [%s]'
                     raise Exception(t % (vol.vpath, k, vol.flags.get(k + "try")))
 
@@ -2580,7 +2580,7 @@ class AuthSrv(object):
                 for etv in vol.flags.get("ext_th") or []:
                     k, v = etv.split("=")
                     ext_th[k] = v
-            except:
+            except (KeyError, IndexError):
                 t = "WARNING: volume [/%s]: invalid value specified for ext-th: %s"
                 self.log(t % (vol.vpath, etv), 3)
 
@@ -3786,7 +3786,7 @@ class AuthSrv(object):
                 for uname in getattr(vol.axs, pkey):
                     try:
                         users[uname] += 1
-                    except:
+                    except (KeyError, IndexError):
                         users[uname] = 1
             lusers = [(v, k) for k, v in users.items()]
             vperms = {}
@@ -3800,7 +3800,7 @@ class AuthSrv(object):
                 pstr = pstr.replace("rwmd.a", "A")
                 try:
                     vperms[pstr].append(uname)
-                except:
+                except (KeyError, IndexError):
                     vperms[pstr] = [uname]
             for pstr, uname in vperms.items():
                 ret.append("    {}: {}".format(pstr, ", ".join(uname)))

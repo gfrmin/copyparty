@@ -134,7 +134,7 @@ class Fstab(object):
                 raise Exception()
             try:
                 so, _ = chkcmd(["lsblk", "-nrfo", "FSTYPE,MOUNTPOINT"])  # centos6
-            except:
+            except (KeyError, IndexError):
                 so, _ = chkcmd(["lsblk", "-nrfo", "FSTYPE,MOUNTPOINTS"])  # future
             for ln in so.split("\n"):
                 zsl = ln.split(" ", 1)

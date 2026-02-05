@@ -130,7 +130,7 @@ def rice_tid():
     tid = threading.current_thread().ident
     try:
         return riced_tids[tid]
-    except:
+    except (KeyError, IndexError):
         c = struct.unpack(b"B" * 5, struct.pack(b">Q", tid)[-5:])
         ret = "".join("\033[1;37;48;5;%dm%02x" % (x, x) for x in c) + "\033[0m"
         riced_tids[tid] = ret
@@ -332,7 +332,7 @@ class Gateway(object):
         tid = tid or get_tid()
         try:
             return self.conns[tid]
-        except:
+        except (KeyError, IndexError):
             info("new conn [{}] [{}]".format(self.web_host, self.web_port))
 
             args = {}

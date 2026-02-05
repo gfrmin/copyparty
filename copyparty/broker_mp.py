@@ -109,7 +109,7 @@ class BrokerMp(object):
 
                     # TODO will deadlock if dest performs another ipc
                     rv = try_exec(retq_id, obj, *args)
-                except:
+                except (KeyError, IndexError):
                     rv = ["exception", "stack", traceback.format_exc()]
 
                 if retq_id:

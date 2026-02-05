@@ -203,7 +203,7 @@ class MCast(object):
                 self.setup_socket(srv)
                 self.srv[sck] = srv
                 bound.append(ip)
-            except:
+            except (KeyError, IndexError):
                 t = "announce failed on {} [{}]:\n{}"
                 self.log(t.format(netdev, ip, min_ex()), 3)
                 sck.close()

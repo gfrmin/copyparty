@@ -1169,7 +1169,7 @@ class SvcHub(object):
                     al.idp_hm_usr_p[hn][zs1] = zs2
                 else:
                     al.idp_hm_usr_p[hn] = {zs1: zs2}
-            except:
+            except (KeyError, IndexError):
                 raise Exception("invalid --idp-hm-usr [%s]" % (zs0,))
 
         zs1 = ""
@@ -1223,14 +1223,14 @@ class SvcHub(object):
             zf1, zf2 = self.args.rm_retry.split("/")
             self.args.rm_re_t = float(zf1)
             self.args.rm_re_r = float(zf2)
-        except:
+        except (KeyError, IndexError):
             raise Exception("invalid --rm-retry [%s]" % (self.args.rm_retry,))
 
         try:
             zf1, zf2 = self.args.mv_retry.split("/")
             self.args.mv_re_t = float(zf1)
             self.args.mv_re_r = float(zf2)
-        except:
+        except (KeyError, IndexError):
             raise Exception("invalid --mv-retry [%s]" % (self.args.mv_retry,))
 
         al.js_utc = "false" if al.localtime else "true"
@@ -1554,7 +1554,7 @@ class SvcHub(object):
 
             self.log("root", "nailed it")
             ret = self.retcode
-        except:
+        except (KeyError, IndexError):
             self.pr("\033[31m[ error during shutdown ]\n{}\033[0m".format(min_ex()))
             raise
         finally:

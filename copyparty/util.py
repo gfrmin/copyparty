@@ -271,7 +271,7 @@ try:
     struct.unpack(b">i", b"idgi")
     spack = struct.pack  # type: ignore
     sunpack = struct.unpack  # type: ignore
-except:
+except (KeyError, IndexError):
 
     def spack(fmt: bytes, *a: Any) -> bytes:
         return struct.pack(fmt.decode("ascii"), *a)
@@ -1195,7 +1195,7 @@ class FHC(object):
             ce = self.cache[path]
             ce.all_fhs.add(fh)
             ce.fhs.append(fh)
-        except:
+        except (KeyError, IndexError):
             ce = self.CE(fh)
             self.cache[path] = ce
 
@@ -1367,7 +1367,7 @@ class HMaccas(object):
     def b(self, msg: bytes) -> str:
         try:
             return self.cache[msg]
-        except:
+        except (KeyError, IndexError):
             if len(self.cache) > 9000:
                 self.cache = {}
 
@@ -1483,7 +1483,7 @@ class Garda(object):
         now = int(time.time())
         try:
             self.ct[ip].append(now)
-        except:
+        except (KeyError, IndexError):
             self.ct[ip] = [now]
 
         if now - self.last_cln > 300:
@@ -1806,7 +1806,7 @@ def ren_open(fname: str, *args: Any, **kwargs: Any) -> tuple[typing.IO[Any], str
                 try:
                     # drop the leftmost sub-extension
                     _, ext = ext.split(".", 1)
-                except:
+                except (KeyError, IndexError):
                     # okay do the first letter then
                     ext = "." + ext[2:]
 
@@ -2067,7 +2067,7 @@ def read_header(sr: Unrecv, t_idle: int, t_tot: int) -> list[str]:
 
         try:
             ret += sr.recv(1024, t_idle // 2)
-        except:
+        except (KeyError, IndexError):
             if not ret:
                 return []
 
@@ -2710,7 +2710,7 @@ def s3enc(mem_cur: "sqlite3.Cursor", rd: str, fn: str) -> tuple[str, str]:
         try:
             mem_cur.execute("select * from a where b = ?", (v,))
             ret.append(v)
-        except:
+        except (KeyError, IndexError):
             ret.append("//" + w8b64enc(v))
             # self.log("mojien [{}] {}".format(v, ret[-1][2:]))
 
@@ -2760,7 +2760,7 @@ def set_ap_perms(ap: str, vf: dict[str, Any]) -> None:
 def trystat_shutil_copy2(log: "NamedLogger", src: bytes, dst: bytes) -> bytes:
     try:
         return shutil.copy2(src, dst)
-    except:
+    except (KeyError, IndexError):
         # ignore failed mtime on linux+ntfs; for example:
         # shutil.py:437 <copy2>: copystat(src, dst, follow_symlinks=follow_symlinks)
         # shutil.py:376 <copystat>: lookup("utime")(dst, ns=(st.st_atime_ns, st.st_mtime_ns),
@@ -3129,7 +3129,7 @@ def load_ipr(
         try:
             zs, uname = ipr.split("=")
             cidrs = zs.split(",")
-        except:
+        except (KeyError, IndexError):
             t = "\n  invalid value %r for argument --ipr; must be CIDR[,CIDR[,...]]=UNAME (192.168.0.0/16=amelia)"
             raise Exception(t % (ipr,))
         try:
@@ -3394,7 +3394,7 @@ def rmdirs_up(top: str, stop: str) -> tuple[list[str], list[str]]:
 
     try:
         os.rmdir(fsenc(top))
-    except:
+    except (KeyError, IndexError):
         return [], [top]
 
     par = os.path.dirname(top)
@@ -3874,7 +3874,7 @@ def _zmq_hook(
     with mtx:
         try:
             mode, sck, mtx = ZMQ[cmd]
-        except:
+        except (KeyError, IndexError):
             mode, uri = cmd.split(":", 1)
             try:
                 desc = ZMQ_DESC[mode]
@@ -3886,7 +3886,7 @@ def _zmq_hook(
 
             try:
                 ctx = ZMQ["ctx"]
-            except:
+            except (KeyError, IndexError):
                 ctx = ZMQ["ctx"] = zmq.Context()
 
             timeout = sp_ka["timeout"]
@@ -3932,7 +3932,7 @@ def _zmq_hook(
                     m = re.search("^return ([0-9]+)", ret[:12])
                     if m:
                         nret = int(m.group(1))
-            except:
+            except (KeyError, IndexError):
                 sck.close()
                 del ZMQ[cmd]  # bad state; must reset
                 raise Exception("ack timeout; zmq socket killed")

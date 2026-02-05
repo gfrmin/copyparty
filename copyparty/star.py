@@ -143,7 +143,7 @@ class StreamTar(StreamArc):
 
             try:
                 self.ser(f)
-            except:
+            except (KeyError, IndexError):
                 ex = min_ex(5, True).replace("\n", "\n-- ")
                 errors.append((f["vp"], ex))
 

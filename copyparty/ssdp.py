@@ -110,7 +110,7 @@ class SSDPd(MCast):
     def run(self) -> None:
         try:
             bound = self.create_servers()
-        except:
+        except (KeyError, IndexError):
             t = "no server IP matches the ssdp config\n{}"
             self.log(t.format(min_ex()), 1)
             bound = []
@@ -171,7 +171,7 @@ class SSDPd(MCast):
                 try:
                     buf, addr = sck.recvfrom(4096)
                     self.eat(buf, addr)
-                except:
+                except (KeyError, IndexError):
                     if not self.running:
                         break
 

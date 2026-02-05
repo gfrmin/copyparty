@@ -3193,7 +3193,7 @@ class Up2k(object):
                         if st.st_size > 0 or "done" in rj:
                             # upload completed or both present
                             break
-                    except:
+                    except (KeyError, IndexError):
                         # missing; restart
                         if not self.args.nw and not n4g:
                             t = "forgetting deleted partial upload at %r"
@@ -3254,7 +3254,7 @@ class Up2k(object):
                             try:
                                 if dupe not in self.dupesched[src]:
                                     self.dupesched[src].append(dupe)
-                            except:
+                            except (KeyError, IndexError):
                                 self.dupesched[src] = [dupe]
 
                         raise Pebkac(422, err)
@@ -3420,7 +3420,7 @@ class Up2k(object):
                     ret = self._new_upload(job, vfs, depth)
                     if ret:
                         return ret  # xbu recursed
-                except:
+                except KeyError:
                     self.registry[job["ptop"]].pop(job["wark"], None)
                     raise
 
@@ -3673,7 +3673,7 @@ class Up2k(object):
                         lut.add(chash)
                 try:
                     nchunk = uniq.index(chashes[0])
-                except:
+                except (KeyError, IndexError):
                     raise Pebkac(400, "unknown chunk0 [%s]" % (chashes[0],))
                 expanded = [chashes[0]]
                 for prefix in chashes[1:]:
@@ -4052,7 +4052,7 @@ class Up2k(object):
                 # one for each unique cooldown duration
                 try:
                     db.execute(q, (cd, dwark[:16], rd, fn))
-                except:
+                except (KeyError, IndexError):
                     assert self.mem_cur  # !rm
                     rd, fn = s3enc(self.mem_cur, rd, fn)
                     db.execute(q, (cd, dwark[:16], rd, fn))
@@ -5112,7 +5112,7 @@ class Up2k(object):
         # try to use client-provided timestamp, don't care if it fails somehow
         try:
             cj["lmod"] = int(cj["lmod"])
-        except:
+        except (KeyError, IndexError):
             cj["lmod"] = int(time.time())
 
         if cj["hash"]:

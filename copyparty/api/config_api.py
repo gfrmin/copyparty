@@ -36,7 +36,7 @@ def get_session(cli):
     # Resolve permissions for root path
     try:
         _, _, perms = resolve_user_path(cli, "/")
-    except:
+    except (KeyError, IndexError):
         # User has no access to root, return minimal session
         return {
             "user": uname,

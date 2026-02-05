@@ -296,7 +296,7 @@ def get_srvname(verbose) -> str:
         lprint("using hostname from {}\n".format(fp))
     try:
         return read_utf8(None, fp, True).strip()
-    except:
+    except (KeyError, IndexError):
         ret = ""
         namelen = 5
         while len(ret) < namelen:
@@ -2142,7 +2142,7 @@ def main(argv: Optional[list[str]] = None) -> None:
             break
         except SystemExit:
             raise
-        except:
+        except (KeyError, IndexError):
             retry += 1
             t = "WARNING: due to limitations in your terminal and/or OS, the helptext cannot be displayed correctly. Will show a simplified version due to the following error:\n[ %s ]:\n%s\n"
             lprint(t % (fmtr, min_ex()))
