@@ -230,6 +230,14 @@ class FileRepository(object):
         assert self.cur is not None
         self.cur.execute("delete from mt where w = ?", (wark_prefix,))
 
+    def delete_tags_by_keys(self, wark_prefix, keys):
+        # type: (str, list[str]) -> None
+        """Delete tags matching specific keys for a wark prefix."""
+        assert self.cur is not None
+        placeholders = " or ".join("+k = ?" for _ in keys)
+        sql = "delete from mt where w = ? and ({})".format(placeholders)
+        self.cur.execute(sql, [wark_prefix] + keys)
+
     def count_tags(self):
         # type: () -> int
         """Count total tags."""
@@ -251,6 +259,26 @@ class FileRepository(object):
         assert self.cur is not None
         self.cur.execute("delete from kv where k = ?", (key,))
         self.cur.execute("insert into kv values (?,?)", (key, value))
+
+    def get_kv_text(self, key):
+        # type: (str) -> str | None
+        """Get a key-value pair where value is text (e.g. volcfg)."""
+        assert self.cur is not None
+        row = self.cur.execute("select v from kv where k = ?", (key,)).fetchone()
+        return row[0] if row else None
+
+    def set_kv_text(self, key, value):
+        # type: (str, str) -> None
+        """Set a key-value pair with text value (upsert)."""
+        assert self.cur is not None
+        self.cur.execute("delete from kv where k = ?", (key,))
+        self.cur.execute("insert into kv values (?,?)", (key, value))
+
+    def delete_kv(self, key):
+        # type: (str) -> None
+        """Delete a key-value pair."""
+        assert self.cur is not None
+        self.cur.execute("delete from kv where k = ?", (key,))
 
     # --- Directory hashes (dh table) ---
 
@@ -274,6 +302,12 @@ class FileRepository(object):
         assert self.cur is not None
         self.cur.execute("delete from dh where d = ?", (rd,))
 
+    def delete_dhash_tree(self, rd):
+        # type: (str) -> None
+        """Delete directory hash for rd and all subdirectories."""
+        assert self.cur is not None
+        self.cur.execute("delete from dh where (d = ? or d like ?||'/%')", (rd, rd))
+
     def delete_all_dhashes(self):
         # type: () -> None
         """Delete all directory hashes."""
@@ -296,6 +330,12 @@ class FileRepository(object):
         self.cur.execute("delete from cv where rd = ? and dn = ?", (rd, dn))
         self.cur.execute("insert into cv values (?,?,?)", (rd, dn, fn))
 
+    def delete_cover(self, rd, dn, fn):
+        # type: (str, str, str) -> None
+        """Delete a specific cover art entry."""
+        assert self.cur is not None
+        self.cur.execute("delete from cv where rd=? and dn=? and +fn=?", (rd, dn, fn))
+
     # --- Directory sizes (ds table) ---
 
     def get_dir_size(self, rd):
@@ -311,6 +351,25 @@ class FileRepository(object):
         assert self.cur is not None
         self.cur.execute("delete from ds where rd = ?", (rd,))
         self.cur.execute("insert into ds values (?,?,?)", (rd, sz, nf))
+
+    def increment_dir_size(self, rd, sz):
+        # type: (str, int) -> int
+        """Increment dir file count by 1 and size by sz. Returns rows updated."""
+        assert self.cur is not None
+        self.cur.execute("update ds set nf=nf+1, sz=sz+? where rd=?", (sz, rd))
+        return self.cur.rowcount
+
+    def decrement_dir_size(self, rd, sz):
+        # type: (str, int) -> None
+        """Decrement dir file count by 1 and size by sz."""
+        assert self.cur is not None
+        self.cur.execute("update ds set nf=nf-1, sz=sz-? where rd=?", (sz, rd))
+
+    def delete_dir_size_tree(self, rd):
+        # type: (str) -> None
+        """Delete dir size entries for rd and all subdirectories."""
+        assert self.cur is not None
+        self.cur.execute("delete from ds where (rd=? or rd like ?||'/%')", (rd, rd))
 
     # --- Index-update hooks (iu table) ---
 

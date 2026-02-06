@@ -121,11 +121,12 @@ NULLSTAT = os.stat_result((0, -1, -1, 0, 0, 0, 0, 0, 0, 0))
 
 
 class Dbw(object):
-    def __init__(self, c: "sqlite3.Cursor", n: int, nf: int, t: float) -> None:
+    def __init__(self, c: "sqlite3.Cursor", n: int, nf: int, t: float, repo: "FileRepository | None" = None) -> None:
         self.c = c
         self.n = n
         self.nf = nf
         self.t = t
+        self.repo = repo
 
 
 class Mpqe(object):
@@ -1386,7 +1387,7 @@ class Up2k(object):
             assert reg and self.pp  # !rm
             cur, db_path = reg
 
-            db = Dbw(cur, 0, 0, time.time())
+            db = Dbw(cur, 0, 0, time.time(), self.repos.get(top))
             self.pp.n = next(db.c.execute("select count(w) from up"))[0]
 
             excl = [
@@ -1449,7 +1450,8 @@ class Up2k(object):
 
             if self.args.no_dhash:
                 if db.c.execute("select d from dh").fetchone():
-                    db.c.execute("delete from dh")
+                    assert db.repo  # !rm
+                    db.repo.delete_all_dhashes()
                     self.log("forgetting dhashes in {}".format(top))
             elif n_add or n_rm:
                 self._set_tagscan(db.c, True)
@@ -1631,12 +1633,12 @@ class Up2k(object):
 
         if not self.args.no_dirsz:
             tnf += len(files)
-            q = "select sz, nf from ds where rd=? limit 1"
             try:
-                db_sz, db_nf = db.c.execute(q, (rd,)).fetchone() or (-1, -1)
+                assert db.repo  # !rm
+                cur_ds = db.repo.get_dir_size(rd)
+                db_sz, db_nf = cur_ds if cur_ds else (-1, -1)
                 if rsz != db_sz or tnf != db_nf:
-                    db.c.execute("delete from ds where rd=?", (rd,))
-                    db.c.execute("insert into ds values (?,?,?)", (rd, rsz, tnf))
+                    db.repo.set_dir_size(rd, rsz, tnf)
                     db.n += 1
             except Exception:
                 pass  # mojibake rd
@@ -1669,11 +1671,11 @@ class Up2k(object):
         if cv and rd:
             # mojibake not supported (for performance / simplicity):
             try:
-                q = "select * from cv where rd=? and dn=? and +fn=?"
+                assert db.repo  # !rm
                 crd, cdn = rd.rsplit("/", 1) if "/" in rd else ("", rd)
-                if not db.c.execute(q, (crd, cdn, cv)).fetchone():
-                    db.c.execute("delete from cv where rd=? and dn=?", (crd, cdn))
-                    db.c.execute("insert into cv values (?,?,?)", (crd, cdn, cv))
+                existing_cv = db.repo.get_cover(crd, cdn)
+                if existing_cv != cv:
+                    db.repo.set_cover(crd, cdn, cv)
                     db.n += 1
             except Exception as ex:
                 self.log("cover %r/%r failed: %s" % (rd, cv, ex), 6)
@@ -1763,8 +1765,8 @@ class Up2k(object):
                 db.t = time.time()
 
         if not self.args.no_dhash:
-            db.c.execute("delete from dh where d = ?", (drd,))  # type: ignore
-            db.c.execute("insert into dh values (?,?)", (drd, dhash))  # type: ignore
+            assert db.repo  # !rm
+            db.repo.update_dhash(drd, dhash)  # type: ignore
 
         if self.stop:
             return -1, 0, 0
@@ -1787,15 +1789,15 @@ class Up2k(object):
                 t = "forgetting %d shadowed autoindexed files in %r > %r"
                 self.log(t % (n, top, sh_rd))
 
-                q = "delete from dh where (d = ? or d like ?||'/%')"
-                db.c.execute(q, erd_erd)
+                assert db.repo  # !rm
+                db.repo.delete_dhash_tree(erd_erd[0])
 
                 q = "delete from up where (rd=? or rd like ?||'/%')"
                 db.c.execute(q, erd_erd)
                 tfa += n
 
-            q = "delete from ds where (rd=? or rd like ?||'/%')"
-            db.c.execute(q, erd_erd)
+            assert db.repo  # !rm
+            db.repo.delete_dir_size_tree(erd_erd[0])
 
         if n4g:
             return tfa, tnf, rsz
@@ -4062,11 +4064,11 @@ class Up2k(object):
             # wasteful; db_add will re-index actual covers
             # but that won't catch existing files
             crd, cdn = rd.rsplit("/", 1) if "/" in rd else ("", rd)
+            repo = self.repos.get(ptop)
             try:
-                q = "select fn from cv where rd=? and dn=?"
-                db_cv = db.execute(q, (crd, cdn)).fetchone()[0]
-                db_lcv = db_cv.lower()
-                if db_lcv in self.args.th_coversd_set:
+                db_cv = repo.get_cover(crd, cdn) if repo else None
+                db_lcv = db_cv.lower() if db_cv else None
+                if db_lcv and db_lcv in self.args.th_coversd_set:
                     idx_db = self.args.th_coversd.index(db_lcv)
                     idx_fn = self.args.th_coversd.index(fn.lower())
                     add_cv = idx_fn < idx_db
@@ -4075,25 +4077,24 @@ class Up2k(object):
             except Exception:
                 add_cv = True
 
-            if add_cv:
+            if add_cv and repo:
                 try:
-                    db.execute("delete from cv where rd=? and dn=?", (crd, cdn))
-                    db.execute("insert into cv values (?,?,?)", (crd, cdn, fn))
+                    repo.set_cover(crd, cdn, fn)
                 except Exception:
                     pass
 
         if "nodirsz" not in vflags:
-            try:
-                q = "update ds set nf=nf+1, sz=sz+? where rd=?"
-                q2 = "insert into ds values(?,?,1)"
-                while True:
-                    if not db.execute(q, (sz, rd)).rowcount:
-                        db.execute(q2, (rd, sz))
-                    if not rd:
-                        break
-                    rd = rd.rsplit("/", 1)[0] if "/" in rd else ""
-            except Exception:
-                pass
+            repo = self.repos.get(ptop)
+            if repo:
+                try:
+                    while True:
+                        if not repo.increment_dir_size(rd, sz):
+                            repo.set_dir_size(rd, sz, 1)
+                        if not rd:
+                            break
+                        rd = rd.rsplit("/", 1)[0] if "/" in rd else ""
+                except Exception:
+                    pass
 
     def handle_fs_abrt(self, akey: str) -> None:
         self.abrt_key = akey
@@ -4934,8 +4935,11 @@ class Up2k(object):
                     drop_tags = False
 
             if drop_tags:
-                q = "delete from mt where w=?"
-                cur.execute(q, (wark[:16],))
+                repo = self.repos.get(ptop)
+                if repo:
+                    repo.delete_tags(wark[:16])
+                else:
+                    cur.execute("delete from mt where w=?", (wark[:16],))
 
             self.db_rm(cur, vflags, srd, sfn, sz)
 

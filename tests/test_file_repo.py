@@ -196,6 +196,102 @@ class TestFileRepo(unittest.TestCase):
 
         conn.close()
 
+    def test_get_kv_text(self):
+        self.repo.set_kv_text("volcfg", "abc123")
+        self.repo.commit()
+        self.assertEqual(self.repo.get_kv_text("volcfg"), "abc123")
+        self.assertIsNone(self.repo.get_kv_text("nonexistent"))
+
+    def test_set_kv_text_overwrite(self):
+        self.repo.set_kv_text("volcfg", "old")
+        self.repo.set_kv_text("volcfg", "new")
+        self.repo.commit()
+        self.assertEqual(self.repo.get_kv_text("volcfg"), "new")
+
+    def test_delete_kv(self):
+        self.repo.set_kv("mykey", 42)
+        self.repo.commit()
+        self.repo.delete_kv("mykey")
+        self.repo.commit()
+        self.assertIsNone(self.repo.get_kv("mykey"))
+
+    def test_delete_kv_nonexistent(self):
+        # Should not raise
+        self.repo.delete_kv("nope")
+
+    def test_delete_tags_by_keys(self):
+        self.repo.insert_tag("wp1", "artist", 1)
+        self.repo.insert_tag("wp1", "title", 2)
+        self.repo.insert_tag("wp1", "album", 3)
+        self.repo.commit()
+        self.repo.delete_tags_by_keys("wp1", ["artist", "title"])
+        self.repo.commit()
+        tags = self.repo.get_tags("wp1")
+        self.assertEqual(len(tags), 1)
+        self.assertEqual(tags[0][0], "album")
+
+    def test_delete_dhash_tree(self):
+        self.repo.update_dhash("dir1", "h1")
+        self.repo.update_dhash("dir1/sub1", "h2")
+        self.repo.update_dhash("dir1/sub2", "h3")
+        self.repo.update_dhash("dir2", "h4")
+        self.repo.commit()
+        self.repo.delete_dhash_tree("dir1")
+        self.repo.commit()
+        self.assertFalse(self.repo.check_dhash("dir1", "h1"))
+        self.assertFalse(self.repo.check_dhash("dir1/sub1", "h2"))
+        self.assertFalse(self.repo.check_dhash("dir1/sub2", "h3"))
+        self.assertTrue(self.repo.check_dhash("dir2", "h4"))
+
+    def test_delete_cover(self):
+        self.repo.set_cover("dir1", "sub", "cover.jpg")
+        self.repo.commit()
+        self.repo.delete_cover("dir1", "sub", "cover.jpg")
+        self.repo.commit()
+        self.assertIsNone(self.repo.get_cover("dir1", "sub"))
+
+    def test_delete_cover_no_match(self):
+        self.repo.set_cover("dir1", "sub", "cover.jpg")
+        self.repo.commit()
+        # Wrong fn should not delete
+        self.repo.delete_cover("dir1", "sub", "wrong.jpg")
+        self.repo.commit()
+        self.assertEqual(self.repo.get_cover("dir1", "sub"), "cover.jpg")
+
+    def test_increment_dir_size(self):
+        self.repo.set_dir_size("dir1", 100, 5)
+        self.repo.commit()
+        rows_updated = self.repo.increment_dir_size("dir1", 50)
+        self.assertEqual(rows_updated, 1)
+        self.repo.commit()
+        result = self.repo.get_dir_size("dir1")
+        self.assertEqual(result, (150, 6))
+
+    def test_increment_dir_size_nonexistent(self):
+        rows_updated = self.repo.increment_dir_size("nodir", 50)
+        self.assertEqual(rows_updated, 0)
+
+    def test_decrement_dir_size(self):
+        self.repo.set_dir_size("dir1", 200, 10)
+        self.repo.commit()
+        self.repo.decrement_dir_size("dir1", 50)
+        self.repo.commit()
+        result = self.repo.get_dir_size("dir1")
+        self.assertEqual(result, (150, 9))
+
+    def test_delete_dir_size_tree(self):
+        self.repo.set_dir_size("dir1", 100, 5)
+        self.repo.set_dir_size("dir1/sub1", 50, 3)
+        self.repo.set_dir_size("dir1/sub2", 30, 2)
+        self.repo.set_dir_size("dir2", 200, 10)
+        self.repo.commit()
+        self.repo.delete_dir_size_tree("dir1")
+        self.repo.commit()
+        self.assertIsNone(self.repo.get_dir_size("dir1"))
+        self.assertIsNone(self.repo.get_dir_size("dir1/sub1"))
+        self.assertIsNone(self.repo.get_dir_size("dir1/sub2"))
+        self.assertEqual(self.repo.get_dir_size("dir2"), (200, 10))
+
 
 if __name__ == "__main__":
     unittest.main()
