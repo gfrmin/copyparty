@@ -53,6 +53,8 @@ from .util import (
 if HAVE_SQLITE3:
     import sqlite3
 
+    from .db.session_repo import SessionRepository
+
 if True:  # pylint: disable=using-constant-test
     from collections.abc import Iterable
 
@@ -3324,30 +3326,25 @@ class AuthSrv(object):
         blen = (self.args.ses_len // 4) * 4  # 3 bytes in 4 chars
         blen = (blen * 3) // 4  # bytes needed for ses_len chars
 
-        db = sqlite3.connect(self.args.ses_db)
-        cur = db.cursor()
+        repo = SessionRepository(self.args.ses_db)
+        all_sessions = repo.load_all()
 
-        for uname, sid in cur.execute("select un, si from us"):
+        for uname, sid in all_sessions.items():
             if uname in self.acct:
                 ases[uname] = sid
 
         n = []
-        q = "insert into us values (?,?,?)"
         accs = list(self.acct)
         if self.args.have_idp_hdrs and self.args.idp_cookie:
             accs.extend(self.idp_accs.keys())
         for uname in accs:
             if uname not in ases:
                 sid = ub64enc(os.urandom(blen)).decode("ascii")
-                cur.execute(q, (uname, sid, int(time.time())))
+                repo.insert_session(uname, sid, int(time.time()))
                 ases[uname] = sid
                 n.append(uname)
 
-        if n:
-            db.commit()
-
-        cur.close()
-        db.close()
+        repo.close()
 
         self.ases = ases
         self.sesa = {v: k for k, v in ases.items()}
@@ -3370,12 +3367,9 @@ class AuthSrv(object):
 
         assert sqlite3  # type: ignore  # !rm
 
-        db = sqlite3.connect(self.args.ses_db)
-        cur = db.cursor()
-        cur.execute("delete from us where un = ?", (uname,))
-        db.commit()
-        cur.close()
-        db.close()
+        repo = SessionRepository(self.args.ses_db)
+        repo.delete_session(uname)
+        repo.close()
 
         self.sesa.pop(self.ases.get(uname, ""), "")
         self.ases.pop(uname, "")
