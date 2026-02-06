@@ -349,7 +349,7 @@ class Up2k(object):
                 for cur in self.cur.values() if get_q else []:
                     try:
                         mtpq += cur.execute(q).fetchone()[0]
-                    except:
+                    except Exception:
                         pass
                 if uname and up_en:
                     ups = self._active_uploads(uname)
@@ -491,7 +491,7 @@ class Up2k(object):
                     try:
                         # close enough on average
                         nbytes += len(job["need"]) * job["size"] // len(job["hash"])
-                    except:
+                    except (KeyError, ZeroDivisionError):
                         pass
 
                 ret[ptop] = (nbytes, nfiles)
@@ -1089,7 +1089,7 @@ class Up2k(object):
                 cur, db_path = reg
                 if bos.path.getsize(db_path + "-wal") < 1024 * 1024 * 5:
                     continue
-            except:
+            except (AssertionError, OSError):
                 continue
 
             try:
@@ -1097,7 +1097,7 @@ class Up2k(object):
                     cur.execute("pragma wal_checkpoint(truncate)")
                     try:
                         cur.execute("commit")  # absolutely necessary! for some reason
-                    except:
+                    except Exception:
                         pass
 
                     cur.connection.commit()  # this one maybe not
@@ -1140,7 +1140,7 @@ class Up2k(object):
         if ptop in self.registry:
             try:
                 return self.cur[ptop], db_path
-            except:
+            except KeyError:
                 return None
 
         vpath = "?"
@@ -1182,12 +1182,12 @@ class Up2k(object):
         try:
             if fl["chmod_f"] == int(self.args.chmod_f or "-1", 8):
                 fl.pop("chmod_f")
-        except:
+        except (KeyError, ValueError, TypeError):
             pass
         for k in ("chmod_f", "chmod_d"):
             try:
                 fl[k] = "%o" % (fl[k])
-            except:
+            except (KeyError, TypeError):
                 pass
 
         a = [
@@ -1592,7 +1592,7 @@ class Up2k(object):
                     tfa += i1
                     tnf += i2
                     rsz += i3
-                except:
+                except Exception:
                     t = "failed to index subdir %r:\n%s"
                     self.log(t % (abspath, min_ex()), 1)
             elif not stat.S_ISREG(inf.st_mode):
@@ -1642,7 +1642,7 @@ class Up2k(object):
                     db.c.execute("delete from ds where rd=?", (rd,))
                     db.c.execute("insert into ds values (?,?,?)", (rd, rsz, tnf))
                     db.n += 1
-            except:
+            except Exception:
                 pass  # mojibake rd
 
         # folder of 1000 files = ~1 MiB RAM best-case (tiny filenames);
@@ -1694,7 +1694,7 @@ class Up2k(object):
             sql = "select w, mt, sz, ip, at, un from up where rd = ? and fn = ?"
             try:
                 c = db.c.execute(sql, (rd, fn))
-            except:
+            except Exception:
                 c = db.c.execute(sql, s3enc(self.mem_cur, rd, fn))
 
             in_db = list(c.fetchall())
@@ -1782,7 +1782,7 @@ class Up2k(object):
                     erd_erd = (sh_erd, sh_erd)
                     n = db.c.execute(q, erd_erd).fetchone()[0]
                     break
-                except:
+                except Exception:
                     pass
 
             assert erd_erd  # type: ignore  # !rm
@@ -1808,7 +1808,7 @@ class Up2k(object):
         q = "select fn from up where rd = ?"
         try:
             c = db.c.execute(q, (rd,))
-        except:
+        except Exception:
             c = db.c.execute(q, ("//" + w8b64enc(rd),))
 
         hits = [w8b64dec(x[2:]) if x.startswith("//") else x for (x,) in c]
@@ -1843,7 +1843,7 @@ class Up2k(object):
             try:
                 if os.path.isdir(abspath):
                     continue
-            except:
+            except OSError:
                 pass
 
             rm.append(drd)
@@ -1868,7 +1868,7 @@ class Up2k(object):
                 try:
                     c = cur.execute(q, (erd, erd + "/"))
                     break
-                except:
+                except Exception:
                     pass
 
             crd = "///"
@@ -1880,7 +1880,7 @@ class Up2k(object):
                     crd = rd
                     try:
                         cdc = set(os.listdir(djoin(top, rd)))
-                    except:
+                    except OSError:
                         cdc.clear()
 
                 if fn not in cdc:
@@ -2335,7 +2335,7 @@ class Up2k(object):
         for parser in vf["mtp"]:
             try:
                 parser = MParser(parser)
-            except:
+            except Exception:
                 self.log("invalid argument (could not find program): " + parser, 1)
                 return
 
@@ -2441,7 +2441,7 @@ class Up2k(object):
                 m, s = divmod(s, 60)
                 n_prev = n_left
                 t_prev = now
-            except:
+            except (ZeroDivisionError, ValueError):
                 h = 1
                 m = 1
 
@@ -2477,7 +2477,7 @@ class Up2k(object):
     ) -> dict[str, MParser]:
         try:
             all_parsers = self.mtp_parsers[ptop]
-        except:
+        except KeyError:
             if self.args.mtag_vv:
                 self.log("no mtp defined for {}".format(ptop), "90")
             return {}
@@ -2572,7 +2572,7 @@ class Up2k(object):
 
                 with self.mutex:
                     self.pending_tags.append((qe.entags, qe.w, qe.abspath, tags))
-            except:
+            except Exception:
                 ex = traceback.format_exc()
                 self._log_tag_err(qe.mtp or self.mtag.backend, qe.abspath, ex)
             finally:
@@ -2602,7 +2602,7 @@ class Up2k(object):
 
         try:
             st = bos.stat(abspath)
-        except:
+        except OSError:
             return 0
 
         if not stat.S_ISREG(st.st_mode):
@@ -2746,7 +2746,7 @@ class Up2k(object):
                 nfiles = next(cur.execute("select count(w) from up"))[0]
                 self.log("  {} |{}|".format(db_path, nfiles), "90")
                 return cur
-            except:
+            except Exception:
                 self.log("WARN: could not list files; DB corrupt?\n" + min_ex())
 
         if (ver or 0) > DB_VER:
@@ -2768,7 +2768,7 @@ class Up2k(object):
         for suf in ("", "-shm", "-wal", "-journal"):
             try:
                 bos.unlink(db_path + suf)
-            except:
+            except OSError:
                 if not suf:
                     raise
 
@@ -2813,10 +2813,10 @@ class Up2k(object):
     ) -> "sqlite3.Cursor":
         try:
             return self._create_db(db_path, cur)
-        except:
+        except Exception:
             try:
                 self._delete_db(db_path)
-            except:
+            except OSError:
                 pass
             raise
 
@@ -2884,7 +2884,7 @@ class Up2k(object):
         try:
             cur.execute("select d, h from dh limit 1").fetchone()
             return
-        except:
+        except Exception:
             pass
 
         for cmd in [
@@ -2902,12 +2902,12 @@ class Up2k(object):
         try:
             cur.execute("select c, w, rd, fn from iu limit 1").fetchone()
             return
-        except:
+        except Exception:
             pass
 
         try:
             cur.execute("drop table iu")
-        except:
+        except Exception:
             pass
 
         for cmd in [
@@ -2924,7 +2924,7 @@ class Up2k(object):
         try:
             cur.execute("select rd, dn, fn from cv limit 1").fetchone()
             return
-        except:
+        except Exception:
             pass
 
         for cmd in [
@@ -2935,7 +2935,7 @@ class Up2k(object):
 
         try:
             cur.execute("delete from dh")
-        except:
+        except Exception:
             pass
 
         cur.connection.commit()
@@ -2944,7 +2944,7 @@ class Up2k(object):
         # v5c -> v5d
         try:
             cur.execute("drop index up_rd")
-        except:
+        except Exception:
             return
 
         for cmd in [
@@ -2963,7 +2963,7 @@ class Up2k(object):
         try:
             cur.execute("select rd, sz from ds limit 1").fetchone()
             return
-        except:
+        except Exception:
             pass
 
         for cmd in [
@@ -3025,7 +3025,7 @@ class Up2k(object):
         inc_ap = djoin(pdir, cj["name"])
         try:
             dev = bos.stat(pdir).st_dev
-        except:
+        except OSError:
             dev = 0
 
         # check if filesystem supports sparse files;
@@ -3573,7 +3573,7 @@ class Up2k(object):
                         fcntl.ioctl(fo.fileno(), fcntl.FICLONE, fi.fileno())
                         if "fperms" in flags:
                             set_fperms(fo, flags)
-                except:
+                except OSError:
                     if bos.path.exists(dst):
                         wunlink(self.log, dst, flags)
                     raise
@@ -3622,7 +3622,7 @@ class Up2k(object):
                     if not bos.path.exists(dst):
                         try:
                             wunlink(self.log, dst, flags)
-                        except:
+                        except OSError:
                             pass
                         t = "the created symlink [%s] did not resolve to [%s]"
                         raise Exception(t % (ldst, lsrc))
@@ -3949,7 +3949,7 @@ class Up2k(object):
         sql = "delete from up where rd = ? and fn = ?"
         try:
             r = db.execute(sql, (rd, fn))
-        except:
+        except Exception:
             assert self.mem_cur  # !rm
             r = db.execute(sql, s3enc(self.mem_cur, rd, fn))
 
@@ -3967,7 +3967,7 @@ class Up2k(object):
                     if not rd:
                         break
                     rd = rd.rsplit("/", 1)[0] if "/" in rd else ""
-            except:
+            except Exception:
                 pass
 
     def db_add(
@@ -4001,7 +4001,7 @@ class Up2k(object):
         v = (dwark, int(ts), sz, rd, fn, db_ip, int(at or 0), usr)
         try:
             db.execute(sql, v)
-        except:
+        except Exception:
             assert self.mem_cur  # !rm
             rd, fn = s3enc(self.mem_cur, rd, fn)
             v = (dwark, int(ts), sz, rd, fn, db_ip, int(at or 0), usr)
@@ -4076,14 +4076,14 @@ class Up2k(object):
                     add_cv = idx_fn < idx_db
                 else:
                     add_cv = True
-            except:
+            except Exception:
                 add_cv = True
 
             if add_cv:
                 try:
                     db.execute("delete from cv where rd=? and dn=?", (crd, cdn))
                     db.execute("insert into cv values (?,?,?)", (crd, cdn, fn))
-                except:
+                except Exception:
                     pass
 
         if "nodirsz" not in vflags:
@@ -4096,7 +4096,7 @@ class Up2k(object):
                     if not rd:
                         break
                     rd = rd.rsplit("/", 1)[0] if "/" in rd else ""
-            except:
+            except Exception:
                 pass
 
     def handle_fs_abrt(self, akey: str) -> None:
@@ -4239,7 +4239,7 @@ class Up2k(object):
                 if stat.S_ISLNK(st.st_mode):
                     try:
                         st = bos.stat(abspath)
-                    except:
+                    except OSError:
                         pass
 
                 volpath = ("%s/%s" % (vrem, fn)).strip("/")
@@ -4407,7 +4407,7 @@ class Up2k(object):
             is_link = True
             try:
                 st = bos.stat(sabs)
-            except:
+            except OSError:
                 pass  # broken symlink; keep as-is
         elif not stat.S_ISREG(st.st_mode):
             self.log("skipping type-0%o file %r" % (st.st_mode, sabs))
@@ -4500,10 +4500,10 @@ class Up2k(object):
             is_link = os.path.islink(b1)  # due to _relink
             try:
                 trystat_shutil_copy2(self.log, b1, b2)
-            except:
+            except OSError:
                 try:
                     wunlink(self.log, dabs, dvn.flags)
-                except:
+                except OSError:
                     pass
 
                 if not is_link:
@@ -4513,7 +4513,7 @@ class Up2k(object):
                 try:
                     zb = os.readlink(b1)
                     os.symlink(zb, b2)
-                except:
+                except OSError:
                     wunlink(self.log, dabs, dvn.flags)
                     raise
 
@@ -4521,7 +4521,7 @@ class Up2k(object):
                 try:
                     times = (int(time.time()), int(ftime))
                     bos.utime(dabs, times, False)
-                except:
+                except OSError:
                     pass
             if "fperms" in dvn.flags:
                 set_ap_perms(dabs, dvn.flags)
@@ -4632,7 +4632,7 @@ class Up2k(object):
                     bos.mkdir(dap, dvn.flags["chmod_d"])
                     if "chown" in dvn.flags:
                         bos.chown(dap, dvn.flags["uid"], dvn.flags["gid"])
-                except:
+                except Exception:
                     pass
 
         return "k"
@@ -4822,10 +4822,10 @@ class Up2k(object):
             is_link = os.path.islink(b1)  # due to _relink
             try:
                 trystat_shutil_copy2(self.log, b1, b2)
-            except:
+            except OSError:
                 try:
                     wunlink(self.log, dabs, dvn.flags)
-                except:
+                except OSError:
                     pass
 
                 if not is_link:
@@ -4835,7 +4835,7 @@ class Up2k(object):
                 try:
                     zb = os.readlink(b1)
                     os.symlink(zb, b2)
-                except:
+                except OSError:
                     wunlink(self.log, dabs, dvn.flags)
                     raise
 
@@ -4843,7 +4843,7 @@ class Up2k(object):
                 try:
                     times = (int(time.time()), int(ftime))
                     bos.utime(dabs, times, False)
-                except:
+                except OSError:
                     pass
             if "fperms" in dvn.flags:
                 set_ap_perms(dabs, dvn.flags)
@@ -4902,7 +4902,7 @@ class Up2k(object):
         q = "select w, mt, sz, ip, at, un from up where rd=? and fn=? limit 1"
         try:
             c = cur.execute(q, (rd, fn))
-        except:
+        except Exception:
             assert self.mem_cur  # !rm
             c = cur.execute(q, s3enc(self.mem_cur, rd, fn))
 
@@ -5032,7 +5032,7 @@ class Up2k(object):
             atomic_move(self.log, sabs, slabs, flags)
             try:
                 bos.utime(slabs, (int(time.time()), int(mt)), False)
-            except:
+            except OSError:
                 self.log("relink: failed to utime(%r, %s)" % (slabs, mt), 3)
             self._symlink(slabs, sabs, flags, False, is_mv=True)
             full[slabs] = (ptop, rem)
@@ -5084,7 +5084,7 @@ class Up2k(object):
             try:
                 lmod = bos.path.getmtime(alink, False)
                 wunlink(self.log, alink, flags)
-            except:
+            except OSError:
                 pass
 
             # this creates a link pointing from dabs to alink; alink may
@@ -5265,7 +5265,7 @@ class Up2k(object):
             ):
                 try:
                     sp.check_call(["fsutil", "sparse", "setflag", abspath])
-                except:
+                except OSError:
                     self.log("could not sparse %r" % (abspath,), 3)
                     relabel = True
                     sprs = False
@@ -5291,7 +5291,7 @@ class Up2k(object):
                     try:
                         nblk = bos.stat(abspath).st_blocks
                         sprs = nblk < 2048
-                    except:
+                    except (OSError, AttributeError):
                         sprs = False
 
             if relabel:
@@ -5364,7 +5364,7 @@ class Up2k(object):
                     if bos.path.getsize(path) == 0:
                         bos.unlink(path)
                         rsv_cleared = True
-                except:
+                except OSError:
                     pass
 
                 try:
@@ -5374,7 +5374,7 @@ class Up2k(object):
                         # PARTIAL is empty (hash==need) or --rm-partial, so delete that too
                         path = djoin(job["ptop"], job["prel"], job["tnam"])
                         bos.unlink(path)
-                except:
+                except (OSError, KeyError):
                     pass
 
         if self.args.nw or self.args.no_snap:
@@ -5632,7 +5632,7 @@ class Up2k(object):
             db = cur.connection
             try:
                 db.interrupt()
-            except:
+            except Exception:
                 pass
 
             cur.close()

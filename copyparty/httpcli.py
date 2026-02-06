@@ -1574,7 +1574,7 @@ class HttpCli(object):
 \t\t</image>
 """
             ret.append(zs % (cv_url, etitle, edirlink))
-        except:
+        except Exception:
             pass
 
         ap = ""
@@ -1844,7 +1844,7 @@ class HttpCli(object):
                             vn.lim.c_vb_v = zi
                             vn.lim.c_vb_r = bfree
                             bfree = min(bfree, max(0, vn.lim.vbmax - zi))
-                        except:
+                        except Exception:
                             pass
                 df = {
                     "quota-available-bytes": str(bfree),
@@ -1876,7 +1876,7 @@ class HttpCli(object):
             if stat.S_ISLNK(st.st_mode):
                 try:
                     st = bos.stat(os.path.join(tap, x["vp"]))
-                except:
+                except OSError:
                     continue
 
             isdir = stat.S_ISDIR(st.st_mode)
@@ -2194,7 +2194,7 @@ class HttpCli(object):
         if self.headers.get("expect", "").lower() == "100-continue":
             try:
                 self.s.sendall(b"HTTP/1.1 100 Continue\r\n\r\n")
-            except:
+            except OSError:
                 raise Pebkac(400, "client d/c before 100 continue")
 
         return self.handle_stash(True)
@@ -2207,7 +2207,7 @@ class HttpCli(object):
         if self.headers.get("expect", "").lower() == "100-continue":
             try:
                 self.s.sendall(b"HTTP/1.1 100 Continue\r\n\r\n")
-            except:
+            except OSError:
                 raise Pebkac(400, "client d/c before 100 continue")
 
         if "raw" in self.uparam:
@@ -2589,7 +2589,7 @@ class HttpCli(object):
             try:
                 lim.chk_sz(post_sz)
                 lim.chk_vsz(self.conn.hsrv.broker, vfs.realpath, post_sz)
-            except:
+            except Exception:
                 wunlink(self.log, path, vfs.flags)
                 raise
 
@@ -2854,7 +2854,7 @@ class HttpCli(object):
         assert self.parser  # !rm
         try:
             k = next(x for x in self.uparam if x in ("zip", "tar"))
-        except:
+        except StopIteration:
             raise Pebkac(422, "need zip or tar keyword")
 
         v = self.uparam[k]
@@ -2966,7 +2966,7 @@ class HttpCli(object):
                         raise Pebkac(400, "some file got your folder name")
 
                     raise Pebkac(500, min_ex())
-            except:
+            except Exception:
                 raise Pebkac(500, min_ex())
 
         # not to protect u2fh, but to prevent handshakes while files are closing
@@ -3109,7 +3109,7 @@ class HttpCli(object):
                         t = "client restarted the chunk; forgetting subchunk offset %d"
                         self.log(t % (sc_pofs,))
                         raise Exception()
-                except:
+                except Exception:
                     sc_pofs = 0
                     hasher = hashlib.sha512()
 
@@ -3160,7 +3160,7 @@ class HttpCli(object):
                 with self.u2mutex:
                     try:
                         f = self.u2fh.pop(path)
-                    except:
+                    except (KeyError, IndexError):
                         pass
 
             f = f or open(fsenc(path), "rb+", self.args.iobuf)
@@ -3180,7 +3180,7 @@ class HttpCli(object):
                             self.bakflip(
                                 f, path, cstart[0], post_sz, chash, sha_b64, vfs.flags
                             )
-                        except:
+                        except Exception:
                             self.log("bakflip failed: " + min_ex())
 
                         t = "your chunk got corrupted somehow (received {} bytes); expected vs received hash:\n{}\n{}"
@@ -3232,7 +3232,7 @@ class HttpCli(object):
                 else:
                     with self.u2mutex:
                         self.u2fh.put(path, f)
-            except:
+            except Exception:
                 # maybe busted handle (eg. disk went full)
                 f.close()
                 raise
@@ -3451,7 +3451,7 @@ class HttpCli(object):
                     raise Pebkac(500, "the server OS denied write-access")
 
                 raise Pebkac(500, "mkdir failed:\n" + min_ex())
-            except:
+            except Exception:
                 raise Pebkac(500, min_ex())
 
         self.out_headers["X-New-Dir"] = quotep(self.args.RS + vpath)
@@ -3644,7 +3644,7 @@ class HttpCli(object):
                             try:
                                 wunlink(self.log, abspath, vfs.flags)
                                 t = "overwriting file with new upload: %r"
-                            except:
+                            except OSError:
                                 t = "toctou while deleting for ?replace: %r"
                             self.log(t % (abspath,))
                 else:
@@ -3747,7 +3747,7 @@ class HttpCli(object):
                             lim.chk_vsz(self.conn.hsrv.broker, vfs.realpath, sz)
                             lim.chk_bup(self.ip)
                             lim.chk_nup(self.ip)
-                        except:
+                        except Exception:
                             if not nullwrite:
                                 wunlink(self.log, tabspath, vfs.flags)
                                 wunlink(self.log, abspath, vfs.flags)
@@ -4118,7 +4118,7 @@ class HttpCli(object):
             try:
                 lim.chk_sz(sz)
                 lim.chk_vsz(self.conn.hsrv.broker, vfs.realpath, sz)
-            except:
+            except Exception:
                 wunlink(self.log, fp, vfs.flags)
                 raise
 
@@ -4533,7 +4533,7 @@ class HttpCli(object):
 
                 file_ts = max(file_ts, st.st_mtime)
                 editions[ext or "plain"] = (fs_path, sz)
-            except:
+            except OSError:
                 pass
             if not self.vpath.startswith(".cpr/"):
                 break
@@ -4770,7 +4770,7 @@ class HttpCli(object):
         # negative = start that many bytes from eof
         try:
             ofs = int(self.uparam["tail"])
-        except:
+        except (ValueError, KeyError):
             ofs = 0
 
         t0 = time.time()
@@ -4808,7 +4808,7 @@ class HttpCli(object):
                 st2 = os.stat(open_args[0])
                 if st.st_ino == st2.st_ino:
                     st = st2  # for filesize
-            except:
+            except OSError:
                 pass
 
             gone = 0
@@ -4862,7 +4862,7 @@ class HttpCli(object):
                             self.log("reopened at byte %d: %r" % (ofs, abspath), 6)
                             gone = 0
                         st = st2
-                    except:
+                    except (OSError, IOError):
                         gone += 1
                         if gone > 3:
                             self.log("file deleted; disconnecting")
@@ -5002,7 +5002,7 @@ class HttpCli(object):
                     remains -= zi
                     lower += zi
                     pofs += zi
-                except:
+                except OSError:
                     broken = True
                     break
 
@@ -5146,7 +5146,7 @@ class HttpCli(object):
             try:
                 self.s.sendall(buf)
                 bsent += len(buf)
-            except:
+            except OSError:
                 logmsg += " \033[31m" + unicode(bsent) + "\033[0m"
                 bgen.stop()
                 break
@@ -5788,7 +5788,7 @@ class HttpCli(object):
                     ):
                         raise Exception()
                     bos.stat(dvn.canonical(drem, False))
-                except:
+                except Exception:
                     x += "\n"
                 dirs.append(x)
 
@@ -5970,7 +5970,7 @@ class HttpCli(object):
             ap = rv.pop("ap")
             try:
                 st = bos.stat(ap)
-            except:
+            except OSError:
                 continue
 
             fk = self.gen_fk(
@@ -6105,7 +6105,7 @@ class HttpCli(object):
             ap = rv.pop("ap")
             try:
                 st = bos.stat(ap)
-            except:
+            except OSError:
                 continue
 
             fk = self.gen_fk(
@@ -6331,7 +6331,7 @@ class HttpCli(object):
 
         try:
             vfs, rem = self.asrv.vfs.get(vp, self.uname, *s_axs)
-        except:
+        except Exception:
             raise Pebkac(400, "you dont have all the perms you tried to grant")
 
         zs = vfs.flags["shr_who"]
@@ -6542,7 +6542,7 @@ class HttpCli(object):
         if arg in ["v", "t", "txt"]:
             try:
                 biggest = max(ls["files"] + ls["dirs"], key=itemgetter("sz"))["sz"]
-            except:
+            except (ValueError, KeyError):
                 biggest = 0
 
             if arg == "v":
@@ -6638,7 +6638,7 @@ class HttpCli(object):
             elif ret == "retry":
                 try:
                     st = bos.stat(abspath)
-                except:
+                except OSError:
                     return self.tx_404(not self.can_read)
             else:
                 return self.tx_404(not self.can_read)
@@ -6755,7 +6755,7 @@ class HttpCli(object):
                     ap2 = os.path.join(abspath, fn)
                     try:
                         st2 = bos.stat(ap2)
-                    except:
+                    except OSError:
                         continue
 
                     # might as well be extra careful
@@ -6835,7 +6835,7 @@ class HttpCli(object):
         try:
             if not self.args.nih:
                 srv_info.append(self.args.name_html)
-        except:
+        except (AttributeError, TypeError):
             self.log("#wow #whoa")
 
         zi = vn.flags["du_iwho"]
@@ -6861,7 +6861,7 @@ class HttpCli(object):
                             vn.lim.c_vb_v = zi
                             vn.lim.c_vb_r = free
                             free = min(free, max(0, vn.lim.vbmax - zi))
-                        except:
+                        except Exception:
                             pass
                 h1 = humansize(free or 0)
                 h2 = humansize(total)
@@ -7019,7 +7019,7 @@ class HttpCli(object):
                 fn = m.group(1) + m.group(3)
                 n, ts, _ = hist.get(fn, (0, 0, ""))
                 hist[fn] = (n + 1, max(ts, float(m.group(2))), hfn)
-        except:
+        except Exception:
             pass
 
         lnames = {x.lower(): x for x in ls_names}
@@ -7067,7 +7067,7 @@ class HttpCli(object):
             try:
                 linf = stats.get(fn) or bos.lstat(fspath)
                 inf = bos.stat(fspath) if stat.S_ISLNK(linf.st_mode) else linf
-            except:
+            except OSError:
                 self.log("broken symlink: %r" % (fspath,))
                 continue
 
@@ -7192,7 +7192,7 @@ class HttpCli(object):
                     try:
                         erd_efn = s3enc(idx.mem_cur, rd, fn)
                         r = icur.execute(mt_q, erd_efn)
-                    except:
+                    except Exception:
                         self.log("tag read error, %r / %r\n%s" % (rd, fn, min_ex()))
                         break
 
@@ -7204,7 +7204,7 @@ class HttpCli(object):
                         for zs1, zs2 in zip(up_m, up_v):
                             if zs2:
                                 tags[zs1] = zs2
-                    except:
+                    except Exception:
                         pass
 
                 _ = [tagset.add(k) for k in tags]
@@ -7225,7 +7225,7 @@ class HttpCli(object):
                     try:
                         hit = icur.execute(q, (vdir + fe["name"],)).fetchone()
                         (fe["sz"], fe["tags"][".files"]) = hit
-                    except:
+                    except Exception:
                         pass  # 404 or mojibake
 
             taglist = [k for k in lmte if k in tagset]
@@ -7502,7 +7502,7 @@ class HttpCli(object):
                     for k, v in file["tags"].items():
                         zs = "{{ %s }}" % (k,)
                         title = title.replace(zs, str(v))
-                except:
+                except (AssertionError, KeyError, TypeError):
                     pass
                 title = re.sub(r"\{\{ [^}]+ \}\}", "", title)
                 while title.startswith(" - "):
@@ -7520,7 +7520,7 @@ class HttpCli(object):
                         if not v:
                             continue
                         ogh[hname] = int(v) if tag == ".dur" else v
-                    except:
+                    except (AssertionError, KeyError, ValueError, TypeError):
                         pass
 
                 ogh["og:title"] = title

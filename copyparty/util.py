@@ -1137,7 +1137,7 @@ class CachedSet(object):
         c = self.c = {k: v for k, v in self.c.items() if now - v < self.maxage}
         try:
             self.oldest = c[min(c, key=c.get)]  # type: ignore
-        except:
+        except (ValueError, KeyError):
             self.oldest = now
 
 
@@ -1156,7 +1156,7 @@ class CachedDict(object):
         c = self.c = {k: v for k, v in self.c.items() if now - v[0] < self.maxage}
         try:
             self.oldest = min([x[0] for x in c.values()])
-        except:
+        except (ValueError, KeyError):
             self.oldest = now
 
     def get(self, k: str) -> Optional[tuple[str, Any]]:
@@ -1167,7 +1167,7 @@ class CachedDict(object):
                 del self.c[k]
                 return None
             return ret
-        except:
+        except (KeyError, TypeError):
             return None
 
 
@@ -1185,7 +1185,7 @@ class FHC(object):
     def close(self, path: str) -> None:
         try:
             ce = self.cache[path]
-        except:
+        except KeyError:
             return
 
         for fh in ce.fhs:
@@ -1320,7 +1320,7 @@ class MTHash(object):
                 try:
                     nch, dig, ofs, csz = qe
                     chunks[nch] = (dig, ofs, csz)
-                except:
+                except (ValueError, TypeError):
                     ex = ex or qe  # type: ignore
 
                 if pp:
@@ -1482,7 +1482,7 @@ class Garda(object):
                 del self.ct[ip]
                 try:
                     del self.prev[ip]
-                except:
+                except KeyError:
                     pass
 
     def allcln(self) -> None:
@@ -1889,18 +1889,18 @@ class MultipartParser(object):
 
             try:
                 field = self.re_cdisp_field.match(ln).group(1)  # type: ignore
-            except:
+            except (AttributeError, IndexError):
                 raise Pebkac(400, "missing field name: %r" % (ln,))
 
             try:
                 fn = self.re_cdisp_file.match(ln).group(1)  # type: ignore
-            except:
+            except (AttributeError, IndexError):
                 # this is not a file upload, we're done
                 return field, None
 
             try:
                 is_webkit = "applewebkit" in self.headers["user-agent"].lower()
-            except:
+            except (KeyError, AttributeError):
                 is_webkit = False
 
             # chromes ignore the spec and makes this real easy
@@ -2167,7 +2167,7 @@ def gen_filekey_dbg(
             p2 = absreal(fspath)
             if p2 != fspath:
                 raise Exception()
-        except:
+        except Exception:
             t = "maybe wrong abspath for filekey;\norig: %r\nreal: %r"
             log(t % (fspath, p2), 1)
 
@@ -2700,7 +2700,7 @@ def atomic_move(log: "NamedLogger", src: str, dst: str, flags: dict[str, Any]) -
             log(t % (ex.strerror, src, dst))
             try:
                 os.unlink(bdst)
-            except:
+            except OSError:
                 pass
             shutil.move(bsrc, bdst)  # type: ignore
 
@@ -3063,7 +3063,7 @@ def sendfile_py(
         try:
             s.sendall(buf)
             remains -= len(buf)
-        except:
+        except OSError:
             return remains
 
         if dl_id:
@@ -3209,7 +3209,7 @@ def rmdirs(
         try:
             os.rmdir(fsenc(top))
             ok.append(top)
-        except:
+        except OSError:
             ng.append(top)
 
     return ok, ng
@@ -3238,7 +3238,7 @@ def guess_mime(
 ) -> str:
     try:
         ext = url.rsplit(".", 1)[1].lower()
-    except:
+    except (IndexError, AttributeError):
         ext = ""
 
     ret = MIMES.get(ext)
@@ -3280,7 +3280,7 @@ def getalive(pids: list[int], pgid: int) -> list[int]:
                 assert psutil  # type: ignore  # !rm
                 psutil.Process(pid)
                 alive.append(pid)
-        except:
+        except Exception:
             pass
 
     return alive
@@ -3291,7 +3291,7 @@ def killtree(root: int) -> None:
     try:
         # limit the damage where possible (unixes)
         pgid = os.getpgid(os.getpid())
-    except:
+    except OSError:
         pgid = 0
 
     if HAVE_PSUTIL:
@@ -3343,7 +3343,7 @@ def _find_nice() -> str:
         zs = shutil.which("nice")
         if zs:
             return zs
-    except:
+    except (OSError, ValueError):
         pass
 
     # busted PATHs and/or py2
@@ -3471,7 +3471,7 @@ def retchk(
     if rc > 128:
         try:
             s = str(signal.Signals(rc - 128))
-        except:
+        except (ValueError, KeyError):
             pass
     elif rc == 126:
         s = "invalid program"
@@ -3489,7 +3489,7 @@ def retchk(
 
     try:
         c = " ".join([fsdec(x) for x in cmd])  # type: ignore
-    except:
+    except (TypeError, UnicodeDecodeError):
         c = str(cmd)
 
     t = "error {} from [{}]".format(t, c)
@@ -3559,7 +3559,7 @@ def _parsehook(
         zsl = [str(pypath)] + [str(x) for x in sys.path if x]
         pypath = str(os.pathsep.join(zsl))
         env["PYTHONPATH"] = pypath
-    except:
+    except Exception:
         if not EXE:
             raise
 
@@ -3958,7 +3958,7 @@ def hidedir(dp) -> None:
             attrs = k32.GetFileAttributesW(dp)
             if attrs >= 0:
                 k32.SetFileAttributesW(dp, attrs | 2)
-        except:
+        except Exception:
             pass
 
 
@@ -3974,7 +3974,7 @@ def _lock_file_ioctl(ap: str) -> bool:
     try:
         fd = _flocks.pop(ap)
         os.close(fd)
-    except:
+    except (KeyError, OSError):
         pass
 
     fd = os.open(ap, os.O_RDWR | os.O_CREAT, 438)
@@ -3990,7 +3990,7 @@ def _lock_file_ioctl(ap: str) -> bool:
         eno = getattr(ex, "errno", -1)
         try:
             os.close(fd)
-        except:
+        except OSError:
             pass
         if eno in (errno.EAGAIN, errno.EACCES):
             return False
@@ -4080,7 +4080,7 @@ _rescache_has = {}
 def _has_resource(name: str):
     try:
         return _rescache_has[name]
-    except:
+    except KeyError:
         pass
 
     if len(_rescache_has) > 999:
