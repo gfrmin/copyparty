@@ -5,6 +5,7 @@ Handles text manipulation, formatting, and terminal operations.
 
 import os
 import re
+import struct
 from typing import Optional
 
 try:
@@ -236,8 +237,7 @@ def termsize() -> tuple[int, int]:
         if not (fcntl and termios):
             return None
         try:
-            from .util import sunpack  # Avoid circular import
-            cr = sunpack(b"hh", fcntl.ioctl(fd, termios.TIOCGWINSZ, b"AAAA"))
+            cr = struct.unpack(b"hh", fcntl.ioctl(fd, termios.TIOCGWINSZ, b"AAAA"))
             return cr[::-1]
         except Exception:
             return None

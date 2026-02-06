@@ -99,6 +99,18 @@ else:
     from collections import OrderedDict as ODict
 
 
+# Re-exports from extracted utility modules (Phase 3c migration)
+from .str_util import (  # noqa: F401,E402
+    align_tab,
+    dedent,
+    eol_conv,
+    str_anchor,
+    termsize,
+    visual_length,
+    wrap,
+)
+
+
 def _ens(want: str) -> tuple[int, ...]:
     ret: list[int] = []
     for v in want.split():
@@ -1522,17 +1534,6 @@ def nuprint(msg: str) -> None:
     uprint("%s\n" % (msg,))
 
 
-def dedent(txt: str) -> str:
-    pad = 64
-    lns = txt.replace("\r", "").split("\n")
-    for ln in lns:
-        zs = ln.lstrip()
-        pad2 = len(ln) - len(zs)
-        if zs and pad > pad2:
-            pad = pad2
-    return "\n".join([ln[pad:] for ln in lns])
-
-
 def rice_tid() -> str:
     tid = threading.current_thread().ident
     c = sunpack(b"B" * 5, spack(b">Q", tid)[-5:])
@@ -2539,21 +2540,6 @@ def ujoin(rd: str, fn: str) -> str:
         return rd or fn
 
 
-def str_anchor(txt) -> tuple[int, str]:
-    if not txt:
-        return 0, ""
-    txt = txt.lower()
-    a = txt.startswith("^")
-    b = txt.endswith("$")
-    if not b:
-        if not a:
-            return 1, txt  # ~
-        return 2, txt[1:]  # ^
-    if not a:
-        return 3, txt[:-1]  # $
-    return 4, txt[1:-1]  # ^$
-
-
 def log_reloc(
     log: "NamedLogger",
     re: dict[str, str],
@@ -3171,17 +3157,6 @@ def justcopy(
             time.sleep(slp)
 
     return tlen, "checksum-disabled", "checksum-disabled"
-
-
-def eol_conv(
-    fin: Generator[bytes, None, None], conv: str
-) -> Generator[bytes, None, None]:
-    crlf = conv.lower() == "crlf"
-    for buf in fin:
-        buf = buf.replace(b"\r", b"")
-        if crlf:
-            buf = buf.replace(b"\n", b"\r\n")
-        yield buf
 
 
 def hashcopy(
@@ -4148,134 +4123,6 @@ def gzip_file_orig_sz(f) -> int:
     rv = f.read(4)
     f.seek(start, 0)
     return sunpack(b"I", rv)[0]  # type: ignore
-
-
-def align_tab(lines: list[str]) -> list[str]:
-    rows = []
-    ncols = 0
-    for ln in lines:
-        row = [x for x in ln.split(" ") if x]
-        ncols = max(ncols, len(row))
-        rows.append(row)
-
-    lens = [0] * ncols
-    for row in rows:
-        for n, col in enumerate(row):
-            lens[n] = max(lens[n], len(col))
-
-    return ["".join(x.ljust(y + 2) for x, y in zip(row, lens)) for row in rows]
-
-
-def visual_length(txt: str) -> int:
-    # from r0c
-    eoc = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    clen = 0
-    pend = None
-    counting = True
-    for ch in txt:
-
-        # escape sequences can never contain ESC;
-        # treat pend as regular text if so
-        if ch == "\033" and pend:
-            clen += len(pend)
-            counting = True
-            pend = None
-
-        if not counting:
-            if ch in eoc:
-                counting = True
-        else:
-            if pend:
-                pend += ch
-                if pend.startswith("\033["):
-                    counting = False
-                else:
-                    clen += len(pend)
-                    counting = True
-                pend = None
-            else:
-                if ch == "\033":
-                    pend = "%s" % (ch,)
-                else:
-                    co = ord(ch)
-                    # the safe parts of latin1 and cp437 (no greek stuff)
-                    if (
-                        co < 0x100  # ascii + lower half of latin1
-                        or (co >= 0x2500 and co <= 0x25A0)  # box drawings
-                        or (co >= 0x2800 and co <= 0x28FF)  # braille
-                    ):
-                        clen += 1
-                    else:
-                        # assume moonrunes or other double-width
-                        clen += 2
-    return clen
-
-
-def wrap(txt: str, maxlen: int, maxlen2: int) -> list[str]:
-    # from r0c
-    words = re.sub(r"([, ])", r"\1\n", txt.rstrip()).split("\n")
-    pad = maxlen - maxlen2
-    ret = []
-    for word in words:
-        if len(word) * 2 < maxlen or visual_length(word) < maxlen:
-            ret.append(word)
-        else:
-            while visual_length(word) >= maxlen:
-                ret.append(word[: maxlen - 1] + "-")
-                word = word[maxlen - 1 :]
-            if word:
-                ret.append(word)
-
-    words = ret
-    ret = []
-    ln = ""
-    spent = 0
-    for word in words:
-        wl = visual_length(word)
-        if spent + wl > maxlen:
-            ret.append(ln)
-            maxlen = maxlen2
-            spent = 0
-            ln = " " * pad
-        ln += word
-        spent += wl
-    if ln:
-        ret.append(ln)
-
-    return ret
-
-
-def termsize() -> tuple[int, int]:
-    try:
-        w, h = os.get_terminal_size()
-        return w, h
-    except:
-        pass
-
-    env = os.environ
-
-    def ioctl_GWINSZ(fd: int) -> Optional[tuple[int, int]]:
-        assert fcntl  # type: ignore  # !rm
-        assert termios  # type: ignore  # !rm
-        try:
-            cr = sunpack(b"hh", fcntl.ioctl(fd, termios.TIOCGWINSZ, b"AAAA"))
-            return cr[::-1]
-        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
-            return None
-
-    cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
-    if not cr:
-        try:
-            fd = os.open(os.ctermid(), os.O_RDONLY)
-            cr = ioctl_GWINSZ(fd)
-            os.close(fd)
-        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
-            pass
-
-    try:
-        return cr or (int(env["COLUMNS"]), int(env["LINES"]))
-    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
-        return 80, 25
 
 
 def hidedir(dp) -> None:
