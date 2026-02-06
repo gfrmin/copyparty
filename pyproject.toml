@@ -111,7 +111,7 @@ skips = ["B104", "B110", "B112"]
 
 [tool.ruff]
 line-length = 120
-ignore = ["E402", "E722"]
+ignore = ["E402"]
 
 # =====================================================================
 
@@ -127,7 +127,6 @@ disable = [
     "import-outside-toplevel",
     "wrong-import-position",
     "raise-missing-from",
-    "bare-except",
     "broad-exception-raised",
     "broad-exception-caught",
     "invalid-name",
