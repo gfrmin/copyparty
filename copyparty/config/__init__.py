@@ -20,6 +20,9 @@ from .path_resolver import PathResolver
 from .orchestrator import ReloadOrchestrator
 from .share_loader import ShareLoader
 from .frontend_builder import FrontendConfigBuilder
+from .search_config import SearchIndexConfigBuilder
+from .flag_converter import FlagConverter
+from .metadata_builder import MetadataTagBuilder
 
 __all__ = [
     "AccountParser",
@@ -36,4 +39,7 @@ __all__ = [
     "ReloadOrchestrator",
     "ShareLoader",
     "FrontendConfigBuilder",
+    "SearchIndexConfigBuilder",
+    "FlagConverter",
+    "MetadataTagBuilder",
 ]
