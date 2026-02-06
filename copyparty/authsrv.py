@@ -53,6 +53,7 @@ from .util import (
 if HAVE_SQLITE3:
     import sqlite3
 
+    from .db.idp_repo import IdpRepository
     from .db.session_repo import SessionRepository
 
 if True:  # pylint: disable=using-constant-test
@@ -1159,15 +1160,9 @@ class AuthSrv(object):
 
         assert sqlite3  # type: ignore  # !rm
 
-        db = sqlite3.connect(self.args.idp_db)
-        cur = db.cursor()
-
-        cur.execute("delete from us where un = ?", (uname,))
-        cur.execute("insert into us values (?,?)", (uname, gname))
-
-        db.commit()
-        cur.close()
-        db.close()
+        repo = IdpRepository(self.args.idp_db)
+        repo.upsert_user(uname, gname)
+        repo.close()
 
     def _map_volume_idp(
         self,
@@ -3284,11 +3279,9 @@ class AuthSrv(object):
 
         assert sqlite3  # type: ignore  # !rm
 
-        db = sqlite3.connect(self.args.idp_db)
-        cur = db.cursor()
-        from_cache = cur.execute("select un, gs from us").fetchall()
-        cur.close()
-        db.close()
+        repo = IdpRepository(self.args.idp_db)
+        from_cache = repo.load_all()
+        repo.close()
 
         self.idp_accs.clear()
         self.idp_usr_gh.clear()
