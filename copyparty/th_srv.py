@@ -144,7 +144,7 @@ try:
 
         Image.new("RGB", (2, 2)).save(BytesIO(), format="jxl")
         HAVE_JXL = True
-    except ImportError:
+    except Exception:
         pass
 
     try:
@@ -172,7 +172,7 @@ try:
         import pillow_avif  # noqa: F401  # pylint: disable=unused-import
 
         HAVE_AVIF = True
-    except ImportError:
+    except Exception:
         pass
 
     logging.getLogger("PIL").setLevel(logging.WARNING)

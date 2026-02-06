@@ -2798,7 +2798,7 @@ class Up2k(object):
         for tab in ["ki", "kv"]:
             try:
                 c = cur.execute(r"select v from {} where k = 'sver'".format(tab))
-            except (OSError, ValueError, TypeError, UnicodeDecodeError):
+            except (OSError, ValueError, TypeError, UnicodeDecodeError, sqlite3.OperationalError):
                 continue
 
             rows = c.fetchall()
@@ -3836,7 +3836,7 @@ class Up2k(object):
                 wake_sr = True
                 t = "using client lifetime; at={:.0f} ({}-{})"
                 self.log(t.format(upt, vlt, flt))
-        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
+        except (KeyError, ValueError, TypeError, UnicodeDecodeError, IndexError):
             pass
 
         z2.append(upt)

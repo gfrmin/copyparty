@@ -6,8 +6,11 @@ import os
 import re
 import stat
 import time
+from datetime import datetime
+from operator import itemgetter
 
 from .bos import bos
+from .httpcli_tx import ACODE2_FMT
 from .util import (
     ODict,
     Pebkac,
@@ -370,7 +373,7 @@ class HttpCliListing(object):
 
         try:
             st = bos.stat(abspath)
-        except (KeyError, IndexError):
+        except (OSError, KeyError, IndexError):
             if "on404" not in vn.flags:
                 return self.tx_404(not self.can_read)
 
@@ -452,7 +455,7 @@ class HttpCliListing(object):
                                 st = bos.stat(fp)
                                 vrem = "{}/{}".format(vrem, fn).strip("/")
                                 is_dir = False
-                        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
+                        except (OSError, ValueError, TypeError, UnicodeDecodeError, IndexError):
                             pass
                     else:
                         for fn in self.args.th_covers:
@@ -462,7 +465,7 @@ class HttpCliListing(object):
                                 vrem = "{}/{}".format(vrem, fn).strip("/")
                                 is_dir = False
                                 break
-                            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
+                            except (OSError, ValueError, TypeError, UnicodeDecodeError, IndexError):
                                 pass
 
                     if is_dir:

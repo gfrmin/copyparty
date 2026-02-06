@@ -2260,7 +2260,7 @@ class AuthSrv(object):
             for k in ["zipmaxn", "zipmaxs"]:
                 try:
                     zs = vol.flags[k]
-                except (ValueError, TypeError, UnicodeDecodeError, IndexError):
+                except (KeyError, ValueError, TypeError, UnicodeDecodeError, IndexError):
                     zs = getattr(self.args, k)
                 if zs in ("", "0"):
                     vol.flags[k] = 0

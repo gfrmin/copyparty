@@ -261,7 +261,7 @@ class HttpCliAuth(object):
             try:
                 zds = {k: v for k, v in body.items()}
                 zds["hash"] = "%d chunks" % (len(body["hash"]),)
-            except (ValueError, TypeError, UnicodeDecodeError, IndexError):
+            except (KeyError, ValueError, TypeError, UnicodeDecodeError, IndexError):
                 zds = body
             t = "POST len=%d type=%s ip=%s user=%s req=%r json=%s"
             self.log(t % (len(json_buf), enc, self.ip, self.uname, self.req, zds))
