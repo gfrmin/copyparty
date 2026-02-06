@@ -21,7 +21,7 @@ class TestFileRepo(unittest.TestCase):
         self.assertEqual(ver, FileRepository.DB_VER)
 
     def test_insert_and_find_file(self):
-        self.repo.insert_file("wark123", 1000.0, 42, "dir/sub", "test.txt", "1.2.3.4", 999.0, "alice")
+        self.repo.insert_file("wark123", 1000, 42, "dir/sub", "test.txt", "1.2.3.4", 999, "alice")
         self.repo.commit()
         row = self.repo.find_file("dir/sub", "test.txt")
         self.assertIsNotNone(row)
@@ -34,22 +34,22 @@ class TestFileRepo(unittest.TestCase):
         self.assertIsNone(row)
 
     def test_find_by_wark(self):
-        self.repo.insert_file("wark_abcdef1234567890", 1000.0, 42, "dir", "f.txt", "1.2.3.4", 999.0, "alice")
+        self.repo.insert_file("wark_abcdef1234567890", 1000, 42, "dir", "f.txt", "1.2.3.4", 999, "alice")
         self.repo.commit()
         rows = self.repo.find_files_by_wark("wark_abcdef1234567890")
         self.assertEqual(len(rows), 1)
         self.assertEqual(rows[0][4], "f.txt")
 
     def test_find_by_dir(self):
-        self.repo.insert_file("w1", 1000.0, 10, "mydir", "a.txt", "ip", 999.0, "u")
-        self.repo.insert_file("w2", 1000.0, 20, "mydir", "b.txt", "ip", 999.0, "u")
-        self.repo.insert_file("w3", 1000.0, 30, "other", "c.txt", "ip", 999.0, "u")
+        self.repo.insert_file("w1", 1000, 10, "mydir", "a.txt", "ip", 999, "u")
+        self.repo.insert_file("w2", 1000, 20, "mydir", "b.txt", "ip", 999, "u")
+        self.repo.insert_file("w3", 1000, 30, "other", "c.txt", "ip", 999, "u")
         self.repo.commit()
         fns = self.repo.find_files_by_dir("mydir")
         self.assertEqual(sorted(fns), ["a.txt", "b.txt"])
 
     def test_delete_file(self):
-        self.repo.insert_file("w1", 1000.0, 10, "dir", "f.txt", "ip", 999.0, "u")
+        self.repo.insert_file("w1", 1000, 10, "dir", "f.txt", "ip", 999, "u")
         self.repo.commit()
         deleted = self.repo.delete_file("dir", "f.txt")
         self.assertEqual(deleted, 1)
@@ -57,8 +57,8 @@ class TestFileRepo(unittest.TestCase):
 
     def test_count_files(self):
         self.assertEqual(self.repo.count_files(), 0)
-        self.repo.insert_file("w1", 1000.0, 10, "d", "a", "ip", 999.0, "u")
-        self.repo.insert_file("w2", 1000.0, 20, "d", "b", "ip", 999.0, "u")
+        self.repo.insert_file("w1", 1000, 10, "d", "a", "ip", 999, "u")
+        self.repo.insert_file("w2", 1000, 20, "d", "b", "ip", 999, "u")
         self.repo.commit()
         self.assertEqual(self.repo.count_files(), 2)
 
@@ -130,18 +130,18 @@ class TestFileRepo(unittest.TestCase):
         self.assertEqual(self.repo.get_dir_size("dir1"), (200, 2))
 
     def test_iu(self):
-        self.repo.insert_iu(100.0, "wp1", "dir", "file.txt")
-        self.repo.insert_iu(200.0, "wp2", "dir", "file2.txt")
+        self.repo.insert_iu(100, "wp1", "dir", "file.txt")
+        self.repo.insert_iu(200, "wp2", "dir", "file2.txt")
         self.repo.commit()
-        results = self.repo.get_iu_by_cooldown(150.0)
+        results = self.repo.get_iu_by_cooldown(150)
         self.assertEqual(len(results), 1)
-        results = self.repo.get_iu_by_cooldown(300.0)
+        results = self.repo.get_iu_by_cooldown(300)
         self.assertEqual(len(results), 2)
         self.repo.delete_iu_by_wark("wp1")
-        self.assertEqual(len(self.repo.get_iu_by_cooldown(300.0)), 1)
+        self.assertEqual(len(self.repo.get_iu_by_cooldown(300)), 1)
 
     def test_vacuum(self):
-        self.repo.insert_file("w1", 1000.0, 10, "d", "a", "ip", 999.0, "u")
+        self.repo.insert_file("w1", 1000, 10, "d", "a", "ip", 999, "u")
         self.repo.commit()
         self.repo.delete_file("d", "a")
         self.repo.commit()
@@ -158,7 +158,7 @@ class TestFileRepo(unittest.TestCase):
         repo = FileRepository(":memory:", no_expr_idx=True)
         repo.open()
         repo.create_schema()
-        repo.insert_file("wark_abcdef1234567890", 1000.0, 42, "dir", "f.txt", "1.2.3.4", 999.0, "alice")
+        repo.insert_file("wark_abcdef1234567890", 1000, 42, "dir", "f.txt", "1.2.3.4", 999, "alice")
         repo.commit()
         rows = repo.find_files_by_wark("wark_abcdef1234567890")
         self.assertEqual(len(rows), 1)
@@ -170,14 +170,14 @@ class TestFileRepo(unittest.TestCase):
 
         conn = sqlite3.connect(":memory:")
         cur = conn.cursor()
-        # Create schema manually
+        # Create schema manually (must match up2k.py)
         cur.execute(
-            "create table up (w text, mt real, sz int, rd text, fn text, ip text, at real, un text)"
+            "create table up (w text, mt int, sz int, rd text, fn text, ip text, at int, un text)"
         )
         cur.execute("create table mt (w text, k text, v int)")
         cur.execute("create table kv (k text, v int)")
-        cur.execute("create table dh (rd text, h text)")
-        cur.execute("create table iu (t real, w text, rd text, fn text)")
+        cur.execute("create table dh (d text, h text)")
+        cur.execute("create table iu (c int, w text, rd text, fn text)")
         cur.execute("create table cv (rd text, dn text, fn text)")
         cur.execute("create table ds (rd text, sz int, nf int)")
         conn.commit()
@@ -188,7 +188,7 @@ class TestFileRepo(unittest.TestCase):
         self.assertIs(repo._conn, conn)
 
         # Should be able to use repo methods on the wrapped cursor
-        repo.insert_file("wk1", 100.0, 5, "d", "f.txt", "ip", 50.0, "u")
+        repo.insert_file("wk1", 100, 5, "d", "f.txt", "ip", 50, "u")
         repo.commit()
         row = repo.find_file("d", "f.txt")
         self.assertIsNotNone(row)

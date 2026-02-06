@@ -1,21 +1,21 @@
 """File database repository for up2k upload tracking.
 
 Mirrors the up2k DB schema from up2k._create_db:
-  table up (w text, mt real, sz int, rd text, fn text, ip text, at real, un text)
+  table up (w text, mt int, sz int, rd text, fn text, ip text, at int, un text)
     -- wark, mtime, size, directory, filename, upload-ip, upload-time, username
   table mt (w text, k text, v int)
     -- wark-prefix, tag-key, tag-value
   table kv (k text, v int)
     -- key, value
-  table dh (rd text, h text)
+  table dh (d text, h text)
     -- directory, dir-hash
-  table iu (t real, w text, rd text, fn text)
+  table iu (c int, w text, rd text, fn text)
     -- cooldown, wark-prefix, directory, filename
   table cv (rd text, dn text, fn text)
     -- directory, subdir, cover-filename
   table ds (rd text, sz int, nf int)
     -- directory, total-size, num-files
-  indexes: up_w, up_rd, mt_w, kv_k, dh_rd
+  indexes: up_w, up_vp, up_fn, up_ip, up_at, mt_w, mt_k, mt_v, kv_k, dh_d, iu_c, iu_w, cv_i, ds_rd
   kv table with schemaver=6
 """
 from __future__ import print_function, unicode_literals
@@ -102,12 +102,12 @@ class FileRepository(object):
         c = self.cur
         c.execute(
             "create table if not exists up "
-            "(w text, mt real, sz int, rd text, fn text, ip text, at real, un text)"
+            "(w text, mt int, sz int, rd text, fn text, ip text, at int, un text)"
         )
         c.execute("create table if not exists mt (w text, k text, v int)")
         c.execute("create table if not exists kv (k text, v int)")
-        c.execute("create table if not exists dh (rd text, h text)")
-        c.execute("create table if not exists iu (t real, w text, rd text, fn text)")
+        c.execute("create table if not exists dh (d text, h text)")
+        c.execute("create table if not exists iu (c int, w text, rd text, fn text)")
         c.execute("create table if not exists cv (rd text, dn text, fn text)")
         c.execute("create table if not exists ds (rd text, sz int, nf int)")
 
@@ -121,10 +121,19 @@ class FileRepository(object):
         if self.no_expr_idx:
             c.execute("create index if not exists up_w on up (w)")
 
-        c.execute("create index if not exists up_rd on up (rd)")
+        c.execute("create index if not exists up_vp on up (rd, fn)")
+        c.execute("create index if not exists up_fn on up (fn)")
+        c.execute("create index if not exists up_ip on up (ip)")
+        c.execute("create index if not exists up_at on up (at)")
         c.execute("create index if not exists mt_w on mt (w)")
+        c.execute("create index if not exists mt_k on mt (k)")
+        c.execute("create index if not exists mt_v on mt (v)")
         c.execute("create unique index if not exists kv_k on kv (k)")
-        c.execute("create unique index if not exists dh_rd on dh (rd)")
+        c.execute("create index if not exists dh_d on dh (d)")
+        c.execute("create index if not exists iu_c on iu (c)")
+        c.execute("create index if not exists iu_w on iu (w)")
+        c.execute("create index if not exists cv_i on cv (rd, dn)")
+        c.execute("create index if not exists ds_rd on ds (rd)")
 
         self.set_kv("schemaver", self.DB_VER)
         self.commit()
@@ -176,7 +185,7 @@ class FileRepository(object):
         return [r[0] for r in self.cur.execute(sql, (rd,)).fetchall()]
 
     def insert_file(self, wark, mt, sz, rd, fn, ip, at, un):
-        # type: (str, float, int, str, str, str, float, str) -> None
+        # type: (str, int, int, str, str, str, int, str) -> None
         """Insert a file record."""
         assert self.cur is not None
         sql = "insert into up values (?,?,?,?,?,?,?,?)"
@@ -249,21 +258,21 @@ class FileRepository(object):
         # type: (str, str) -> bool
         """Check if directory hash matches."""
         assert self.cur is not None
-        rows = self.cur.execute("select h from dh where rd = ?", (rd,)).fetchall()
+        rows = self.cur.execute("select h from dh where d = ?", (rd,)).fetchall()
         return bool(rows) and rows[0][0] == dhash
 
     def update_dhash(self, rd, dhash):
         # type: (str, str) -> None
         """Update directory hash."""
         assert self.cur is not None
-        self.cur.execute("delete from dh where rd = ?", (rd,))
+        self.cur.execute("delete from dh where d = ?", (rd,))
         self.cur.execute("insert into dh values (?,?)", (rd, dhash))
 
     def delete_dhash(self, rd):
         # type: (str) -> None
         """Delete directory hash entry."""
         assert self.cur is not None
-        self.cur.execute("delete from dh where rd = ?", (rd,))
+        self.cur.execute("delete from dh where d = ?", (rd,))
 
     def delete_all_dhashes(self):
         # type: () -> None
@@ -306,16 +315,16 @@ class FileRepository(object):
     # --- Index-update hooks (iu table) ---
 
     def insert_iu(self, cooldown, wark_prefix, rd, fn):
-        # type: (float, str, str, str) -> None
+        # type: (int, str, str, str) -> None
         """Insert index-update record."""
         assert self.cur is not None
         self.cur.execute("insert into iu values (?,?,?,?)", (cooldown, wark_prefix, rd, fn))
 
     def get_iu_by_cooldown(self, cooldown):
-        # type: (float) -> list[tuple]
+        # type: (int) -> list[tuple]
         """Get index-update records by cooldown threshold."""
         assert self.cur is not None
-        return self.cur.execute("select * from iu where t <= ?", (cooldown,)).fetchall()
+        return self.cur.execute("select * from iu where c <= ?", (cooldown,)).fetchall()
 
     def delete_iu_by_wark(self, wark_prefix):
         # type: (str) -> None
