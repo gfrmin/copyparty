@@ -10,7 +10,6 @@ import hashlib
 import hmac
 import json
 import logging
-import math
 import mimetypes
 import os
 import platform
@@ -29,7 +28,6 @@ import traceback
 from collections import Counter
 
 from ipaddress import IPv4Address, IPv4Network, IPv6Address, IPv6Network
-from queue import Queue
 
 try:
     from zlib_ng import gzip_ng as gzip
@@ -133,6 +131,11 @@ from .time_util import (  # noqa: F401,E402
     humansize,
     s2hms,
     unhumanize,
+)
+from .mime_util import (  # noqa: F401,E402
+    EXTS,
+    MAGIC_MAP,
+    MIMES,
 )
 
 
@@ -328,14 +331,6 @@ CAN_SIGMASK = not (ANYWIN or PY2 or GRAAL)
 
 RE_ANSI = re.compile("\033\\[[^mK]*[mK]")
 RE_HTML_SH = re.compile(r"[<>&$?`\"';]")
-RE_CTYPE = re.compile(r"^content-type: *([^; ]+)", re.IGNORECASE)
-RE_CDISP = re.compile(r"^content-disposition: *([^; ]+)", re.IGNORECASE)
-RE_CDISP_FIELD = re.compile(
-    r'^content-disposition:(?: *|.*; *)name="([^"]+)"', re.IGNORECASE
-)
-RE_CDISP_FILE = re.compile(
-    r'^content-disposition:(?: *|.*; *)filename="(.*)"', re.IGNORECASE
-)
 RE_MEMTOTAL = re.compile("^MemTotal:.* kB")
 RE_MEMAVAIL = re.compile("^MemAvailable:.* kB")
 
@@ -477,60 +472,6 @@ FAVICON_MIMES = {
     "png": "image/png",
     "svg": "image/svg+xml",
 }
-
-
-MIMES = {
-    "opus": "audio/ogg; codecs=opus",
-    "owa": "audio/webm; codecs=opus",
-}
-
-
-def _add_mimes() -> None:
-    # `mimetypes` is woefully unpopulated on windows
-    # but will be used as fallback on linux
-
-    for ln in """text css html csv
-application json wasm xml pdf rtf zip jar fits wasm
-image webp jpeg png gif bmp jxl jp2 jxs jxr tiff bpg heic heif avif
-audio aac ogg wav flac ape amr
-video webm mp4 mpeg
-font woff woff2 otf ttf
-""".splitlines():
-        k, vs = ln.split(" ", 1)
-        for v in vs.strip().split():
-            MIMES[v] = "{}/{}".format(k, v)
-
-    for ln in """text md=plain txt=plain js=javascript
-application 7z=x-7z-compressed tar=x-tar bz2=x-bzip2 gz=gzip rar=x-rar-compressed zst=zstd xz=x-xz lz=lzip cpio=x-cpio
-application msi=x-ms-installer cab=vnd.ms-cab-compressed rpm=x-rpm crx=x-chrome-extension
-application epub=epub+zip mobi=x-mobipocket-ebook lit=x-ms-reader rss=rss+xml atom=atom+xml torrent=x-bittorrent
-application p7s=pkcs7-signature dcm=dicom shx=vnd.shx shp=vnd.shp dbf=x-dbf gml=gml+xml gpx=gpx+xml amf=x-amf
-application swf=x-shockwave-flash m3u=vnd.apple.mpegurl db3=vnd.sqlite3 sqlite=vnd.sqlite3
-text ass=plain ssa=plain
-image jpg=jpeg xpm=x-xpixmap psd=vnd.adobe.photoshop jpf=jpx tif=tiff ico=x-icon djvu=vnd.djvu
-image heic=heic-sequence heif=heif-sequence hdr=vnd.radiance svg=svg+xml
-image arw=x-sony-arw cr2=x-canon-cr2 crw=x-canon-crw dcr=x-kodak-dcr dng=x-adobe-dng erf=x-epson-erf
-image k25=x-kodak-k25 kdc=x-kodak-kdc mrw=x-minolta-mrw nef=x-nikon-nef orf=x-olympus-orf
-image pef=x-pentax-pef raf=x-fuji-raf raw=x-panasonic-raw sr2=x-sony-sr2 srf=x-sony-srf x3f=x-sigma-x3f
-audio caf=x-caf mp3=mpeg m4a=mp4 mid=midi mpc=musepack aif=aiff au=basic qcp=qcelp
-video mkv=x-matroska mov=quicktime avi=x-msvideo m4v=x-m4v ts=mp2t
-video asf=x-ms-asf flv=x-flv 3gp=3gpp 3g2=3gpp2 rmvb=vnd.rn-realmedia-vbr
-font ttc=collection
-""".splitlines():
-        k, ems = ln.split(" ", 1)
-        for em in ems.strip().split():
-            ext, mime = em.split("=")
-            MIMES[ext] = "{}/{}".format(k, mime)
-
-
-_add_mimes()
-
-
-EXTS: dict[str, str] = {v: k for k, v in MIMES.items()}
-
-EXTS["vnd.mozilla.apng"] = "png"
-
-MAGIC_MAP = {"jpeg": "jpg"}
 
 
 DEF_EXP = "self.ip self.ua self.uname self.host cfg.name cfg.logout vf.scan vf.thsize hdr.cf-ipcountry srv.itime srv.htime"
@@ -1278,103 +1219,6 @@ class ProgressPrinter(threading.Thread):
         sys.stdout.flush()  # necessary on win10 even w/ stderr btw
 
 
-class MTHash(object):
-    def __init__(self, cores: int):
-        self.pp: Optional[ProgressPrinter] = None
-        self.f: Optional[typing.BinaryIO] = None
-        self.sz = 0
-        self.csz = 0
-        self.stop = False
-        self.readsz = 1024 * 1024 * (2 if (RAM_AVAIL or 2) < 1 else 12)
-        self.omutex = threading.Lock()
-        self.imutex = threading.Lock()
-        self.work_q: Queue[int] = Queue()
-        self.done_q: Queue[tuple[int, str, int, int]] = Queue()
-        self.thrs = []
-        for n in range(cores):
-            t = Daemon(self.worker, "mth-" + str(n))
-            self.thrs.append(t)
-
-    def hash(
-        self,
-        f: typing.BinaryIO,
-        fsz: int,
-        chunksz: int,
-        pp: Optional[ProgressPrinter] = None,
-        prefix: str = "",
-        suffix: str = "",
-    ) -> list[tuple[str, int, int]]:
-        with self.omutex:
-            self.f = f
-            self.sz = fsz
-            self.csz = chunksz
-
-            chunks: dict[int, tuple[str, int, int]] = {}
-            nchunks = int(math.ceil(fsz / chunksz))
-            for nch in range(nchunks):
-                self.work_q.put(nch)
-
-            ex: Optional[Exception] = None
-            for nch in range(nchunks):
-                qe = self.done_q.get()
-                try:
-                    nch, dig, ofs, csz = qe
-                    chunks[nch] = (dig, ofs, csz)
-                except (ValueError, TypeError):
-                    ex = ex or qe  # type: ignore
-
-                if pp:
-                    mb = (fsz - nch * chunksz) // (1024 * 1024)
-                    pp.msg = prefix + str(mb) + suffix
-
-            if ex:
-                raise ex
-
-            ret = []
-            for n in range(nchunks):
-                ret.append(chunks[n])
-
-            self.f = None
-            self.csz = 0
-            self.sz = 0
-            return ret
-
-    def worker(self) -> None:
-        while True:
-            ofs = self.work_q.get()
-            try:
-                v = self.hash_at(ofs)
-            except Exception as ex:
-                v = ex  # type: ignore
-
-            self.done_q.put(v)
-
-    def hash_at(self, nch: int) -> tuple[int, str, int, int]:
-        f = self.f
-        ofs = ofs0 = nch * self.csz
-        chunk_sz = chunk_rem = min(self.csz, self.sz - ofs)
-        if self.stop:
-            return nch, "", ofs0, chunk_sz
-
-        assert f  # !rm
-        hashobj = hashlib.sha512()
-        while chunk_rem > 0:
-            with self.imutex:
-                f.seek(ofs)
-                buf = f.read(min(chunk_rem, self.readsz))
-
-            if not buf:
-                raise Exception("EOF at " + str(ofs))
-
-            hashobj.update(buf)
-            chunk_rem -= len(buf)
-            ofs += len(buf)
-
-        bdig = hashobj.digest()[:33]
-        udig = ub64enc(bdig).decode("ascii")
-        return nch, udig, ofs0, chunk_sz
-
-
 class HMaccas(object):
     def __init__(self, keypath: str, retlen: int) -> None:
         self.retlen = retlen
@@ -1825,283 +1669,6 @@ def ren_open(fname: str, *args: Any, **kwargs: Any) -> tuple[typing.IO[Any], str
                     ext = "." + ext[2:]
 
             fname = "%s~%s%s" % (bname, b64, ext)
-
-
-class MultipartParser(object):
-    def __init__(
-        self,
-        log_func: "NamedLogger",
-        args: argparse.Namespace,
-        sr: Unrecv,
-        http_headers: dict[str, str],
-    ):
-        self.sr = sr
-        self.log = log_func
-        self.args = args
-        self.headers = http_headers
-        try:
-            self.clen = int(http_headers["content-length"])
-            sr.nb = 0
-        except (ValueError, TypeError, UnicodeDecodeError, IndexError):
-            self.clen = 0
-
-        self.re_ctype = RE_CTYPE
-        self.re_cdisp = RE_CDISP
-        self.re_cdisp_field = RE_CDISP_FIELD
-        self.re_cdisp_file = RE_CDISP_FILE
-
-        self.boundary = b""
-        self.gen: Optional[
-            Generator[
-                tuple[str, Optional[str], Generator[bytes, None, None]], None, None
-            ]
-        ] = None
-
-    def _read_header(self) -> tuple[str, Optional[str]]:
-        """
-        returns [fieldname, filename] after eating a block of multipart headers
-        while doing a decent job at dealing with the absolute mess that is
-        rfc1341/rfc1521/rfc2047/rfc2231/rfc2388/rfc6266/the-real-world
-        (only the fallback non-js uploader relies on these filenames)
-        """
-        for ln in read_header(self.sr, 2, 2592000):
-            self.log(repr(ln))
-
-            m = self.re_ctype.match(ln)
-            if m:
-                if m.group(1).lower() == "multipart/mixed":
-                    # rfc-7578 overrides rfc-2388 so this is not-impl
-                    # (opera >=9 <11.10 is the only thing i've ever seen use it)
-                    raise Pebkac(
-                        400,
-                        "you can't use that browser to upload multiple files at once",
-                    )
-
-                continue
-
-            # the only other header we care about is content-disposition
-            m = self.re_cdisp.match(ln)
-            if not m:
-                continue
-
-            if m.group(1).lower() != "form-data":
-                raise Pebkac(400, "not form-data: %r" % (ln,))
-
-            try:
-                field = self.re_cdisp_field.match(ln).group(1)  # type: ignore
-            except (AttributeError, IndexError):
-                raise Pebkac(400, "missing field name: %r" % (ln,))
-
-            try:
-                fn = self.re_cdisp_file.match(ln).group(1)  # type: ignore
-            except (AttributeError, IndexError):
-                # this is not a file upload, we're done
-                return field, None
-
-            try:
-                is_webkit = "applewebkit" in self.headers["user-agent"].lower()
-            except (KeyError, AttributeError):
-                is_webkit = False
-
-            # chromes ignore the spec and makes this real easy
-            if is_webkit:
-                # quotes become %22 but they don't escape the %
-                # so unescaping the quotes could turn messi
-                return field, fn.split('"')[0]
-
-            # also ez if filename doesn't contain "
-            if not fn.split('"')[0].endswith("\\"):
-                return field, fn.split('"')[0]
-
-            # this breaks on firefox uploads that contain \"
-            # since firefox escapes " but forgets to escape \
-            # so it'll truncate after the \
-            ret = ""
-            esc = False
-            for ch in fn:
-                if esc:
-                    esc = False
-                    if ch not in ['"', "\\"]:
-                        ret += "\\"
-                    ret += ch
-                elif ch == "\\":
-                    esc = True
-                elif ch == '"':
-                    break
-                else:
-                    ret += ch
-
-            return field, ret
-
-        raise Pebkac(400, "server expected a multipart header but you never sent one")
-
-    def _read_data(self) -> Generator[bytes, None, None]:
-        blen = len(self.boundary)
-        bufsz = self.args.s_rd_sz
-        while True:
-            try:
-                buf = self.sr.recv(bufsz)
-            except (OSError, ValueError, TypeError, UnicodeDecodeError):
-                # abort: client disconnected
-                raise Pebkac(400, "client d/c during multipart post")
-
-            while True:
-                ofs = buf.find(self.boundary)
-                if ofs != -1:
-                    self.sr.unrecv(buf[ofs + blen :])
-                    yield buf[:ofs]
-                    return
-
-                d = len(buf) - blen
-                if d > 0:
-                    # buffer growing large; yield everything except
-                    # the part at the end (maybe start of boundary)
-                    yield buf[:d]
-                    buf = buf[d:]
-
-                # look for boundary near the end of the buffer
-                n = 0
-                for n in range(1, len(buf) + 1):
-                    if not buf[-n:] in self.boundary:
-                        n -= 1
-                        break
-
-                if n == 0 or not self.boundary.startswith(buf[-n:]):
-                    # no boundary contents near the buffer edge
-                    break
-
-                if blen == n:
-                    # EOF: found boundary
-                    yield buf[:-n]
-                    return
-
-                try:
-                    buf += self.sr.recv(bufsz)
-                except (OSError, ValueError, TypeError, UnicodeDecodeError):
-                    # abort: client disconnected
-                    raise Pebkac(400, "client d/c during multipart post")
-
-            yield buf
-
-    def _run_gen(
-        self,
-    ) -> Generator[tuple[str, Optional[str], Generator[bytes, None, None]], None, None]:
-        """
-        yields [fieldname, unsanitized_filename, fieldvalue]
-        where fieldvalue yields chunks of data
-        """
-        run = True
-        while run:
-            fieldname, filename = self._read_header()
-            yield (fieldname, filename, self._read_data())
-
-            tail = self.sr.recv_ex(2, False)
-
-            if tail == b"--":
-                # EOF indicated by this immediately after final boundary
-                if self.clen == self.sr.nb:
-                    tail = b"\r\n"  # dillo doesn't terminate with trailing \r\n
-                else:
-                    tail = self.sr.recv_ex(2, False)
-                run = False
-
-            if tail != b"\r\n":
-                t = "protocol error after field value: want b'\\r\\n', got {!r}"
-                raise Pebkac(400, t.format(tail))
-
-    def _read_value(self, iterable: Iterable[bytes], max_len: int) -> bytes:
-        ret = b""
-        for buf in iterable:
-            ret += buf
-            if len(ret) > max_len:
-                raise Pebkac(422, "field length is too long")
-
-        return ret
-
-    def parse(self) -> None:
-        boundary = get_boundary(self.headers)
-        if boundary.startswith('"') and boundary.endswith('"'):
-            boundary = boundary[1:-1]  # dillo uses quotes
-        self.log("boundary=%r" % (boundary,))
-
-        # spec says there might be junk before the first boundary,
-        # can't have the leading \r\n if that's not the case
-        self.boundary = b"--" + boundary.encode("utf-8")
-
-        # discard junk before the first boundary
-        for junk in self._read_data():
-            if not junk:
-                continue
-
-            jtxt = junk.decode("utf-8", "replace")
-            self.log("discarding preamble |%d| %r" % (len(junk), jtxt))
-
-        # nice, now make it fast
-        self.boundary = b"\r\n" + self.boundary
-        self.gen = self._run_gen()
-
-    def require(self, field_name: str, max_len: int) -> str:
-        """
-        returns the value of the next field in the multipart body,
-        raises if the field name is not as expected
-        """
-        assert self.gen  # !rm
-        p_field, p_fname, p_data = next(self.gen)
-        if p_field != field_name:
-            raise WrongPostKey(field_name, p_field, p_fname, p_data)
-
-        return self._read_value(p_data, max_len).decode("utf-8", "surrogateescape")
-
-    def drop(self) -> None:
-        """discards the remaining multipart body"""
-        assert self.gen  # !rm
-        for _, _, data in self.gen:
-            for _ in data:
-                pass
-
-
-def get_boundary(headers: dict[str, str]) -> str:
-    # boundaries contain a-z A-Z 0-9 ' ( ) + _ , - . / : = ?
-    # (whitespace allowed except as the last char)
-    ptn = r"^multipart/form-data *; *(.*; *)?boundary=([^;]+)"
-    ct = headers["content-type"]
-    m = re.match(ptn, ct, re.IGNORECASE)
-    if not m:
-        raise Pebkac(400, "invalid content-type for a multipart post: %r" % (ct,))
-
-    return m.group(2)
-
-
-def read_header(sr: Unrecv, t_idle: int, t_tot: int) -> list[str]:
-    t0 = time.time()
-    ret = b""
-    while True:
-        if time.time() - t0 >= t_tot:
-            return []
-
-        try:
-            ret += sr.recv(1024, t_idle // 2)
-        except (KeyError, IndexError):
-            if not ret:
-                return []
-
-            raise Pebkac(
-                400,
-                "protocol error while reading headers",
-                log=ret.decode("utf-8", "replace"),
-            )
-
-        ofs = ret.find(b"\r\n\r\n")
-        if ofs < 0:
-            if len(ret) > 1024 * 32:
-                raise Pebkac(400, "header 2big")
-            else:
-                continue
-
-        if len(ret) > ofs + 4:
-            sr.unrecv(ret[ofs + 4 :])
-
-        return ret[:ofs].decode("utf-8", "surrogateescape").lstrip("\r\n").split("\r\n")
 
 
 def rand_name(fdir: str, fn: str, rnd: int) -> str:
@@ -4191,3 +3758,12 @@ __all__ = [
     "PYFTPD_VER",
     "PARTFTPY_VER",
 ]
+
+# re-exports from extracted modules that depend on util.py symbols
+# (must be at end to avoid circular imports)
+from .multipart_util import (  # noqa: F401,E402
+    MultipartParser,
+    get_boundary,
+    read_header,
+)
+from .hash_util import MTHash  # noqa: F401,E402
