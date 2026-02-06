@@ -115,6 +115,16 @@ from .codec_util import (  # noqa: F401,E402
     json_hesc,
     unescape_cookie,
 )
+from .path_util import (  # noqa: F401,E402
+    djoin,
+    u8safe,
+    ujoin,
+    uncyg,
+    undot,
+    vjoin,
+    vroots,
+    vsplit,
+)
 
 
 def _ens(want: str) -> tuple[int, ...]:
@@ -2270,36 +2280,6 @@ def s2hms(s: float, optional_h: bool = False) -> str:
     return "%d:%02d:%02d" % (h, m, s)
 
 
-def djoin(*paths: str) -> str:
-    """joins without adding a trailing slash on blank args"""
-    return os.path.join(*[x for x in paths if x])
-
-
-def uncyg(path: str) -> str:
-    if len(path) < 2 or not path.startswith("/"):
-        return path
-
-    if len(path) > 2 and path[2] != "/":
-        return path
-
-    return "%s:\\%s" % (path[1], path[3:])
-
-
-def undot(path: str) -> str:
-    ret: list[str] = []
-    for node in path.split("/"):
-        if node == "." or not node:
-            continue
-
-        if node == "..":
-            if ret:
-                ret.pop()
-            continue
-
-        ret.append(node)
-
-    return "/".join(ret)
-
 
 def sanitize_fn(fn: str) -> str:
     fn = fn.replace("\\", "/").split("/")[-1]
@@ -2354,13 +2334,6 @@ def absreal(fpath: str) -> str:
         # some win7sp1 and win10:20H2 boxes cannot realpath a
         # networked drive letter such as b"n:" or b"n:\\"
         return os.path.abspath(os.path.realpath(fpath))
-
-
-def u8safe(txt: str) -> str:
-    try:
-        return txt.encode("utf-8", "xmlcharrefreplace").decode("utf-8", "replace")
-    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
-        return txt.encode("utf-8", "replace").decode("utf-8", "replace")
 
 
 def exclude_dotfiles(filepaths: list[str]) -> list[str]:
@@ -2478,46 +2451,6 @@ def unquotep(txt: str) -> str:
     btxt = w8enc(txt)
     unq2 = unquote(btxt)
     return w8dec(unq2)
-
-
-def vroots(vp1: str, vp2: str) -> tuple[str, str]:
-    """
-    input("q/w/e/r","a/s/d/e/r") output("/q/w/","/a/s/d/")
-    """
-    while vp1 and vp2:
-        zt1 = vp1.rsplit("/", 1) if "/" in vp1 else ("", vp1)
-        zt2 = vp2.rsplit("/", 1) if "/" in vp2 else ("", vp2)
-        if zt1[1] != zt2[1]:
-            break
-        vp1 = zt1[0]
-        vp2 = zt2[0]
-    return (
-        "/%s/" % (vp1,) if vp1 else "/",
-        "/%s/" % (vp2,) if vp2 else "/",
-    )
-
-
-def vsplit(vpath: str) -> tuple[str, str]:
-    if "/" not in vpath:
-        return "", vpath
-
-    return vpath.rsplit("/", 1)  # type: ignore
-
-
-# vpath-join
-def vjoin(rd: str, fn: str) -> str:
-    if rd and fn:
-        return rd + "/" + fn
-    else:
-        return rd or fn
-
-
-# url-join
-def ujoin(rd: str, fn: str) -> str:
-    if rd and fn:
-        return rd.rstrip("/") + "/" + fn.lstrip("/")
-    else:
-        return rd or fn
 
 
 def log_reloc(

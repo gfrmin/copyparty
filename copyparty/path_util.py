@@ -1,220 +1,92 @@
 """Path utilities for copyparty.
 
-Handles path normalization, sanitization, and manipulation.
+Self-contained path manipulation functions.
+Functions that depend on util.py globals (sanitize_fn, sanitize_vpath,
+relchk, absreal) remain in util.py until their dependencies can be migrated.
 """
 
 import os
-import re
-import sys
-from typing import Tuple
 
 
 def djoin(*paths: str) -> str:
-    """Join path components with forward slashes.
-
-    Args:
-        *paths: Path components
-
-    Returns:
-        Joined path with forward slashes
-    """
-    return "/".join(paths)
+    """joins without adding a trailing slash on blank args"""
+    return os.path.join(*[x for x in paths if x])
 
 
 def uncyg(path: str) -> str:
-    """Convert Cygwin path to Windows path.
-
-    Args:
-        path: Path potentially in Cygwin format (/c/Users/...)
-
-    Returns:
-        Windows path or original if not Cygwin format
-    """
-    if not path.startswith("/"):
+    """Convert Cygwin-style path to Windows path."""
+    if len(path) < 2 or not path.startswith("/"):
         return path
 
-    # /c/Users/... -> c:\Users\...
-    if len(path) > 2 and path[2] == "/" and path[1].isalpha():
-        return path[1] + ":\\" + path[3:].replace("/", "\\")
+    if len(path) > 2 and path[2] != "/":
+        return path
 
-    # /cygdrive/c/Users/... -> c:\Users\...
-    if path.startswith("/cygdrive/"):
-        parts = path[10:].split("/")
-        if parts:
-            return parts[0] + ":\\" + "\\".join(parts[1:])
-
-    return path
+    return "%s:\\%s" % (path[1], path[3:])
 
 
 def undot(path: str) -> str:
-    """Remove leading dot from path.
-
-    Args:
-        path: Path that may start with dot
-
-    Returns:
-        Path with leading dot removed
-    """
-    if path.startswith("./"):
-        return path[2:]
-    if path == ".":
-        return ""
-    return path
-
-
-def sanitize_fn(fn: str) -> str:
-    """Sanitize filename by removing invalid characters.
-
-    Args:
-        fn: Filename to sanitize
-
-    Returns:
-        Sanitized filename
-    """
-    # Remove null bytes and control characters
-    fn = re.sub(r"[\x00-\x1f\x7f]", "", fn)
-    # Remove trailing spaces and dots
-    fn = fn.rstrip(". ")
-    return fn
-
-
-def sanitize_vpath(vp: str) -> str:
-    """Sanitize virtual path.
-
-    Args:
-        vp: Virtual path to sanitize
-
-    Returns:
-        Sanitized virtual path
-    """
-    # Remove double slashes
-    while "//" in vp:
-        vp = vp.replace("//", "/")
-    # Remove trailing slash
-    vp = vp.rstrip("/")
-    return vp
-
-
-def relchk(rp: str) -> str:
-    """Check for relative path traversal and normalize.
-
-    Args:
-        rp: Relative path to check
-
-    Returns:
-        Normalized relative path
-
-    Raises:
-        Exception: If path attempts to escape parent directory
-    """
-    parts = []
-    for part in rp.split("/"):
-        if part == "" or part == ".":
+    """Resolve . and .. in path segments."""
+    ret: list[str] = []
+    for node in path.split("/"):
+        if node == "." or not node:
             continue
-        elif part == "..":
-            if not parts:
-                raise Exception("relative path escape attempt")
-            parts.pop()
-        else:
-            parts.append(part)
-    return "/".join(parts)
 
+        if node == "..":
+            if ret:
+                ret.pop()
+            continue
 
-def absreal(fpath: str) -> str:
-    """Get absolute real path, expanding variables and user home.
+        ret.append(node)
 
-    Args:
-        fpath: File path potentially with variables/tilde
-
-    Returns:
-        Absolute real path
-    """
-    fpath = os.path.expandvars(os.path.expanduser(fpath))
-    return os.path.realpath(fpath)
+    return "/".join(ret)
 
 
 def u8safe(txt: str) -> str:
-    """Ensure string is safe for UTF-8 encoding.
+    """Ensure string is safe for UTF-8 encoding."""
+    try:
+        return txt.encode("utf-8", "xmlcharrefreplace").decode("utf-8", "replace")
+    except (ValueError, TypeError, UnicodeDecodeError, IndexError):
+        return txt.encode("utf-8", "replace").decode("utf-8", "replace")
 
-    Args:
-        txt: Text to make UTF-8 safe
 
-    Returns:
-        UTF-8 safe string
+def vroots(vp1: str, vp2: str) -> tuple[str, str]:
     """
-    return txt.encode("utf-8", "replace").decode("utf-8")
-
-
-def vroots(vp1: str, vp2: str) -> Tuple[str, str]:
-    """Find common root of two virtual paths.
-
-    Args:
-        vp1: First virtual path
-        vp2: Second virtual path
-
-    Returns:
-        Tuple of (common_root, remaining_path)
+    input("q/w/e/r","a/s/d/e/r") output("/q/w/","/a/s/d/")
     """
-    if vp1 == vp2:
-        return vp1, ""
-
-    vp1_parts = vp1.split("/")
-    vp2_parts = vp2.split("/")
-
-    common = []
-    for p1, p2 in zip(vp1_parts, vp2_parts):
-        if p1 == p2:
-            common.append(p1)
-        else:
+    while vp1 and vp2:
+        zt1 = vp1.rsplit("/", 1) if "/" in vp1 else ("", vp1)
+        zt2 = vp2.rsplit("/", 1) if "/" in vp2 else ("", vp2)
+        if zt1[1] != zt2[1]:
             break
+        vp1 = zt1[0]
+        vp2 = zt2[0]
+    return (
+        "/%s/" % (vp1,) if vp1 else "/",
+        "/%s/" % (vp2,) if vp2 else "/",
+    )
 
-    root = "/".join(common)
-    if vp1 == root:
-        return root, vp2[len(root) :].lstrip("/")
-    return root, vp2[len(root) :].lstrip("/")
 
-
-def vsplit(vpath: str) -> Tuple[str, str]:
-    """Split virtual path into parent and filename.
-
-    Args:
-        vpath: Virtual path to split
-
-    Returns:
-        Tuple of (parent_path, filename)
-    """
+def vsplit(vpath: str) -> tuple[str, str]:
+    """Split vpath into (directory, filename)."""
     if "/" not in vpath:
         return "", vpath
 
-    parts = vpath.rsplit("/", 1)
-    return parts[0], parts[1]
+    return vpath.rsplit("/", 1)  # type: ignore
 
 
+# vpath-join
 def vjoin(rd: str, fn: str) -> str:
-    """Join directory and filename in virtual path.
-
-    Args:
-        rd: Directory path
-        fn: Filename
-
-    Returns:
-        Joined virtual path
-    """
-    if not rd:
-        return fn
-    if not fn:
-        return rd
-    return rd.rstrip("/") + "/" + fn.lstrip("/")
+    """Join directory and filename in virtual path."""
+    if rd and fn:
+        return rd + "/" + fn
+    else:
+        return rd or fn
 
 
+# url-join
 def ujoin(rd: str, fn: str) -> str:
-    """Join directory and filename in URL path.
-
-    Args:
-        rd: Directory path
-        fn: Filename
-
-    Returns:
-        Joined URL path
-    """
-    return vjoin(rd, fn)
+    """Join directory and filename as URL path."""
+    if rd and fn:
+        return rd.rstrip("/") + "/" + fn.lstrip("/")
+    else:
+        return rd or fn
