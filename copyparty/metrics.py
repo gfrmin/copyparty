@@ -124,7 +124,7 @@ class Metrics(object):
             try:
                 t = "number of files queued for plugin-based analysis"
                 addg("cpp_mtpq_files", str(int(vs["mtpq"])), t)
-            except:
+            except (KeyError, ValueError, TypeError):
                 pass
 
         if not args.nos_hdd:

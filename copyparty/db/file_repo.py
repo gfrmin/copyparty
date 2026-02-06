@@ -115,7 +115,7 @@ class FileRepository(object):
         if not self.no_expr_idx:
             try:
                 c.execute("create index if not exists up_w on up (substr(w,1,16))")
-            except:
+            except Exception:
                 self.no_expr_idx = True
 
         if self.no_expr_idx:
@@ -138,7 +138,7 @@ class FileRepository(object):
             try:
                 mem_cur.execute("select * from a where b = ?", (v,))
                 ret.append(v)
-            except:
+            except (UnicodeEncodeError, UnicodeDecodeError):
                 ret.append("//" + base64.b64encode(v.encode("utf-8", "surrogateescape")).decode())
         return ret[0], ret[1]
 
@@ -189,7 +189,7 @@ class FileRepository(object):
         sql = "delete from up where rd = ? and fn = ?"
         try:
             self.cur.execute(sql, (rd, fn))
-        except:
+        except Exception:
             rd2, fn2 = self._s3enc(rd, fn)
             self.cur.execute(sql, (rd2, fn2))
         return self.cur.rowcount

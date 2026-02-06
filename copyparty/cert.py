@@ -23,11 +23,11 @@ else:
 def _sp_err(exe, what, rc, so, se, sin):
     try:
         zs = shutil.which(exe)
-    except:
+    except Exception:
         zs = "<?>"
     try:
         zi = os.path.getsize(zs)
-    except:
+    except (OSError, TypeError):
         zi = 0
     t = "failed to %s; error %s using %s (%s):\n  STDOUT: %s\n  STDERR: %s\n  STDIN: %s\n"
     raise Exception(t % (what, rc, zs, zi, so, se, sin.decode("utf-8")))
@@ -69,7 +69,7 @@ def ensure_cert(log: "RootLogger", args) -> None:
         if active_cert == cert_insec:
             t = "using default TLS certificate; https will be insecure:\033[36m {}"
             log("cert", t.format(args.cert), 3)
-    except:
+    except OSError:
         pass
 
     # speaking of the default cert,

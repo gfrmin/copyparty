@@ -37,7 +37,7 @@ def build_listing(vn, rem, uname, can_read, can_write, can_dot):
 
     try:
         st = bos.stat(abspath)
-    except:
+    except OSError:
         raise Pebkac(404, "Path not found")
 
     if not stat.S_ISDIR(st.st_mode):

@@ -334,7 +334,7 @@ class TcpSrv(object):
         except (OSError, socket.error) as ex:
             try:
                 srv.close()
-            except:
+            except Exception:
                 pass
 
             e = ""
@@ -431,7 +431,7 @@ class TcpSrv(object):
         try:
             for srv in self.srv:
                 srv.close()
-        except:
+        except Exception:
             pass
 
         self.log("tcpsrv", "ok bye")
@@ -474,7 +474,7 @@ class TcpSrv(object):
                         t = "netdev idx mismatch; ifaddr={} cpython={}"
                         self.log("tcpsrv", t.format(nd.idx, idx), 3)
                         nd.idx = idx
-                except:
+                except (OSError, AttributeError):
                     pass
 
         netlist = str(sorted(eps.items()))

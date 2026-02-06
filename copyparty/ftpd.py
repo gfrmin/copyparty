@@ -111,7 +111,7 @@ class FtpAuth(DummyAuthorizer):
                         # only possible if multiprocessing disabled
                         self.hub.broker.httpsrv.bans[ip] = bonk  # type: ignore
                         self.hub.broker.httpsrv.nban += 1  # type: ignore
-                    except:
+                    except Exception:
                         pass
 
             raise AuthenticationFailed("Authentication failed.")
@@ -244,7 +244,7 @@ class FtpFs(AbstractedFS):
                 st = bos.stat(ap)
                 td = time.time() - st.st_mtime
                 need_unlink = True
-            except:
+            except OSError:
                 need_unlink = False
                 td = 0
 
@@ -288,7 +288,7 @@ class FtpFs(AbstractedFS):
                 try:
                     self.rv2a(filename, False, True, False, True)
                     do_it = True
-                except:
+                except Exception:
                     do_it = False
 
             if not do_it:
@@ -316,7 +316,7 @@ class FtpFs(AbstractedFS):
             st = bos.stat(ap)
             if not stat.S_ISDIR(st.st_mode):
                 raise Exception()
-        except:
+        except OSError:
             # returning 550 is library-default and suitable
             raise FSE("No such file or directory")
 
@@ -605,7 +605,7 @@ class Ftpd(object):
         if self.args.ftps:
             try:
                 h1 = SftpHandler
-            except:
+            except NameError:
                 t = "\nftps requires pyopenssl;\nplease run the following:\n\n  {} -m pip install --user pyopenssl\n"
                 print(t.format(pybin))
                 sys.exit(1)
@@ -660,7 +660,7 @@ class Ftpd(object):
             for h, lp in hs:
                 try:
                     FTPServer((ip, int(lp)), h, ioloop)
-                except:
+                except OSError:
                     if ip != "0.0.0.0" or "::" not in ips:
                         raise
 

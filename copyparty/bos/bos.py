@@ -55,7 +55,7 @@ def makedirs(name: str, vf: dict[str, Any] = MKD_755, exist_ok: bool = True) -> 
             os.mkdir(zb, mode)
             if chown:
                 os.chown(zb, vf["uid"], vf["gid"])
-        except:
+        except OSError:
             if os.path.isdir(zb):
                 continue
             raise

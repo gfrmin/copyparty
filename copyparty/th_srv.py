@@ -130,7 +130,7 @@ try:
 
         Image.new("RGB", (2, 2)).save(BytesIO(), format="webp")
         HAVE_WEBP = True
-    except:
+    except Exception:
         pass
 
     try:
@@ -410,7 +410,7 @@ class ThumbSrv(object):
             if st.st_size:
                 self.poke(tpath)
                 return tpath
-        except:
+        except OSError:
             pass
 
         return None
@@ -569,7 +569,7 @@ class ThumbSrv(object):
                         # ffmpeg may spawn empty files on windows
                         try:
                             wunlink(self.log, ttpath, vn.flags)
-                        except:
+                        except OSError:
                             pass
 
             if abspath != ap_unpk and ap_unpk:
@@ -584,7 +584,7 @@ class ThumbSrv(object):
                 elif not conv_ok:
                     try:
                         open(tpath, "ab").close()
-                    except:
+                    except OSError:
                         pass
 
             untemp = []
@@ -597,7 +597,7 @@ class ThumbSrv(object):
             for ap in untemp:
                 try:
                     wunlink(self.log, ap, VF_CAREFUL)
-                except:
+                except OSError:
                     pass
 
             for x in subs:
@@ -620,7 +620,7 @@ class ThumbSrv(object):
             exif = im.getexif()
             rot = int(exif[k])
             del exif[k]
-        except:
+        except (KeyError, ValueError, TypeError):
             rot = 1
 
         rots = {8: Image.ROTATE_90, 3: Image.ROTATE_180, 6: Image.ROTATE_270}
@@ -897,7 +897,7 @@ class ThumbSrv(object):
             if ret:
                 try:
                     wunlink(self.log, wtpath, vn.flags)
-                except:
+                except OSError:
                     pass
             else:
                 atomic_move(self.log, wtpath, tpath, vn.flags)
@@ -1174,12 +1174,12 @@ class ThumbSrv(object):
         tmp_opus = tpath + ".opus"
         try:
             wunlink(self.log, tmp_opus, vn.flags)
-        except:
+        except OSError:
             pass
 
         try:
             dur = tags[".dur"][1]
-        except:
+        except (KeyError, IndexError):
             dur = 0
 
         self.log("conv2 caf-tmp [%s]" % (enc,), 6)
@@ -1249,7 +1249,7 @@ class ThumbSrv(object):
 
         try:
             wunlink(self.log, tmp_opus, vn.flags)
-        except:
+        except OSError:
             pass
 
     def big_tags(self, raw_tags: dict[str, list[str]]) -> list[bytes]:
@@ -1338,7 +1338,7 @@ class ThumbSrv(object):
                 self.log_func, not self.args.no_scandir, False, thumbpath, False
             )
             ents = sorted(list(t1))
-        except:
+        except OSError:
             return 0
 
         ndirs = 0

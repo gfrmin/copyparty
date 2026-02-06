@@ -99,7 +99,7 @@ def resolve_permissions(uname, vpath, asrv):
             can_admin,
             can_dot,
         ) = avn.uaxs[uname]
-    except:
+    except KeyError:
         pass  # default is all-false
 
     return vn, avn, rem, (

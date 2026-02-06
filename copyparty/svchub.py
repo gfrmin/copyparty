@@ -523,7 +523,7 @@ class SvcHub(object):
         db_lock = db_path + ".lock"
         try:
             create = not os.path.getsize(db_path)
-        except:
+        except OSError:
             create = True
         zs = "creating new" if create else "opening"
         self.log("root", "%s %s %s" % (zs, desc, db_path))
@@ -562,15 +562,15 @@ class SvcHub(object):
                 self.log("root", t % (desc, ex), 3)
                 try:
                     cur.close()  # type: ignore
-                except:
+                except Exception:
                     pass
                 try:
                     db.close()  # type: ignore
-                except:
+                except Exception:
                     pass
                 try:
                     os.unlink(db_lock)
-                except:
+                except OSError:
                     pass
                 os.unlink(db_path)
 
@@ -620,7 +620,7 @@ class SvcHub(object):
             if len(zil) > 1:
                 raise Exception()
             owner = zil[0][0]
-        except:
+        except Exception:
             owner = 0
 
         if which == "ses":
@@ -1338,7 +1338,7 @@ class SvcHub(object):
         fn = sel_fn
         try:
             bos.makedirs(os.path.dirname(fn))
-        except:
+        except OSError:
             pass
 
         try:
@@ -1398,7 +1398,7 @@ class SvcHub(object):
             try:
                 while not self.stop_req:
                     time.sleep(1)
-            except:
+            except Exception:
                 pass
 
             self.shutdown()
@@ -1482,7 +1482,7 @@ class SvcHub(object):
                 try:
                     threading.Thread(target=self.pr, args=("OMBO BREAKER",)).start()
                     time.sleep(0.1)
-                except:
+                except Exception:
                     pass
 
                 self.kill9()
@@ -1712,7 +1712,7 @@ class SvcHub(object):
             x.put(("foo", "bar"))
             if x.get()[0] != "foo":
                 raise Exception()
-        except:
+        except Exception:
             return "multiprocessing is not supported on your platform;"
 
         return ""
@@ -1724,7 +1724,7 @@ class SvcHub(object):
         try:
             if mp.cpu_count() <= 1 and not os.environ.get("PRTY_FORCE_MP"):
                 raise Exception()
-        except:
+        except Exception:
             self.log("svchub", "only one CPU detected; multiprocessing disabled")
             return False
 

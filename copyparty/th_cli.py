@@ -159,7 +159,7 @@ class ThumbCli(object):
                     break
                 else:
                     abort = True
-            except:
+            except Exception:
                 pass
 
         if ret:

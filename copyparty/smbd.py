@@ -57,7 +57,7 @@ class SMB(object):
         for k in os.__dict__:
             try:
                 setattr(fos, k, getattr(os, k))
-            except:
+            except Exception:
                 pass
         fos.close = self._close
         fos.listdir = self._listdir
@@ -75,7 +75,7 @@ class SMB(object):
         for k in os.path.__dict__:
             try:
                 setattr(fop, k, getattr(os.path, k))
-            except:
+            except Exception:
                 pass
         fop.exists = self._p_exists
         fop.getsize = self._p_getsize
@@ -99,7 +99,7 @@ class SMB(object):
         try:
             if self.accs:
                 srv.setAuthCallback(self._auth_cb)
-        except:
+        except Exception:
             self.accs = False
             self.noacc = True
             t = "impacket too old; access permissions will not work! all accounts are admin!"
@@ -165,7 +165,7 @@ class SMB(object):
                     return cl["connData"]["partygoer"]
                 cf = cf.f_back
             raise Exception()
-        except:
+        except Exception:
             warning(
                 "nyoron... %s <<-- %s <<-- %s <<-- %s",
                 cf0.f_code.co_name,
@@ -326,7 +326,7 @@ class SMB(object):
         self.hub.up2k.handle_mv("", uname, "1.7.6.2", vp1, vp2)
         try:
             bos.makedirs(ap2, vf=vfs2.flags)
-        except:
+        except OSError:
             pass
 
     def _mkdir(self, vpath: str) -> None:
@@ -347,7 +347,7 @@ class SMB(object):
             ret = bos.stat(ap, *a, **ka)
             # debug(" `-stat:ok")
             return ret
-        except:
+        except Exception:
             # white lie: windows freaks out if we raise due to an offline volume
             # debug(" `-stat:NOPE (faking a directory)")
             ts = int(time.time())
@@ -387,7 +387,7 @@ class SMB(object):
             bos.stat(ap)
             # debug(" `-exists((%s)->(%s)):ok", vpath, ap)
             return True
-        except:
+        except Exception:
             # debug(" `-exists((%s)->(%s)):NOPE", vpath, ap)
             return False
 
@@ -401,7 +401,7 @@ class SMB(object):
             ret = stat.S_ISDIR(st.st_mode)
             # debug(" `-isdir:%s:%s", st.st_mode, ret)
             return ret
-        except:
+        except Exception:
             return False
 
     def _p_join(self, *a) -> str:

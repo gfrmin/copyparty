@@ -63,7 +63,7 @@ def get_session(cli):
                     "read": perms[0],
                     "write": perms[1],
                 })
-        except:
+        except Exception:
             pass
 
     return {

@@ -235,7 +235,7 @@ class HttpSrv(object):
         try:
             x = self.broker.ask("thumbsrv.getcfg")
             self.th_cfg = x.get()
-        except:
+        except Exception:
             pass
 
     def set_netdevs(self, netdevs: dict[str, Netdev]) -> None:
@@ -375,7 +375,7 @@ class HttpSrv(object):
                                 nclose += 1
                                 if c.nreq <= 0 and (not c.cli or c.cli.in_hdr_recv):
                                     nloris += 1
-                        except:
+                        except Exception:
                             pass
 
                 t = "{} downgraded to connection:close for {} min; dropped {}/{} connections"
@@ -577,7 +577,7 @@ class HttpSrv(object):
                     for fh in dh:
                         inf = fh.stat()
                         v = max(v, inf.st_mtime)
-            except:
+            except OSError:
                 pass
 
             # spack gives 4 lsb, take 3 lsb, get 4 ch

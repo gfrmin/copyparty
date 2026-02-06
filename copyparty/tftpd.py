@@ -141,7 +141,7 @@ class Tftpd(object):
         for k in os.__dict__:
             try:
                 setattr(fos, k, getattr(os, k))
-            except:
+            except Exception:
                 pass
         fos.access = self._access
         fos.mkdir = self._mkdir
@@ -155,7 +155,7 @@ class Tftpd(object):
         for k in os.path.__dict__:
             try:
                 setattr(fop, k, getattr(os.path, k))
-            except:
+            except Exception:
                 pass
         fop.abspath = self._p_abspath
         fop.exists = self._p_exists
@@ -323,7 +323,7 @@ class Tftpd(object):
 
         try:
             biggest = max([x[1] for x in ls])
-        except:
+        except ValueError:
             biggest = 0
 
         perms = []
@@ -413,7 +413,7 @@ class Tftpd(object):
 
         try:
             inf = bos.stat(ap)
-        except:
+        except OSError:
             return
 
         if not stat.S_ISREG(inf.st_mode) or inf.st_size:
@@ -436,7 +436,7 @@ class Tftpd(object):
             ap = self._v2a("p.exists", vpath, [False, False])[2]
             bos.stat(ap)
             return True
-        except:
+        except Exception:
             return vpath == "/"
 
     def _p_isdir(self, vpath: str) -> bool:
@@ -444,7 +444,7 @@ class Tftpd(object):
             st = bos.stat(self._v2a("p.isdir", vpath, [False, False])[2])
             ret = stat.S_ISDIR(st.st_mode)
             return ret
-        except:
+        except Exception:
             return vpath == "/"
 
     def _hook(self, *a: Any, **ka: Any) -> None:

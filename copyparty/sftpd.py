@@ -100,7 +100,7 @@ class SSH_Srv(paramiko.ServerInterface):
     def check_auth_none(self, username: str) -> int:
         try:
             return self._check_auth_none(username)
-        except:
+        except Exception:
             self.log("unhandled exception: %s" % (min_ex(),), 1)
             return AUTH_FAILED
 
@@ -127,7 +127,7 @@ class SSH_Srv(paramiko.ServerInterface):
     def check_auth_password(self, username: str, password: str) -> int:
         try:
             return self._check_auth_password(username, password)
-        except:
+        except Exception:
             self.log("unhandled exception: %s" % (min_ex(),), 1)
             return AUTH_FAILED
 
@@ -194,7 +194,7 @@ class SSH_Srv(paramiko.ServerInterface):
                         # only possible if multiprocessing disabled
                         self.hub.broker.httpsrv.bans[ip] = bonk  # type: ignore
                         self.hub.broker.httpsrv.nban += 1  # type: ignore
-                    except:
+                    except Exception:
                         pass
             return AUTH_FAILED
 
@@ -205,7 +205,7 @@ class SSH_Srv(paramiko.ServerInterface):
     def check_auth_publickey(self, username: str, key: paramiko.PKey) -> int:
         try:
             return self._check_auth_publickey(username, key)
-        except:
+        except Exception:
             self.log("unhandled exception: %s" % (min_ex(),), 1)
             return AUTH_FAILED
 
@@ -363,7 +363,7 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
                 self.log("folder 404: %s" % (path,))
                 return SFTP_NO_SUCH_FILE
             return SFTP_PERMISSION_DENIED
-        except:
+        except Exception:
             self.log("unhandled exception: %s" % (min_ex(),), 1)
             return SFTP_FAILURE
 
@@ -498,7 +498,7 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
                 st = bos.stat(ap)
                 td = time.time() - st.st_mtime
                 need_unlink = True
-            except:
+            except OSError:
                 need_unlink = False
                 td = 0
 
@@ -584,7 +584,7 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
     def remove(self, path: str) -> int:
         try:
             return self._remove(path)
-        except:
+        except Exception:
             self.log("unhandled exception: %s" % (min_ex(),), 1)
             return SFTP_FAILURE
 
@@ -615,7 +615,7 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
                 if not bos.path.exists(ap):
                     self.log(" `- file didn't exist; returning ENOENT")
                     return SFTP_NO_SUCH_FILE
-            except:
+            except Exception:
                 pass
             return SFTP_PERMISSION_DENIED
         except OSError as ex:
@@ -625,7 +625,7 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
     def rename(self, oldpath: str, newpath: str) -> int:
         try:
             return self._rename(oldpath, newpath)
-        except:
+        except Exception:
             self.log("unhandled exception: %s" % (min_ex(),), 1)
             return SFTP_FAILURE
 
@@ -673,7 +673,7 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
     def rmdir(self, path: str) -> int:
         try:
             return self._rmdir(path)
-        except:
+        except Exception:
             self.log("unhandled exception: %s" % (min_ex(),), 1)
             return SFTP_FAILURE
 
@@ -695,7 +695,7 @@ class SFTP_Srv(paramiko.SFTPServerInterface):
     def chattr(self, path: str, attr: SATTR) -> int:
         try:
             return self._chattr(path, attr)
-        except:
+        except Exception:
             self.log("unhandled exception: %s" % (min_ex(),), 1)
             return SFTP_FAILURE
 

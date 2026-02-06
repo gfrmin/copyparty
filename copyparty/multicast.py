@@ -262,7 +262,7 @@ class MCast(object):
             try:
                 sck.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_MULTICAST_HOPS, 255)
                 sck.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_MULTICAST_LOOP, 1)
-            except:
+            except OSError:
                 # macos
                 t = "failed to set IPv6 TTL/LOOP; announcements may not survive multiple switches/routers"
                 self.log(t, 3)
@@ -280,7 +280,7 @@ class MCast(object):
                     raise Exception()
 
                 sck.bind((grp, self.port))
-            except:
+            except OSError:
                 sck.bind(("", self.port))
 
             bgrp = socket.inet_aton(self.grp4)
@@ -296,7 +296,7 @@ class MCast(object):
             try:
                 sck.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 255)
                 sck.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_LOOP, 1)
-            except:
+            except OSError:
                 # probably can't happen but dontcare if it does
                 t = "failed to set IPv4 TTL/LOOP; announcements may not survive multiple switches/routers"
                 self.log(t, 3)
@@ -318,7 +318,7 @@ class MCast(object):
                 try:
                     sck.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_LEAVE_GROUP, req)
                     return True
-                except:
+                except OSError:
                     return False
             else:
                 sck.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_JOIN_GROUP, req)
@@ -327,7 +327,7 @@ class MCast(object):
                 try:
                     sck.setsockopt(socket.IPPROTO_IP, socket.IP_DROP_MEMBERSHIP, req)
                     return True
-                except:
+                except OSError:
                     return False
             else:
                 # t = "joining {} from ip {} idx {} with mreq {}"
@@ -356,7 +356,7 @@ class MCast(object):
     def map_client(self, cip: str) -> Optional[MC_Sck]:
         try:
             return self.cscache[cip]
-        except:
+        except KeyError:
             pass
 
         ret: Optional[MC_Sck] = None

@@ -90,7 +90,7 @@ class HttpConn(object):
         self.stopping = True
         try:
             shut_socket(self.log, self.s, 1)
-        except:
+        except Exception:
             pass
 
     def set_rproxy(self, ip: Optional[str] = None) -> str:
@@ -176,7 +176,7 @@ class HttpConn(object):
                 if self.args.ssl_log:
                     try:
                         ctx.keylog_filename = self.args.ssl_log
-                    except:
+                    except (AttributeError, OSError):
                         self.log("keylog failed; openssl or python too old")
 
                 if self.args.ciphers:

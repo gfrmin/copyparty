@@ -2129,7 +2129,7 @@ class AuthSrv(object):
                     # pointless but might as well:
                     zv.all_vols.pop(vol.vpath)
                     zv.all_nodes.pop(vol.vpath)
-                except:
+                except (KeyError, ValueError):
                     pass
                 zs = next((x for x, y in zv.nodes.items() if y == vol), "")
                 if zs:
@@ -2197,7 +2197,7 @@ class AuthSrv(object):
                     try:
                         with open(powner, "rb") as f:
                             owner = f.read().rstrip()
-                    except:
+                    except OSError:
                         owner = None
 
                     me = afsenc(vol.realpath).rstrip()
@@ -2292,7 +2292,7 @@ class AuthSrv(object):
                 try:
                     _ = float(zs)
                     zs = "%sg" % (zs,)
-                except:
+                except (ValueError, TypeError):
                     pass
                 lim.dfl = unhumanize(zs)
 
@@ -3123,7 +3123,7 @@ class AuthSrv(object):
                             vn2, _ = s_vfs.get(vp2, "*", False, False)
                             if vn2 == s_vfs or vn2.dbv == s_vfs:
                                 vns.append(shn)
-                        except:
+                        except Exception:
                             pass
                 if not exact:
                     shn.shr_all_aps.append((ap, [shn]))
@@ -3620,7 +3620,7 @@ class AuthSrv(object):
                 self.log("checking /{} as {}".format(v, u))
                 try:
                     vn, _ = self.vfs.get(v, u, True, False, False, False, False)
-                except:
+                except Exception:
                     continue
 
                 atop = vn.realpath
@@ -3715,7 +3715,7 @@ class AuthSrv(object):
                     v = v.pattern
                     if k in ("idp_gsep", "tftp_lsf"):
                         v = v[1:-1]  # close enough
-                except:
+                except AttributeError:
                     pass
 
                 skip = False
@@ -3812,7 +3812,7 @@ class AuthSrv(object):
 
                 try:
                     v = v.pattern
-                except:
+                except AttributeError:
                     pass
 
                 try:
@@ -3821,12 +3821,12 @@ class AuthSrv(object):
 
                     try:
                         v2 = v2.pattern
-                    except:
+                    except AttributeError:
                         pass
 
                     if v2 is v:
                         continue
-                except:
+                except (KeyError, AttributeError):
                     pass
 
                 skip = False

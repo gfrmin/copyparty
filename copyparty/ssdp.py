@@ -185,7 +185,7 @@ class SSDPd(MCast):
         for srv in self.srv.values():
             try:
                 srv.sck.close()
-            except:
+            except OSError:
                 pass
 
         self.srv.clear()

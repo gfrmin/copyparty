@@ -53,19 +53,19 @@ class Fstab(object):
             fs = "vfat"
             try:
                 path = self._winpath(path)
-            except:
+            except Exception:
                 self.log(msg % (path, fs, min_ex()), 3)
                 return fs, ""
 
         path = undot(path)
         try:
             return self.cache[path]
-        except:
+        except KeyError:
             pass
 
         try:
             fs, mp = self.get_w32(path) if ANYWIN else self.get_unix(path)
-        except:
+        except Exception:
             self.log(msg % (path, fs, min_ex()), 3)
 
         fs = fs.lower()

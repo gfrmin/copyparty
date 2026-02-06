@@ -60,7 +60,7 @@ class Ico(object):
                     img.save(buf, format="PNG", compress_level=1)
                     return "image/png", buf.getvalue()
 
-                except:
+                except Exception:
                     pass
 
             if HAVE_PIL:

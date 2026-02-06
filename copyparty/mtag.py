@@ -722,7 +722,7 @@ class MTag(object):
         sz = bos.path.getsize(abspath)
         try:
             ret[".q"] = (0, int((sz / md.info.length) / 128))
-        except:
+        except (ValueError, TypeError, ZeroDivisionError, AttributeError):
             pass
 
         for attr, k, norm in [
@@ -786,7 +786,7 @@ class MTag(object):
             zsl = [str(pypath)] + [str(x) for x in sys.path if x]
             pypath = str(os.pathsep.join(zsl))
             env["PYTHONPATH"] = pypath
-        except:
+        except Exception:
             raise  # might be expected outside cpython
 
         ext = abspath.split(".")[-1].lower()

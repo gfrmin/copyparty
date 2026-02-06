@@ -60,14 +60,14 @@ def gfilter(
                     task, f = pend.pop(0)
                     try:
                         f = task.result(600)
-                    except:
+                    except Exception:
                         pass
                     yield f
 
             for task, f in pend:
                 try:
                     f = task.result(600)
-                except:
+                except Exception:
                     pass
                 yield f
         except Exception as ex:
@@ -75,7 +75,7 @@ def gfilter(
             for task, f in pend:
                 try:
                     task.result(600)
-                except:
+                except Exception:
                     pass
             thumbcli.log("gfilter flushed")
 

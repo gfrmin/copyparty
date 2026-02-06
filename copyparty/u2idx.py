@@ -125,7 +125,7 @@ class U2idx(object):
 
         try:
             return self.run_query(uname, vols, uq, uv, False, True, 99999)[0]
-        except:
+        except Exception:
             raise Pebkac(500, min_ex())
 
     def get_shr(self) -> Optional["sqlite3.Cursor"]:
@@ -182,7 +182,7 @@ class U2idx(object):
                 cur = self._open_db(uri, timeout=2, uri=True).cursor()
                 cur.execute('pragma table_info("up")').fetchone()
                 self.log("ro: %r" % (db_path,))
-            except:
+            except Exception:
                 self.log("could not open read-only: {}\n{}".format(uri, min_ex()))
                 # may not fail until the pragma so unset it
                 cur = None
@@ -476,7 +476,7 @@ class U2idx(object):
                     try:
                         ap = absreal(os.path.join(ptop, rd, fn))
                         ino = 0 if ANYWIN or fk_alg == 2 else bos.stat(ap).st_ino
-                    except:
+                    except OSError:
                         continue
 
                     suf = "?k=" + gen_filekey(

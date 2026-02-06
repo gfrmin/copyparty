@@ -221,7 +221,7 @@ def init_E(EE: EnvParams) -> None:
                             raise Exception("filesystem has broken unix permissions")
                 try:
                     os.listdir(p)
-                except:
+                except OSError:
                     os.mkdir(p, 0o700)
 
                 if ram:
@@ -261,7 +261,7 @@ def init_E(EE: EnvParams) -> None:
         if not os.path.isdir(p):
             os.mkdir(p, 0o700)
         os.listdir(p)
-    except:
+    except OSError:
         p = ""
 
     if p:
@@ -277,7 +277,7 @@ def init_E(EE: EnvParams) -> None:
     E.cfg = E.cfg.replace("\\", "/")
     try:
         bos.makedirs(E.cfg, bos.MKD_700)
-    except:
+    except OSError:
         if not os.path.isdir(E.cfg):
             raise
 
@@ -412,7 +412,7 @@ def configure_ssl_ciphers(al: argparse.Namespace) -> None:
     if al.ciphers and not is_help:
         try:
             ctx.set_ciphers(al.ciphers)
-        except:
+        except Exception:
             lprint("\n\033[1;31mfailed to set ciphers\033[0m\n")
 
     if not hasattr(ctx, "get_ciphers"):
@@ -465,7 +465,7 @@ def expand_cfg(argv) -> list[str]:
         v1v = v1[2:].lstrip("=")
         try:
             v2 = argv[n + 1]
-        except:
+        except (IndexError, KeyError):
             v2 = ""
 
         n += 1
@@ -574,7 +574,7 @@ def showlic() -> None:
     try:
         with load_resource(E, "res/COPYING.txt") as f:
             buf = f.read()
-    except:
+    except Exception:
         buf = b""
 
     if buf:
@@ -2151,7 +2151,7 @@ def main(argv: Optional[list[str]] = None) -> None:
         assert al  # type: ignore
         assert dal  # type: ignore
         al.E = E  # __init__ is not shared when oxidized
-    except:
+    except Exception:
         sys.exit(1)
 
     quotecheck(al)
@@ -2167,7 +2167,7 @@ def main(argv: Optional[list[str]] = None) -> None:
     if WINDOWS and not al.keep_qem and not al.ah_cli:
         try:
             disable_quickedit()
-        except:
+        except Exception:
             lprint("\nfailed to disable quick-edit-mode:\n" + min_ex() + "\n")
 
     if not al.ansi:

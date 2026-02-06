@@ -106,7 +106,7 @@ class StreamTar(StreamArc):
             while buf:
                 try:
                     buf = self.qfile.q.get()
-                except:
+                except Exception:
                     pass
 
             if self.errf:

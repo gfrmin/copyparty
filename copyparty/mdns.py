@@ -407,7 +407,7 @@ class MDNS(MCast):
                     srv.sck.close()
                 else:
                     srv.sck.sendto(srv.bp_bye, (srv.grp, 5353))
-            except:
+            except Exception:
                 pass
 
         self.srv.clear()
@@ -491,7 +491,7 @@ class MDNS(MCast):
             for r in p.questions:
                 try:
                     lhn = U(r.qname).lower()
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError):
                     self.log("invalid question: {}".format(r))
                     continue
 
@@ -516,7 +516,7 @@ class MDNS(MCast):
         for r in p.questions:
             try:
                 lhn = U(r.qname).lower()
-            except:
+            except (ValueError, TypeError, UnicodeDecodeError):
                 self.log("invalid question: {}".format(r))
                 continue
 
@@ -529,7 +529,7 @@ class MDNS(MCast):
             for rr in p.rr:
                 try:
                     rname = U(rr.rname).lower()
-                except:
+                except (ValueError, TypeError, UnicodeDecodeError):
                     self.log("invalid rr: {}".format(rr))
                     continue
 
