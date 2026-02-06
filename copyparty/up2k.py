@@ -84,6 +84,8 @@ except ImportError:
 if HAVE_SQLITE3:
     import sqlite3
 
+    from .db.share_repo import ShareRepository
+
 DB_VER = 6
 
 if True:  # pylint: disable=using-constant-test
@@ -743,43 +745,37 @@ class Up2k(object):
         vn = self.vfs.nodes.get(self.args.shr.strip("/"))
         active = vn and vn.nodes
 
-        db = sqlite3.connect(self.args.shr_db, timeout=2)
-        cur = db.cursor()
+        repo = ShareRepository(self.args.shr_db)
 
-        q = "select k from sh where t1 and t1 <= ?"
-        rm = [x[0] for x in cur.execute(q, (now,))] if active else []
+        rm = repo.find_expired_before(now) if active else []
         if rm:
             assert vn and vn.nodes  # type: ignore
-            # self.log("chk_shr: %d" % (len(rm),))
             zss = set(rm)
             rm = [zs for zs in vn.nodes if zs in zss]
         reload = bool(rm)
         if reload:
             self.log("disabling expired shares %s" % (rm,))
 
-        rm = [x[0] for x in cur.execute(q, (low,))]
+        rm = repo.find_expired_before(low)
         if rm:
             self.log("forgetting expired shares %s" % (rm,))
-            cur.executemany("delete from sh where k=?", [(x,) for x in rm])
-            cur.executemany("delete from sf where k=?", [(x,) for x in rm])
-            db.commit()
+            repo.delete_shares_batch(rm)
+            repo.commit()
 
         if reload:
             Daemon(self.hub.reload, "sharedrop", (False, False))
 
-        q = "select min(t1) from sh where t1 > ?"
-        (earliest,) = cur.execute(q, (1,)).fetchone()
+        earliest = repo.find_next_expiry(1)
         if earliest:
             # deadline for revoking regular access
             timeout = min(timeout, earliest + maxage)
 
-            (earliest,) = cur.execute(q, (now - 2,)).fetchone()
+            earliest = repo.find_next_expiry(now - 2)
             if earliest:
                 # deadline for revival; drop entirely
                 timeout = min(timeout, earliest)
 
-        cur.close()
-        db.close()
+        repo.close()
 
         if self.args.shr_v:
             self.log("next shr_chk = %d (%d)" % (timeout, timeout - time.time()))

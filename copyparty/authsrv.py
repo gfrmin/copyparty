@@ -55,6 +55,7 @@ if HAVE_SQLITE3:
 
     from .db.idp_repo import IdpRepository
     from .db.session_repo import SessionRepository
+    from .db.share_repo import ShareRepository
 
 if True:  # pylint: disable=using-constant-test
     from collections.abc import Iterable
@@ -1934,12 +1935,9 @@ class AuthSrv(object):
 
             shv = VFS(self.log_func, "", shr, shr, AXS(), self.vf0())
 
-            db_path = self.args.shr_db
-            db = sqlite3.connect(db_path)
-            cur = db.cursor()
-            cur2 = db.cursor()
+            shr_repo = ShareRepository(self.args.shr_db)
             now = time.time()
-            for row in cur.execute("select * from sh"):
+            for row in shr_repo.list_shares():
                 s_k, s_pw, s_vp, s_pr, s_nf, s_un, s_t0, s_t1 = row
                 if s_t1 and s_t1 < now:
                     continue
@@ -3062,8 +3060,8 @@ class AuthSrv(object):
                 if x != shr and not x.startswith(shrs)
             }
 
-            assert db and cur and cur2 and shv  # type: ignore
-            for row in cur.execute("select * from sh"):
+            assert shr_repo and shv  # type: ignore
+            for row in shr_repo.list_shares():
                 s_k, s_pw, s_vp, s_pr, s_nf, s_un, s_t0, s_t1 = row
                 shn = shv.nodes.get(s_k, None)
                 if not shn:
@@ -3081,9 +3079,7 @@ class AuthSrv(object):
 
                 fns = []
                 if s_nf:
-                    q = "select vp from sf where k = ?"
-                    for (s_fn,) in cur2.execute(q, (s_k,)):
-                        fns.append(s_fn)
+                    fns = shr_repo.get_share_files(s_k)
 
                     shn.shr_files = set(fns)
                     shn.ls = shn._ls_shr
@@ -3142,9 +3138,7 @@ class AuthSrv(object):
                     # hide subvolume
                     vn.nodes[zs] = VFS(self.log_func, "", "", "", AXS(), self.vf0())
 
-            cur2.close()
-            cur.close()
-            db.close()
+            shr_repo.close()
 
         self.js_ls = {}
         self.js_htm = {}

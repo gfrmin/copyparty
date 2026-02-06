@@ -147,6 +147,66 @@ class TestShareRepo(unittest.TestCase):
         self.repo.close()
         self.repo.close()
 
+    def test_find_expired_before(self):
+        now = int(time.time())
+        self.repo.create_share("old", "", "p1", "r", 0, "a", now, now - 200)
+        self.repo.create_share("recent", "", "p2", "r", 0, "a", now, now - 50)
+        self.repo.create_share("active", "", "p3", "r", 0, "a", now, now + 3600)
+        self.repo.create_share("no_exp", "", "p4", "r", 0, "a", now, 0)
+        self.repo.commit()
+
+        expired = self.repo.find_expired_before(now - 100)
+        self.assertEqual(len(expired), 1)
+        self.assertEqual(expired[0], "old")
+
+        expired = self.repo.find_expired_before(now)
+        self.assertEqual(len(expired), 2)
+        keys = set(expired)
+        self.assertEqual(keys, {"old", "recent"})
+
+    def test_find_next_expiry(self):
+        now = int(time.time())
+        self.repo.create_share("k1", "", "p1", "r", 0, "a", now, now + 100)
+        self.repo.create_share("k2", "", "p2", "r", 0, "a", now, now + 200)
+        self.repo.create_share("k3", "", "p3", "r", 0, "a", now, 0)
+        self.repo.commit()
+
+        earliest = self.repo.find_next_expiry(1)
+        self.assertEqual(earliest, now + 100)
+
+        earliest = self.repo.find_next_expiry(now + 150)
+        self.assertEqual(earliest, now + 200)
+
+    def test_find_next_expiry_none(self):
+        self.assertIsNone(self.repo.find_next_expiry(1))
+
+        now = int(time.time())
+        self.repo.create_share("k1", "", "p1", "r", 0, "a", now, 0)
+        self.repo.commit()
+        self.assertIsNone(self.repo.find_next_expiry(1))
+
+    def test_delete_shares_batch(self):
+        now = int(time.time())
+        self.repo.create_share("k1", "", "p1", "r", 0, "a", now, 0)
+        self.repo.create_share("k2", "", "p2", "r", 0, "a", now, 0)
+        self.repo.create_share("k3", "", "p3", "r", 0, "a", now, 0)
+        self.repo.add_share_file("k1", "f1.txt")
+        self.repo.add_share_file("k2", "f2.txt")
+        self.repo.commit()
+
+        self.repo.delete_shares_batch(["k1", "k2"])
+        self.repo.commit()
+
+        self.assertIsNone(self.repo.get_share("k1"))
+        self.assertIsNone(self.repo.get_share("k2"))
+        self.assertIsNotNone(self.repo.get_share("k3"))
+        self.assertEqual(self.repo.get_share_files("k1"), [])
+        self.assertEqual(self.repo.get_share_files("k2"), [])
+
+    def test_delete_shares_batch_empty(self):
+        """Batch delete with empty list should not raise."""
+        self.repo.delete_shares_batch([])
+
 
 if __name__ == "__main__":
     unittest.main()

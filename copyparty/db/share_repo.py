@@ -117,6 +117,27 @@ class ShareRepository(object):
         rows = cur.execute("select k from sh where t1 > 0 and t1 < ?", (now,)).fetchall()
         return [r[0] for r in rows]
 
+    def find_expired_before(self, cutoff):
+        # type: (float) -> list[str]
+        """Find shares expired before cutoff (t1 > 0 and t1 <= cutoff)."""
+        cur = self.get_cursor()
+        rows = cur.execute("select k from sh where t1 and t1 <= ?", (cutoff,)).fetchall()
+        return [r[0] for r in rows]
+
+    def find_next_expiry(self, after=1):
+        # type: (float) -> int | None
+        """Find the earliest expiry time after the given threshold."""
+        cur = self.get_cursor()
+        row = cur.execute("select min(t1) from sh where t1 > ?", (after,)).fetchone()
+        return row[0] if row and row[0] else None
+
+    def delete_shares_batch(self, keys):
+        # type: (list[str]) -> None
+        """Delete multiple shares and their files by key."""
+        cur = self.get_cursor()
+        cur.executemany("delete from sh where k=?", [(k,) for k in keys])
+        cur.executemany("delete from sf where k=?", [(k,) for k in keys])
+
     def commit(self):
         # type: () -> None
         if self._conn:
