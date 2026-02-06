@@ -1,133 +1,65 @@
 """Codec utilities for copyparty.
 
-Handles encoding, decoding, and escaping operations.
+Handles HTML escaping, JSON escaping, and cookie operations.
+Functions that depend on util.py globals (html_sh_esc, unquotep)
+remain in util.py until their dependencies can be migrated.
 """
-
-import html
-import re
-from typing import Optional, Union
-
-
-def html_sh_esc(s: str) -> str:
-    """Escape string for HTML shell commands.
-
-    Args:
-        s: String to escape
-
-    Returns:
-        Escaped string safe for HTML shell context
-    """
-    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
 def json_hesc(s: str) -> str:
-    """Escape string for JSON HTML context.
-
-    Args:
-        s: String to escape
-
-    Returns:
-        Escaped string safe for JSON in HTML
-    """
-    return (
-        s.replace("\\", "\\\\")
-        .replace('"', '\\"')
-        .replace("\r", "\\r")
-        .replace("\n", "\\n")
-    )
+    """Escape HTML-special characters in a string destined for JSON in HTML context."""
+    return s.replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
 
 
 def html_escape(s: str, quot: bool = False, crlf: bool = False) -> str:
-    """Escape HTML special characters.
-
-    Args:
-        s: String to escape
-        quot: Whether to escape quotes
-        crlf: Whether to escape CRLF
-
-    Returns:
-        HTML-escaped string
-    """
-    s = html.escape(s, quote=quot)
+    """html.escape but also newlines"""
+    s = s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    if quot:
+        s = s.replace('"', "&quot;").replace("'", "&#x27;")
     if crlf:
         s = s.replace("\r", "&#13;").replace("\n", "&#10;")
+
     return s
 
 
 def html_bescape(s: bytes, quot: bool = False, crlf: bool = False) -> bytes:
-    """Escape HTML special characters in bytes.
+    """html.escape but bytestrings"""
+    s = s.replace(b"&", b"&amp;").replace(b"<", b"&lt;").replace(b">", b"&gt;")
+    if quot:
+        s = s.replace(b'"', b"&quot;").replace(b"'", b"&#x27;")
+    if crlf:
+        s = s.replace(b"\r", b"&#13;").replace(b"\n", b"&#10;")
 
-    Args:
-        s: Bytes to escape
-        quot: Whether to escape quotes
-        crlf: Whether to escape CRLF
-
-    Returns:
-        HTML-escaped bytes
-    """
-    return html_escape(s.decode("utf-8", "replace"), quot, crlf).encode("utf-8")
-
-
-def _quotep2(txt: str) -> str:
-    """Unescape Python 2 quoted string.
-
-    Args:
-        txt: Python 2 quoted string
-
-    Returns:
-        Unquoted string
-    """
-    return txt.encode().decode("unicode-escape")
-
-
-def _quotep3(txt: str) -> str:
-    """Unescape Python 3 quoted string.
-
-    Args:
-        txt: Python 3 quoted string
-
-    Returns:
-        Unquoted string
-    """
-    return txt.encode("utf-8").decode("unicode-escape")
-
-
-def unquotep(txt: str) -> str:
-    """Unescape quoted string (Python 2 or 3).
-
-    Args:
-        txt: Quoted string
-
-    Returns:
-        Unquoted string
-    """
-    # Try Python 3 style first (most common)
-    try:
-        return _quotep3(txt)
-    except (UnicodeDecodeError, UnicodeEncodeError):
-        pass
-
-    # Fall back to Python 2 style
-    try:
-        return _quotep2(txt)
-    except (UnicodeDecodeError, UnicodeEncodeError):
-        pass
-
-    # Return as-is if both fail
-    return txt
+    return s
 
 
 def unescape_cookie(orig: str) -> str:
-    """Unescape cookie value.
+    """Unescape percent-encoded cookie values.
 
-    Args:
-        orig: Original cookie string
-
-    Returns:
-        Unescaped cookie value
+    Handles %XX sequences in cookie strings.
     """
-    # Remove quotes and unescape
-    if orig.startswith('"') and orig.endswith('"'):
-        orig = orig[1:-1]
+    # mw=idk; doot=qwe%2Crty%3Basd+fgh%2Bjkl%25zxc%26vbn  # qwe,rty;asd fgh+jkl%zxc&vbn
+    ret = []
+    esc = ""
+    for ch in orig:
+        if ch == "%":
+            if esc:
+                ret.append(esc)
+            esc = ch
 
-    return orig.replace("\\", "")
+        elif esc:
+            esc += ch
+            if len(esc) == 3:
+                try:
+                    ret.append(chr(int(esc[1:], 16)))
+                except (ValueError, TypeError):
+                    ret.append(esc)
+                esc = ""
+
+        else:
+            ret.append(ch)
+
+    if esc:
+        ret.append(esc)
+
+    return "".join(ret)
