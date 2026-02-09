@@ -13,7 +13,7 @@ import socket
 import threading
 import time
 import typing
-from typing import TYPE_CHECKING, Generator, Optional, Union
+from typing import TYPE_CHECKING, Any, Generator, Optional, Union
 
 from ipaddress import IPv4Address, IPv4Network, IPv6Address, IPv6Network
 

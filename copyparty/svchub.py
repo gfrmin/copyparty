@@ -469,7 +469,7 @@ class SvcHub(object):
         for zs in "ipu_nm ftp_ipa_nm tftp_ipa_nm".split():
             try:
                 getattr(args, zs).mutex = threading.Lock()
-            except ImportError:
+            except (AttributeError, ImportError):
                 pass
         if args.ipr:
             for nm in args.ipr_u.values():
